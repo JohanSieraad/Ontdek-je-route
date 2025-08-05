@@ -6,6 +6,13 @@ This is a full-stack web application for exploring historical routes throughout 
 
 ## Recent Changes
 
+### Belgian Ardennes Expansion (January 2025)
+- Added Belgium as new country with focus on Belgian Ardennes region
+- Created 2 new Belgian routes: "Kastelen Route Ardennen" and "Ardennen Natuur Route"
+- Added authentic Belgian castle stops: Bouillon, La Roche-en-Ardenne, Reinhardstein
+- Implemented nature route with Hoge Venen National Park and Ourthe River
+- Extended navigation system to support cross-border routing
+
 ### Navigation Integration (January 2025)
 - Added comprehensive navigation system architecture for future Google Maps/Waze integration
 - Created RouteNavigation component with preferences for avoiding highways, tolls, and ferries  

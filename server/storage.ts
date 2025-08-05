@@ -85,7 +85,19 @@ export class MemStorage implements IStorage {
       }
     ];
 
-    dutchRegions.forEach(region => {
+    // Initialize Belgian regions
+    const belgianRegions: InsertRegion[] = [
+      {
+        name: "Belgische Ardennen",
+        description: "Ontdek de prachtige natuurgebieden, historische kastelen en charmante dorpjes van de Belgische Ardennen.",
+        routeCount: 6,
+        estimatedDuration: "3-6 uur per route", 
+        imageUrl: "https://images.unsplash.com/photo-1551632811-561732d1e306?ixlib=rb-4.0.3"
+      }
+    ];
+
+    // Initialize all regions
+    [...dutchRegions, ...belgianRegions].forEach(region => {
       this.createRegion(region);
     });
 
@@ -129,7 +141,44 @@ export class MemStorage implements IStorage {
       }
     ];
 
-    popularRoutes.forEach(route => {
+    // Initialize Belgian Ardennes routes
+    const ardennesRoutes: InsertRoute[] = [
+      {
+        title: "Kastelen Route Ardennen",
+        description: "Ontdek de middeleeuwse kastelen van de Belgische Ardennen, van Bouillon tot La Roche-en-Ardenne. Een reis door de geschiedenis.",
+        regionId: "", // Will be set after region creation
+        category: "Geschiedenis & Kastelen",
+        rating: 4.6,
+        duration: "5 uur",
+        distance: "8.2 km",
+        imageUrl: "https://images.unsplash.com/photo-1520637836862-4d197d17c93a?ixlib=rb-4.0.3",
+        difficulty: "gemiddeld",
+        isPopular: 1
+      },
+      {
+        title: "Ardennen Natuur Route",
+        description: "Wandel door de dichte bossen en langs de kronkelige rivieren van de Ardennen. Spot wilde dieren en geniet van de ongerepte natuur.",
+        regionId: "", // Will be set after region creation
+        category: "Natuur & Wildlife",
+        rating: 4.8,
+        duration: "4.5 uur",
+        distance: "7.8 km",
+        imageUrl: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?ixlib=rb-4.0.3",
+        difficulty: "uitdagend",
+        isPopular: 1
+      }
+    ];
+
+    // Set regionId for Belgian routes
+    const ardennesRegion = Array.from(this.regions.values()).find(r => r.name === "Belgische Ardennen");
+    if (ardennesRegion) {
+      ardennesRoutes.forEach(route => {
+        route.regionId = ardennesRegion.id;
+      });
+    }
+
+    // Create all routes
+    [...popularRoutes, ...ardennesRoutes].forEach(route => {
       this.createRoute(route);
     });
 
@@ -225,6 +274,102 @@ export class MemStorage implements IStorage {
         duration: "12:34",
         fileUrl: "/audio/kastelen-intro.mp3",
         transcript: "Welkom bij de Kastelen Route Utrecht..."
+      });
+    }
+
+    // Add route stops for Ardennes Kastelen Route
+    const ardennesKastelenRoute = Array.from(this.routes.values()).find(r => r.title === "Kastelen Route Ardennen");
+    if (ardennesKastelenRoute) {
+      const ardennesStops: InsertRouteStop[] = [
+        {
+          routeId: ardennesKastelenRoute.id,
+          number: 1,
+          title: "Kasteel van Bouillon",
+          description: "Het oudste kasteel van België, gebouwd in de 8e eeuw door Godfried van Bouillon tijdens de kruistochten.",
+          duration: "45 min",
+          hasAudio: 1,
+          coordinates: { lat: 49.7938, lng: 5.0664 }
+        },
+        {
+          routeId: ardennesKastelenRoute.id,
+          number: 2,
+          title: "Kasteel van La Roche-en-Ardenne",
+          description: "Ruïnes van een 11e-eeuws kasteel met spectaculair uitzicht over de rivier de Ourthe.",
+          duration: "40 min",
+          hasAudio: 1,
+          coordinates: { lat: 50.1825, lng: 5.5789 }
+        },
+        {
+          routeId: ardennesKastelenRoute.id,
+          number: 3,
+          title: "Kasteel van Reinhardstein",
+          description: "Prachtig gerestaureerd 14e-eeuws kasteel in een dramatische bergachtige omgeving.",
+          duration: "50 min",
+          hasAudio: 1,
+          coordinates: { lat: 50.4186, lng: 6.0975 }
+        }
+      ];
+
+      ardennesStops.forEach(stop => {
+        this.createRouteStop(stop);
+      });
+
+      // Add audio track for Ardennes castle route
+      this.createAudioTrack({
+        routeId: ardennesKastelenRoute.id,
+        stopId: undefined,
+        title: "Introductie - Kastelen van de Ardennen",
+        duration: "14:22",
+        fileUrl: "/audio/ardennen-kastelen-intro.mp3",
+        transcript: "Welkom bij de Kastelen Route van de Belgische Ardennen..."
+      });
+    }
+
+    // Add route stops for Ardennes Natuur Route
+    const ardennesNatuurRoute = Array.from(this.routes.values()).find(r => r.title === "Ardennen Natuur Route");
+    if (ardennesNatuurRoute) {
+      const natuurStops: InsertRouteStop[] = [
+        {
+          routeId: ardennesNatuurRoute.id,
+          number: 1,
+          title: "Hoge Venen Nationaal Park",
+          description: "Uniek hoogveenlandschap met veenmoerassen, wilde orchideeën en zeldzame vogels.",
+          duration: "60 min",
+          hasAudio: 1,
+          coordinates: { lat: 50.5056, lng: 6.1000 }
+        },
+        {
+          routeId: ardennesNatuurRoute.id,
+          number: 2,
+          title: "Ourthe Rivier Wandeling",
+          description: "Volg de meanderende rivier door dichte bossen met kans op het spotten van bevers en ijsvogels.",
+          duration: "45 min",
+          hasAudio: 1,
+          coordinates: { lat: 50.1589, lng: 5.6036 }
+        },
+        {
+          routeId: ardennesNatuurRoute.id,
+          number: 3,
+          title: "Ardennen Wildlife Kijkpunt",
+          description: "Observatieplatform voor het spotten van wilde zwijnen, reeën en roofvogels in hun natuurlijke habitat.",
+          duration: "35 min",
+          hasAudio: 1,
+          coordinates: { lat: 50.2456, lng: 5.7892 }
+        }
+      ];
+
+      natuurStops.forEach(stop => {
+        this.createRouteStop(stop);
+      });
+
+      // Add audio track for Ardennes nature route
+      this.createAudioTrack({
+        routeId: ardennesNatuurRoute.id,
+        stopId: undefined,
+        title: "Introductie - Ardennen Natuur",
+        duration: "11:45",
+        fileUrl: "/audio/ardennen-natuur-intro.mp3",
+        transcript: "Welkom bij de Natuur Route van de Belgische Ardennen..."
       });
     }
   }
