@@ -1,153 +1,214 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { insertLeadSchema, insertChargingStationSchema, insertBrandSchema, insertInfoCategorySchema, insertInfoItemSchema } from "@shared/schema";
+import { insertRouteSchema, insertRegionSchema, insertRouteStopSchema, insertAudioTrackSchema, insertReviewSchema, insertPhotoSchema } from "@shared/schema";
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Brands
-  app.get("/api/brands", async (req, res) => {
+  // Regions
+  app.get("/api/regions", async (req, res) => {
     try {
-      const brands = await storage.getAllBrands();
-      res.json(brands);
+      const regions = await storage.getAllRegions();
+      res.json(regions);
     } catch (error) {
-      res.status(500).json({ message: "Fout bij ophalen van merken" });
+      res.status(500).json({ message: "Fout bij ophalen van regio's" });
     }
   });
 
-  app.get("/api/brands/:id", async (req, res) => {
+  app.get("/api/regions/:id", async (req, res) => {
     try {
-      const brand = await storage.getBrandById(req.params.id);
-      if (!brand) {
-        return res.status(404).json({ message: "Merk niet gevonden" });
+      const region = await storage.getRegionById(req.params.id);
+      if (!region) {
+        return res.status(404).json({ message: "Regio niet gevonden" });
       }
-      res.json(brand);
+      res.json(region);
     } catch (error) {
-      res.status(500).json({ message: "Fout bij ophalen van merk" });
+      res.status(500).json({ message: "Fout bij ophalen van regio" });
     }
   });
 
-  app.post("/api/brands", async (req, res) => {
+  app.post("/api/regions", async (req, res) => {
     try {
-      const validated = insertBrandSchema.parse(req.body);
-      const brand = await storage.createBrand(validated);
-      res.status(201).json(brand);
+      const validated = insertRegionSchema.parse(req.body);
+      const region = await storage.createRegion(validated);
+      res.status(201).json(region);
     } catch (error) {
-      res.status(400).json({ message: "Ongeldige merk gegevens" });
+      res.status(400).json({ message: "Ongeldige regio gegevens" });
     }
   });
 
-  // Charging Stations
-  app.get("/api/charging-stations", async (req, res) => {
+  // Routes
+  app.get("/api/routes", async (req, res) => {
     try {
-      const { brandId, popular } = req.query;
+      const { regionId, popular } = req.query;
       
-      let stations;
-      if (brandId) {
-        stations = await storage.getChargingStationsByBrand(brandId as string);
+      let routes;
+      if (regionId) {
+        routes = await storage.getRoutesByRegion(regionId as string);
       } else if (popular === 'true') {
-        stations = await storage.getPopularChargingStations();
+        routes = await storage.getPopularRoutes();
       } else {
-        stations = await storage.getAllChargingStations();
+        routes = await storage.getAllRoutes();
       }
       
-      res.json(stations);
+      res.json(routes);
     } catch (error) {
-      res.status(500).json({ message: "Fout bij ophalen van laadpalen" });
+      res.status(500).json({ message: "Fout bij ophalen van routes" });
     }
   });
 
-  app.get("/api/charging-stations/:id", async (req, res) => {
+  app.get("/api/routes/:id", async (req, res) => {
     try {
-      const station = await storage.getChargingStationById(req.params.id);
-      if (!station) {
-        return res.status(404).json({ message: "Laadpaal niet gevonden" });
+      const route = await storage.getRouteById(req.params.id);
+      if (!route) {
+        return res.status(404).json({ message: "Route niet gevonden" });
       }
-      res.json(station);
+      res.json(route);
     } catch (error) {
-      res.status(500).json({ message: "Fout bij ophalen van laadpaal" });
+      res.status(500).json({ message: "Fout bij ophalen van route" });
     }
   });
 
-  app.post("/api/charging-stations", async (req, res) => {
+  app.post("/api/routes", async (req, res) => {
     try {
-      const validated = insertChargingStationSchema.parse(req.body);
-      const station = await storage.createChargingStation(validated);
-      res.status(201).json(station);
+      const validated = insertRouteSchema.parse(req.body);
+      const route = await storage.createRoute(validated);
+      res.status(201).json(route);
     } catch (error) {
-      res.status(400).json({ message: "Ongeldige laadpaal gegevens" });
+      res.status(400).json({ message: "Ongeldige route gegevens" });
     }
   });
 
-  // Leads
-  app.get("/api/leads", async (req, res) => {
+  // Route Stops
+  app.get("/api/routes/:routeId/stops", async (req, res) => {
     try {
-      const leads = await storage.getAllLeads();
-      res.json(leads);
+      const stops = await storage.getRouteStops(req.params.routeId);
+      res.json(stops);
     } catch (error) {
-      res.status(500).json({ message: "Fout bij ophalen van leads" });
+      res.status(500).json({ message: "Fout bij ophalen van route stops" });
     }
   });
 
-  app.get("/api/leads/:id", async (req, res) => {
+  app.post("/api/routes/:routeId/stops", async (req, res) => {
     try {
-      const lead = await storage.getLeadById(req.params.id);
-      if (!lead) {
-        return res.status(404).json({ message: "Lead niet gevonden" });
+      const validated = insertRouteStopSchema.parse({
+        ...req.body,
+        routeId: req.params.routeId
+      });
+      const stop = await storage.createRouteStop(validated);
+      res.status(201).json(stop);
+    } catch (error) {
+      res.status(400).json({ message: "Ongeldige stop gegevens" });
+    }
+  });
+
+  // Audio Tracks
+  app.get("/api/routes/:routeId/audio", async (req, res) => {
+    try {
+      const tracks = await storage.getAudioTracksByRoute(req.params.routeId);
+      res.json(tracks);
+    } catch (error) {
+      res.status(500).json({ message: "Fout bij ophalen van audio tracks" });
+    }
+  });
+
+  app.get("/api/stops/:stopId/audio", async (req, res) => {
+    try {
+      const track = await storage.getAudioTrackByStop(req.params.stopId);
+      if (!track) {
+        return res.status(404).json({ message: "Audio track niet gevonden" });
       }
-      res.json(lead);
+      res.json(track);
     } catch (error) {
-      res.status(500).json({ message: "Fout bij ophalen van lead" });
+      res.status(500).json({ message: "Fout bij ophalen van audio track" });
     }
   });
 
-  app.post("/api/leads", async (req, res) => {
+  app.post("/api/audio", async (req, res) => {
     try {
-      const validated = insertLeadSchema.parse(req.body);
-      const lead = await storage.createLead(validated);
-      res.status(201).json(lead);
+      const validated = insertAudioTrackSchema.parse(req.body);
+      const track = await storage.createAudioTrack(validated);
+      res.status(201).json(track);
     } catch (error) {
-      console.error('Lead creation error:', error);
-      res.status(400).json({ message: "Ongeldige lead gegevens", error: error });
+      res.status(400).json({ message: "Ongeldige audio gegevens" });
     }
   });
 
-  // Info Categories
-  app.get("/api/info-categories", async (req, res) => {
+  // Reviews
+  app.get("/api/routes/:routeId/reviews", async (req, res) => {
     try {
-      const categories = await storage.getAllInfoCategories();
-      res.json(categories);
+      const reviews = await storage.getReviewsByRoute(req.params.routeId);
+      res.json(reviews);
     } catch (error) {
-      res.status(500).json({ message: "Fout bij ophalen van info categorieën" });
+      res.status(500).json({ message: "Fout bij ophalen van reviews" });
     }
   });
 
-  app.post("/api/info-categories", async (req, res) => {
+  app.post("/api/routes/:routeId/reviews", async (req, res) => {
     try {
-      const validated = insertInfoCategorySchema.parse(req.body);
-      const category = await storage.createInfoCategory(validated);
-      res.status(201).json(category);
+      const validated = insertReviewSchema.parse({
+        ...req.body,
+        routeId: req.params.routeId
+      });
+      const review = await storage.createReview(validated);
+      res.status(201).json(review);
     } catch (error) {
-      res.status(400).json({ message: "Ongeldige categorie gegevens" });
+      res.status(400).json({ message: "Ongeldige review gegevens" });
     }
   });
 
-  // Info Items
-  app.get("/api/info-items/:categoryId", async (req, res) => {
+  app.get("/api/reviews/:id", async (req, res) => {
     try {
-      const items = await storage.getInfoItemsByCategory(req.params.categoryId);
-      res.json(items);
+      const review = await storage.getReviewById(req.params.id);
+      if (!review) {
+        return res.status(404).json({ message: "Review niet gevonden" });
+      }
+      res.json(review);
     } catch (error) {
-      res.status(500).json({ message: "Fout bij ophalen van info items" });
+      res.status(500).json({ message: "Fout bij ophalen van review" });
     }
   });
 
-  app.post("/api/info-items", async (req, res) => {
+  // Photos
+  app.get("/api/routes/:routeId/photos", async (req, res) => {
     try {
-      const validated = insertInfoItemSchema.parse(req.body);
-      const item = await storage.createInfoItem(validated);
-      res.status(201).json(item);
+      const photos = await storage.getPhotosByRoute(req.params.routeId);
+      res.json(photos);
     } catch (error) {
-      res.status(400).json({ message: "Ongeldige info item gegevens" });
+      res.status(500).json({ message: "Fout bij ophalen van foto's" });
+    }
+  });
+
+  app.get("/api/stops/:stopId/photos", async (req, res) => {
+    try {
+      const photos = await storage.getPhotosByStop(req.params.stopId);
+      res.json(photos);
+    } catch (error) {
+      res.status(500).json({ message: "Fout bij ophalen van foto's" });
+    }
+  });
+
+  app.post("/api/routes/:routeId/photos", async (req, res) => {
+    try {
+      const validated = insertPhotoSchema.parse({
+        ...req.body,
+        routeId: req.params.routeId
+      });
+      const photo = await storage.createPhoto(validated);
+      res.status(201).json(photo);
+    } catch (error) {
+      res.status(400).json({ message: "Ongeldige foto gegevens" });
+    }
+  });
+
+  app.get("/api/photos/:id", async (req, res) => {
+    try {
+      const photo = await storage.getPhotoById(req.params.id);
+      if (!photo) {
+        return res.status(404).json({ message: "Foto niet gevonden" });
+      }
+      res.json(photo);
+    } catch (error) {
+      res.status(500).json({ message: "Fout bij ophalen van foto" });
     }
   });
 

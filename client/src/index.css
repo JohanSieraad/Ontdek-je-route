@@ -24,13 +24,13 @@
   --ring: hsl(20, 14.3%, 4.1%);
   --radius: 0.5rem;
   
-  /* Laadpaalshop themed colors */
-  --laadpaal-blue: hsl(210, 100%, 50%); /* Laadpaalshop blue */
-  --laadpaal-green: hsl(120, 50%, 35%); /* Electric green */
-  --laadpaal-orange: hsl(25, 95%, 55%); /* Energy orange */
-  --laadpaal-gray: hsl(220, 10%, 95%); /* Light gray background */
-  --laadpaal-dark: hsl(220, 15%, 25%); /* Dark text */
-  --laadpaal-accent: hsl(45, 100%, 60%); /* Yellow accent */
+  /* Summer automotive themed colors */
+  --dutch-orange: hsl(32, 95%, 55%); /* Fresh summer orange */
+  --royal-blue: hsl(200, 85%, 45%); /* Summer sky blue */
+  --forest-green: hsl(120, 60%, 50%); /* Fresh green */
+  --purple-accent: hsl(280, 70%, 55%); /* Vibrant purple */
+  --sunset-pink: hsl(340, 75%, 65%); /* Warm pink */
+  --road-yellow: hsl(50, 100%, 60%); /* Road sign yellow */
 }
 
 .dark {
@@ -63,7 +63,7 @@
 
   body {
     @apply font-sans antialiased bg-background text-foreground;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-family: 'Inter', sans-serif;
   }
 }
 

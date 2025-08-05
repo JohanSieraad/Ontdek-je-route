@@ -61,12 +61,12 @@ export default {
           border: "var(--sidebar-border)",
           ring: "var(--sidebar-ring)",
         },
-        "laadpaal-blue": "hsl(var(--laadpaal-blue))",
-        "laadpaal-green": "hsl(var(--laadpaal-green))",
-        "laadpaal-orange": "hsl(var(--laadpaal-orange))",
-        "laadpaal-gray": "hsl(var(--laadpaal-gray))",
-        "laadpaal-dark": "hsl(var(--laadpaal-dark))",
-        "laadpaal-accent": "hsl(var(--laadpaal-accent))",
+        "dutch-orange": "hsl(var(--dutch-orange))",
+        "royal-blue": "hsl(var(--royal-blue))",
+        "forest-green": "hsl(var(--forest-green))",
+        "purple-accent": "hsl(var(--purple-accent))",
+        "sunset-pink": "hsl(var(--sunset-pink))",
+        "road-yellow": "hsl(var(--road-yellow))",
       },
       keyframes: {
         "accordion-down": {
