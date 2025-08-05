@@ -47,6 +47,19 @@ export const audioTracks = pgTable("audio_tracks", {
   transcript: text("transcript"),
 });
 
+// Navigation routes table for future Google Maps/Waze integration
+export const navigationRoutes = pgTable("navigation_routes", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  routeId: varchar("route_id").notNull(),
+  provider: text("provider").notNull(), // 'google', 'waze', 'openstreetmap'
+  routeData: jsonb("route_data"), // Full route response from provider
+  preferences: jsonb("preferences"), // {avoidHighways: boolean, avoidTolls: boolean, avoidFerries: boolean}
+  estimatedDuration: integer("estimated_duration"), // in minutes
+  estimatedDistance: integer("estimated_distance"), // in meters
+  createdAt: text("created_at").notNull().default(sql`(datetime('now'))`),
+  expiresAt: text("expires_at"), // Route cache expiration
+});
+
 export const insertRegionSchema = createInsertSchema(regions).omit({
   id: true,
 });
@@ -63,6 +76,11 @@ export const insertAudioTrackSchema = createInsertSchema(audioTracks).omit({
   id: true,
 });
 
+export const insertNavigationRouteSchema = createInsertSchema(navigationRoutes).omit({
+  id: true,
+  createdAt: true,
+});
+
 export type InsertRegion = z.infer<typeof insertRegionSchema>;
 export type Region = typeof regions.$inferSelect;
 
@@ -74,3 +92,39 @@ export type RouteStop = typeof routeStops.$inferSelect;
 
 export type InsertAudioTrack = z.infer<typeof insertAudioTrackSchema>;
 export type AudioTrack = typeof audioTracks.$inferSelect;
+
+export type InsertNavigationRoute = z.infer<typeof insertNavigationRouteSchema>;
+export type NavigationRoute = typeof navigationRoutes.$inferSelect;
+
+// Navigation types for future implementation
+export interface RoutePreferences {
+  avoidHighways: boolean;
+  avoidTolls: boolean;
+  avoidFerries: boolean;
+  preferScenic: boolean;
+  transportMode: 'driving' | 'walking' | 'bicycling' | 'transit';
+}
+
+export interface Coordinates {
+  lat: number;
+  lng: number;
+}
+
+export interface NavigationStep {
+  instruction: string;
+  distance: string;
+  duration: string;
+  coordinates: Coordinates[];
+}
+
+export interface NavigationResponse {
+  provider: 'google' | 'waze' | 'openstreetmap';
+  routes: {
+    summary: string;
+    duration: string;
+    distance: string;
+    steps: NavigationStep[];
+    coordinates: Coordinates[];
+  }[];
+  preferences: RoutePreferences;
+}

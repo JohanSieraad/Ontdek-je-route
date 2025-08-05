@@ -192,7 +192,11 @@ export class MemStorage implements IStorage {
 
   async createRegion(insertRegion: InsertRegion): Promise<Region> {
     const id = randomUUID();
-    const region: Region = { ...insertRegion, id };
+    const region: Region = { 
+      ...insertRegion, 
+      id,
+      routeCount: insertRegion.routeCount ?? 0
+    };
     this.regions.set(id, region);
     return region;
   }
@@ -215,7 +219,13 @@ export class MemStorage implements IStorage {
 
   async createRoute(insertRoute: InsertRoute): Promise<Route> {
     const id = randomUUID();
-    const route: Route = { ...insertRoute, id };
+    const route: Route = { 
+      ...insertRoute, 
+      id,
+      rating: insertRoute.rating ?? 0,
+      difficulty: insertRoute.difficulty ?? "gemakkelijk",
+      isPopular: insertRoute.isPopular ?? 0
+    };
     this.routes.set(id, route);
     return route;
   }
@@ -228,7 +238,12 @@ export class MemStorage implements IStorage {
 
   async createRouteStop(insertStop: InsertRouteStop): Promise<RouteStop> {
     const id = randomUUID();
-    const stop: RouteStop = { ...insertStop, id };
+    const stop: RouteStop = { 
+      ...insertStop, 
+      id,
+      hasAudio: insertStop.hasAudio ?? 0,
+      coordinates: insertStop.coordinates ?? null
+    };
     this.routeStops.set(id, stop);
     return stop;
   }
@@ -243,7 +258,14 @@ export class MemStorage implements IStorage {
 
   async createAudioTrack(insertTrack: InsertAudioTrack): Promise<AudioTrack> {
     const id = randomUUID();
-    const track: AudioTrack = { ...insertTrack, id };
+    const track: AudioTrack = { 
+      ...insertTrack, 
+      id,
+      routeId: insertTrack.routeId ?? null,
+      stopId: insertTrack.stopId ?? null,
+      fileUrl: insertTrack.fileUrl ?? null,
+      transcript: insertTrack.transcript ?? null
+    };
     this.audioTracks.set(id, track);
     return track;
   }

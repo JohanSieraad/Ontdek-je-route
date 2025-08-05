@@ -83,7 +83,7 @@ export function AudioPlayer({ track }: AudioPlayerProps) {
 
   return (
     <div className="bg-white rounded-lg p-4 border border-gray-200">
-      <audio ref={audioRef} src={track.fileUrl} />
+      <audio ref={audioRef} src={track.fileUrl || undefined} />
       
       <div className="flex items-center justify-between mb-3">
         <span className="text-sm font-medium text-gray-700" data-testid="text-audio-title">

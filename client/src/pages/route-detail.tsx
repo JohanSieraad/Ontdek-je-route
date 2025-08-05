@@ -1,6 +1,7 @@
 import { useParams, Link } from "wouter";
 import { Navigation } from "@/components/navigation";
 import { AudioPlayer } from "@/components/audio-player";
+import { RouteNavigation } from "@/components/route-navigation";
 import { Footer } from "@/components/footer";
 import { useQuery } from "@tanstack/react-query";
 import { Route, RouteStop, AudioTrack } from "@shared/schema";
@@ -188,11 +189,7 @@ export default function RouteDetailPage() {
           </div>
 
           {/* Action Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4">
-            <Button className="flex-1 bg-dutch-orange hover:bg-dutch-orange/90" data-testid="button-start-route">
-              <Play className="mr-2 h-4 w-4" />
-              Route Starten
-            </Button>
+          <div className="flex flex-col sm:flex-row gap-4 mb-8">
             <Button variant="outline" className="flex-1 border-dutch-orange text-dutch-orange hover:bg-dutch-orange hover:text-white" data-testid="button-download-route">
               <Download className="mr-2 h-4 w-4" />
               Route Downloaden
@@ -203,6 +200,13 @@ export default function RouteDetailPage() {
             </Button>
           </div>
         </div>
+
+        {/* Navigation Section */}
+        {stops && stops.length > 0 && (
+          <div className="mb-8">
+            <RouteNavigation route={route} stops={stops} />
+          </div>
+        )}
       </div>
 
       <Footer />

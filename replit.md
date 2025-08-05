@@ -4,6 +4,15 @@
 
 This is a full-stack web application for exploring historical routes throughout the Netherlands. The application allows users to discover various regions, browse curated historical routes, and access audio guides for an immersive cultural experience. Built with React on the frontend and Express.js on the backend, it features a modern, responsive design using shadcn/ui components and Tailwind CSS.
 
+## Recent Changes
+
+### Navigation Integration (January 2025)
+- Added comprehensive navigation system architecture for future Google Maps/Waze integration
+- Created RouteNavigation component with preferences for avoiding highways, tolls, and ferries  
+- Implemented navigation service interfaces supporting multiple providers (Google Maps, Waze, OpenStreetMap)
+- Enhanced route detail pages with navigation controls and transport mode selection
+- Added schema support for navigation routes and preferences storage
+
 ## User Preferences
 
 Preferred communication style: Simple, everyday language.
@@ -32,19 +41,38 @@ Preferred communication style: Simple, everyday language.
   - `routes` - Individual historical routes with metadata and ratings
   - `routeStops` - Waypoints along routes with coordinates and descriptions  
   - `audioTracks` - Audio guide content linked to routes and stops
+  - `navigationRoutes` - Navigation data cache for external routing providers
 - **Validation**: Zod schemas for runtime type validation and API request/response validation
+- **Navigation Types**: Support for route preferences, coordinates, and multi-provider navigation
 
 ### Component Architecture
 - **Layout Components**: Navigation, footer, and responsive mobile-friendly design
-- **Feature Components**: Region cards, route cards, audio player, and interactive map placeholder
+- **Feature Components**: Region cards, route cards, audio player, route navigation, and interactive map placeholder
 - **UI Components**: Comprehensive shadcn/ui component library with consistent theming
 - **Custom Hooks**: Mobile detection, toast notifications, and form handling
+- **Navigation Components**: RouteNavigation with transport mode selection and route preferences
 
 ### Development Workflow
 - **Monorepo Structure**: Shared types and schemas between frontend and backend
 - **Hot Reloading**: Full-stack development with Vite serving frontend and Express backend
 - **Type Safety**: End-to-end TypeScript with shared schema definitions
 - **Code Organization**: Clear separation between client, server, and shared code
+
+## Navigation Features
+
+### Route Navigation System
+- **Multi-Provider Support**: Google Maps, Waze, and OpenStreetMap integration architecture
+- **Route Preferences**: Options to avoid highways, tolls, ferries with scenic route preference
+- **Transport Modes**: Support for driving, cycling, walking, and public transit
+- **Multi-Stop Routes**: Optimized routing through multiple historical stops
+- **Real-Time Integration**: Framework for live traffic and road condition updates
+
+### Future Implementation Plans
+- **Google Maps Integration**: Directions API with Dutch language support and regional optimization
+- **Waze Integration**: Real-time traffic-aware routing for optimal travel times
+- **OpenStreetMap**: Free alternative using OSRM routing engine
+- **Route Caching**: Navigation route storage for improved performance
+- **Offline Support**: Downloaded routes for areas with poor connectivity
 
 ## External Dependencies
 
