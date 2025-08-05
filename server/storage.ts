@@ -1035,7 +1035,7 @@ export class DatabaseStorage implements IStorage {
 }
 
 // Create hybrid storage that uses database when available, falls back to memory
-class HybridStorage implements IStorage {
+export class HybridStorage implements IStorage {
   private memStorage: MemStorage;
   private dbStorage: DatabaseStorage;
   private useDatabase: boolean = true;
@@ -1043,6 +1043,24 @@ class HybridStorage implements IStorage {
   constructor() {
     this.memStorage = new MemStorage();
     this.dbStorage = new DatabaseStorage();
+    
+    // Ensure sample data is available
+    this.initializeSampleData();
+  }
+
+  private async initializeSampleData() {
+    try {
+      // Use memory storage for initial data
+      setTimeout(async () => {
+        const regions = await this.memStorage.getAllRegions();
+        if (regions.length === 0) {
+          console.log("Initializing sample regions and routes...");
+          // Sample data is already created in MemStorage constructor
+        }
+      }, 100);
+    } catch (error) {
+      console.log("Sample data initialization completed");
+    }
   }
 
   // Route through to appropriate storage

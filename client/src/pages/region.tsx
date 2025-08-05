@@ -4,6 +4,7 @@ import { Navigation } from "@/components/navigation";
 import { RouteCard } from "@/components/route-card";
 import { AddRouteSection } from "@/components/add-route-section";
 import { Footer } from "@/components/footer";
+import { AddRouteButton } from "@/components/add-route-button";
 import { useQuery } from "@tanstack/react-query";
 import { Region, Route } from "@shared/schema";
 import { ArrowLeft } from "lucide-react";
@@ -108,13 +109,20 @@ export default function RegionPage() {
       {/* Routes Grid */}
       <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="mb-8">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
-              Routes in {region.name}
-            </h2>
-            <p className="text-lg text-gray-600">
-              Ontdek alle historische routes in deze regio
-            </p>
+          <div className="flex items-center justify-between mb-8">
+            <div>
+              <h2 className="text-3xl font-bold text-gray-900 mb-4">
+                Routes in {region.name}
+              </h2>
+              <p className="text-lg text-gray-600">
+                Ontdek alle historische routes in deze regio
+              </p>
+            </div>
+            <AddRouteButton 
+              regionId={region.id}
+              regionName={region.name}
+              className="shrink-0"
+            />
           </div>
 
           {routesLoading ? (
