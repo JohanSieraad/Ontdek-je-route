@@ -18,11 +18,11 @@ export function HeroBanner() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 drop-shadow-lg">
-            Ontdek Prachtige Routes
+            Ontdek de Mooiste Autoroutes
           </h1>
           <p className="text-xl text-white/90 max-w-3xl mx-auto mb-8 drop-shadow-md">
-            Verken historische routes in Nederland en België met GPS navigatie, 
-            audio gidsen en verhalen van andere reizigers
+            Rijd langs kastelen, pittoreske dorpjes en toprestaurants in Nederland en België. 
+            Compleet met parkeerplekken, fotostops en culinaire ervaringen.
           </p>
           
           {/* Country Selection with Flags */}

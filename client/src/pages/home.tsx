@@ -33,13 +33,13 @@ export default function Home() {
       <HeroBanner />
 
       {/* Country and Region Selection */}
-      <section className="py-16 bg-white">
+      <section className="py-16 bg-gradient-to-br from-orange-50 via-white to-pink-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h3 className="text-3xl font-bold text-gray-900 mb-4">Kies Uw Bestemming</h3>
+            <h3 className="text-3xl font-bold text-gray-900 mb-4">🚗 Kies Uw Auto Avontuur</h3>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Ontdek historische routes in Nederland en België. Elk land biedt unieke culturele ervaringen 
-              en adembenemende landschappen om te verkennen.
+              Rijd langs kastelen, pittoreske dorpjes en toprestaurants in Nederland en België. 
+              Compleet met parkeerplekken, culinaire stops en Instagram-waardige fotomomenten.
             </p>
           </div>
 
@@ -106,12 +106,13 @@ export default function Home() {
       </section>
 
       {/* Featured Routes Section */}
-      <section className="py-16 bg-gray-50">
+      <section className="py-16 bg-gradient-to-br from-blue-50 to-green-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h3 className="text-3xl font-bold text-gray-900 mb-4">Populaire Routes</h3>
+            <h3 className="text-3xl font-bold text-gray-900 mb-4">🏰 Populaire Autoroutes</h3>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Ontdek onze meest populaire historische routes die bezoekers uit heel Nederland aantrekken.
+              Ontdek onze meest gewilde autoroutes langs kastelen, mooie dorpjes en toprestaurants. 
+              Perfect voor een dagje uit met de auto!
             </p>
           </div>
 

@@ -59,44 +59,44 @@ export class MemStorage implements IStorage {
     const dutchRegions: InsertRegion[] = [
       {
         name: "Noord-Holland",
-        description: "Ontdek de hoofdstad Amsterdam, historische steden zoals Haarlem en de prachtige Zaanse Schans.",
+        description: "Rijd langs kastelen, pittoreske dorpjes en toprestaurants. Van Muiderslot tot Volendam, perfecte autoroutes met culinaire stops.",
         routeCount: 8,
-        estimatedDuration: "2-4 uur per route",
+        estimatedDuration: "5-8 uur rijden",
         imageUrl: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3"
       },
       {
         name: "Zuid-Holland",
-        description: "Van Den Haag tot Rotterdam, ontdek de politieke en maritieme geschiedenis van Nederland.",
-        routeCount: 12,
-        estimatedDuration: "1.5-3 uur per route",
+        description: "Autoroutes langs historische steden, molens en de kust. Van Kinderdijk tot Scheveningen met restaurant stops.",
+        routeCount: 6,
+        estimatedDuration: "4-7 uur rijden",
         imageUrl: "https://images.unsplash.com/photo-1464207687429-7505649dae38?ixlib=rb-4.0.3"
       },
       {
         name: "Utrecht",
-        description: "Het hart van Nederland met de Dom van Utrecht en eeuwenoude handelsroutes.",
-        routeCount: 6,
-        estimatedDuration: "2-5 uur per route",
+        description: "Rijd door het groene hart met landgoederen, kastelen en charmante dorpjes. Perfecte lunch spots onderweg.",
+        routeCount: 4,
+        estimatedDuration: "3-6 uur rijden",
         imageUrl: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3"
       },
       {
         name: "Zeeland",
-        description: "Ontdek de Deltawerken en de rijke maritieme geschiedenis van de Zeeuwse eilanden.",
-        routeCount: 5,
-        estimatedDuration: "3-6 uur per route",
+        description: "Kustroutes langs de Deltawerken, strand restaurants en vissersdorpjes. Stop bij Grand Café Ristorante Rossini (Middelburg).",
+        routeCount: 3,
+        estimatedDuration: "4-6 uur rijden",
         imageUrl: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3"
       },
       {
         name: "Gelderland",
-        description: "Van Arnhem tot de Hoge Veluwe, ontdek kastelen, natuur en oorlogsgeschiedenis.",
-        routeCount: 10,
-        estimatedDuration: "2-4 uur per route",
+        description: "Kasteel routes door de Veluwe met wildparken en restaurants. Van Kasteel Het Loo tot Restaurant De Echoput.",
+        routeCount: 5,
+        estimatedDuration: "5-8 uur rijden",
         imageUrl: "https://images.unsplash.com/photo-1542273917363-3b1817f69a2d?ixlib=rb-4.0.3"
       },
       {
         name: "Overijssel",
-        description: "Hanzestad Deventer, het Nationaal Park Weerribben-Wieden en historische dorpen.",
-        routeCount: 7,
-        estimatedDuration: "1.5-3.5 uur per route",
+        description: "Hanzestad routes langs Deventer, Zwolle en Giethoorn. Met lunch stops bij historische grand cafés.",
+        routeCount: 4,
+        estimatedDuration: "3-6 uur rijden",
         imageUrl: "https://images.unsplash.com/photo-1542273917363-3b1817f69a2d?ixlib=rb-4.0.3"
       }
     ];
@@ -105,9 +105,9 @@ export class MemStorage implements IStorage {
     const belgianRegions: InsertRegion[] = [
       {
         name: "Belgische Ardennen",
-        description: "Ontdek de prachtige natuurgebieden, historische kastelen en charmante dorpjes van de Belgische Ardennen.",
-        routeCount: 6,
-        estimatedDuration: "3-6 uur per route", 
+        description: "Autoroutes langs kastelen, bossen en Belgische brouwerijen. Stop bij Kasteel Bouillon en Brasserie d'Achouffe.",
+        routeCount: 4,
+        estimatedDuration: "6-8 uur rijden", 
         imageUrl: "https://images.unsplash.com/photo-1551632811-561732d1e306?ixlib=rb-4.0.3"
       }
     ];
@@ -117,103 +117,103 @@ export class MemStorage implements IStorage {
       this.createRegion(region);
     });
 
-    // Initialize with authentic Dutch routes (8 routes for Noord-Holland)
+    // Automotive routes voor autorijders - echte routes langs mooie dorpjes en bezienswaardigheden
     const dutchRoutes: InsertRoute[] = [
       {
-        title: "Amsterdam Grachtenroute",
-        description: "Wandel langs de beroemde grachtengordel en ontdek de Gouden Eeuw van Amsterdam. Bezoek historische koopmanspanden en verborgen hofjes.",
+        title: "Kastelen Route Noord-Holland",
+        description: "Spectaculaire autoroute langs Nederlandse kastelen: Muiderslot, Kasteel De Haar en Slot Assumburg. Stop bij Restaurant De Kazerne (Muiden) voor lunch met kasteelzicht. Perfecte fotomomenten bij historische vestingwerken.",
         regionId: Array.from(this.regions.values()).find(r => r.name === "Noord-Holland")?.id || "",
-        category: "Stadswandeling",
-        rating: 4.8,
-        duration: "2.5 uur",
-        distance: "3.2 km",
-        imageUrl: "https://images.unsplash.com/photo-1548707309-dcebeab9ea9b?ixlib=rb-4.0.3",
+        category: "Kastelen & Eten",
+        rating: 4.9,
+        duration: "6 uur rijden",
+        distance: "185 km",
+        imageUrl: "https://images.unsplash.com/photo-1518709268805-4e9042af2176?ixlib=rb-4.0.3",
         difficulty: "gemakkelijk",
         isPopular: 1
       },
       {
-        title: "Legmeerroute Uithoorn",
-        description: "Fietsroute door het groene hart van de Randstad, langs de Legmeer en door historische dorpjes.",
+        title: "Pittoreske Dorpjes Route",
+        description: "Autoroute langs de mooiste dorpjes: Volendam, Marken, Giethoorn en Staphorst. Stop bij Restaurant Spaander (Volendam) voor verse vis en bij Grand Café Giethoorn voor koffie met dorpszicht. Instagram-waardige fotostops bij traditionele huizen.",
         regionId: Array.from(this.regions.values()).find(r => r.name === "Noord-Holland")?.id || "",
-        category: "Fietsen",
-        rating: 4.3,
-        duration: "3 uur",
-        distance: "35 km",
+        category: "Dorpjes & Fotografie",
+        rating: 4.7,
+        duration: "8 uur rijden",
+        distance: "220 km",
         imageUrl: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3",
-        difficulty: "gemiddeld",
-        isPopular: 0
-      },
-      {
-        title: "Duinwaterroute Castricum",
-        description: "Ontdek de duinen en het strand van Castricum op deze prachtige fietsroute door het Noord-Hollands Duinreservaat.",
-        regionId: Array.from(this.regions.values()).find(r => r.name === "Noord-Holland")?.id || "",
-        category: "Natuur",
-        rating: 4.5,
-        duration: "4 uur",
-        distance: "43 km",
-        imageUrl: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3",
-        difficulty: "gemiddeld",
+        difficulty: "gemakkelijk",
         isPopular: 1
       },
       {
-        title: "Ronde van Noord-Holland",
-        description: "De klassieke Ronde van Noord-Holland, startend vanuit Alkmaar door het prachtige West-Friese landschap.",
+        title: "Nederlandse Bierroute",
+        description: "Autoroute langs ambachtelijke brouwerijen: Brouwerij 't IJ (Amsterdam), Jopen Brouwerij (Haarlem) en Brouwerij De Molen (Bodegraven). Inclusief proeverijen, biertuinen voor lunch en brouwerij tours. Designate driver aanbevolen!",
         regionId: Array.from(this.regions.values()).find(r => r.name === "Noord-Holland")?.id || "",
-        category: "Fietsen",
-        rating: 4.6,
-        duration: "6 uur",
-        distance: "85 km",
-        imageUrl: "https://images.unsplash.com/photo-1502780402662-acc01917478e?ixlib=rb-4.0.3",
-        difficulty: "zwaar",
-        isPopular: 1
-      },
-      {
-        title: "Gooise Heideroute",
-        description: "Fietsroute door de heide en bossen van het Gooi, met prachtige uitzichten en historische landgoederen.",
-        regionId: Array.from(this.regions.values()).find(r => r.name === "Noord-Holland")?.id || "",
-        category: "Natuur",
-        rating: 4.4,
-        duration: "2.5 uur",
-        distance: "30 km",
-        imageUrl: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?ixlib=rb-4.0.3",
-        difficulty: "gemiddeld",
-        isPopular: 0
-      },
-      {
-        title: "Texel Natuurroute",
-        description: "Ontdek de natuurgebieden van Texel per fiets, van De Hoge Berg tot De Slufter.",
-        regionId: Array.from(this.regions.values()).find(r => r.name === "Noord-Holland")?.id || "",
-        category: "Natuur",
+        category: "Bier & Cultuur",
         rating: 4.8,
-        duration: "4 uur",
-        distance: "42 km",
-        imageUrl: "https://images.unsplash.com/photo-1516833398908-1e85ac4c4b56?ixlib=rb-4.0.3",
-        difficulty: "gemiddeld",
+        duration: "7 uur rijden",
+        distance: "160 km",
+        imageUrl: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3",
+        difficulty: "gemakkelijk",
         isPopular: 1
       },
       {
-        title: "Zaanse Schans Cultuurroute",
-        description: "Wandelroute langs de historische molens en ambachten van de Zaanse Schans.",
+        title: "Kustroute met Strandpaviljoen Stops",
+        description: "Prachtige autoroute langs de Nederlandse kust: Zandvoort, Noordwijk, Scheveningen. Stop bij Beach Restaurant Tijn (Zandvoort) voor lunch op het strand, Strandpaviljoen De Brekers (Noordwijk) voor cocktails met zeezicht. Perfect voor zonsondergangfoto's.",
         regionId: Array.from(this.regions.values()).find(r => r.name === "Noord-Holland")?.id || "",
-        category: "Cultuur",
-        rating: 4.5,
-        duration: "2 uur",
-        distance: "4.5 km",
+        category: "Strand & Restaurants",
+        rating: 4.6,
+        duration: "5 uur rijden",
+        distance: "125 km",
+        imageUrl: "https://images.unsplash.com/photo-1502780402662-acc01917478e?ixlib=rb-4.0.3",
+        difficulty: "gemakkelijk",
+        isPopular: 1
+      },
+      {
+        title: "Landgoederen & Tuinen Route",
+        description: "Luxe autoroute langs historische landgoederen: Keukenhof, Hortus Botanicus en Kasteel Groeneveld. Stop bij Restaurant De Kas (Utrecht) voor lunchen tussen de bloemen. Fotogenie tuinen en perfecte picknickplekken bij historische villa's.",
+        regionId: Array.from(this.regions.values()).find(r => r.name === "Noord-Holland")?.id || "",
+        category: "Natuur & Fotografie",
+        rating: 4.8,
+        duration: "5 uur rijden",
+        distance: "140 km",
+        imageUrl: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?ixlib=rb-4.0.3",
+        difficulty: "gemakkelijk",
+        isPopular: 1
+      },
+      {
+        title: "Waddeneiland Auto & Ferry Avontuur",
+        description: "Unieke autoroute inclusief veerboten naar Texel en Vlieland. Stop bij Strandpaviljoen Paal 17 voor lunch op het strand, Restaurant Topido (Den Burg) voor lokale specialiteiten. Vuurtoren De Cocksdorp voor iconische zonsondergangfoto's.",
+        regionId: Array.from(this.regions.values()).find(r => r.name === "Noord-Holland")?.id || "",
+        category: "Eilanden & Zee",
+        rating: 4.8,
+        duration: "Volledige dag",
+        distance: "180 km + ferry",
+        imageUrl: "https://images.unsplash.com/photo-1516833398908-1e85ac4c4b56?ixlib=rb-4.0.3",
+        difficulty: "gemakkelijk",
+        isPopular: 1
+      },
+      {
+        title: "Hollands Erfgoed Auto Route",
+        description: "Autoroute langs Nederlandse iconen: Zaanse Schans molens, Kinderdijk en Waterland. Stop bij Restaurant De Hoop op Swarte Walvis (Zaandam) voor traditionele Nederlandse keuken. Molens en historische huizen perfect voor Instagram-foto's.",
+        regionId: Array.from(this.regions.values()).find(r => r.name === "Noord-Holland")?.id || "",
+        category: "Nederlandse Cultuur",
+        rating: 4.7,
+        duration: "6 uur rijden",
+        distance: "165 km",
         imageUrl: "https://images.unsplash.com/photo-1602328493548-21e1b34d92d8?ixlib=rb-4.0.3",
         difficulty: "gemakkelijk",
         isPopular: 1
       },
       {
-        title: "Noord-Hollandpad Wandeling",
-        description: "Een etappe van het 284 km lange Noord-Hollandpad, door diverse landschappen van Noord-Holland.",
+        title: "Nederlandse Kaas & Boerderij Route",
+        description: "Culinaire autoroute langs kaasboerderijen: Reypenaer Kaasmakerij (Amsterdam), Alkmaar Kaasmarkt en Beenster Cheese. Stop bij Boerderij Restaurant De Vier Seizoenen voor kaasplank met wijn. Authentieke kaasmakerijen en koeienweiden voor landelijke foto's.",
         regionId: Array.from(this.regions.values()).find(r => r.name === "Noord-Holland")?.id || "",
-        category: "Wandelen",
-        rating: 4.2,
-        duration: "5 uur",
-        distance: "18 km",
+        category: "Eten & Cultuur",
+        rating: 4.6,
+        duration: "5 uur rijden",
+        distance: "130 km",
         imageUrl: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3",
-        difficulty: "gemiddeld",
-        isPopular: 0
+        difficulty: "gemakkelijk",
+        isPopular: 1
       },
       {
         title: "Kinderdijk Molens Route",

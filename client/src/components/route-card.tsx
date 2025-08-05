@@ -11,14 +11,23 @@ interface RouteCardProps {
 export function RouteCard({ route }: RouteCardProps) {
   const getCategoryColor = (category: string) => {
     switch (category.toLowerCase()) {
-      case 'stadswandeling':
-        return 'bg-royal-blue text-white';
-      case 'natuur & cultuur':
-        return 'bg-forest-green text-white';
-      case 'geschiedenis':
-        return 'bg-purple-accent text-white';
+      case 'kastelen & eten':
+      case 'kastelen & cultuur':
+        return 'bg-gradient-to-r from-purple-accent to-royal-blue text-white';
+      case 'dorpjes & fotografie':
+      case 'natuur & fotografie':
+        return 'bg-gradient-to-r from-forest-green to-dutch-orange text-white';
+      case 'bier & cultuur':
+      case 'eten & cultuur':
+        return 'bg-gradient-to-r from-dutch-orange to-sunset-pink text-white';
+      case 'strand & restaurants':
+        return 'bg-gradient-to-r from-royal-blue to-forest-green text-white';
+      case 'eilanden & zee':
+        return 'bg-gradient-to-r from-royal-blue to-purple-accent text-white';
+      case 'nederlandse cultuur':
+        return 'bg-gradient-to-r from-dutch-orange to-royal-blue text-white';
       default:
-        return 'bg-gray-500 text-white';
+        return 'bg-gradient-to-r from-gray-500 to-gray-600 text-white';
     }
   };
 
@@ -66,10 +75,10 @@ export function RouteCard({ route }: RouteCardProps) {
             </div>
             <Link href={`/route/${route.id}`}>
               <Button 
-                className="bg-dutch-orange text-white hover:bg-dutch-orange/90 text-sm"
+                className="bg-gradient-to-r from-dutch-orange to-sunset-pink text-white hover:from-dutch-orange/90 hover:to-sunset-pink/90 text-sm shadow-md"
                 data-testid={`button-start-route-${route.id}`}
               >
-                Start Route
+                🚗 Start Autoroute
               </Button>
             </Link>
           </div>

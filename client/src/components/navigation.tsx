@@ -49,7 +49,7 @@ export function Navigation() {
           <Link href="/">
             <div className="flex items-center space-x-2 cursor-pointer" data-testid="link-home">
               <MapPin className="h-8 w-8 text-dutch-orange" />
-              <h1 className="text-xl font-bold text-gray-900">Nederlandse Routes</h1>
+              <h1 className="text-xl font-bold text-gray-900">AutoRoutes Nederland</h1>
             </div>
           </Link>
           
@@ -95,9 +95,9 @@ export function Navigation() {
               </div>
             </div>
             
-            <Button className="bg-dutch-orange text-white hover:bg-dutch-orange/90" data-testid="button-search">
+            <Button className="bg-gradient-to-r from-dutch-orange to-sunset-pink text-white hover:from-dutch-orange/90 hover:to-sunset-pink/90 shadow-lg" data-testid="button-search">
               <Search className="mr-2 h-4 w-4" />
-              Zoeken
+              Zoek Routes
             </Button>
           </nav>
 

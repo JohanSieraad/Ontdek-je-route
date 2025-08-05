@@ -61,6 +61,12 @@ export default {
           border: "var(--sidebar-border)",
           ring: "var(--sidebar-ring)",
         },
+        "dutch-orange": "hsl(var(--dutch-orange))",
+        "royal-blue": "hsl(var(--royal-blue))",
+        "forest-green": "hsl(var(--forest-green))",
+        "purple-accent": "hsl(var(--purple-accent))",
+        "sunset-pink": "hsl(var(--sunset-pink))",
+        "road-yellow": "hsl(var(--road-yellow))",
       },
       keyframes: {
         "accordion-down": {
