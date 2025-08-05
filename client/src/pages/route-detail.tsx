@@ -3,6 +3,7 @@ import { useParams, Link } from "wouter";
 import { Navigation } from "@/components/navigation";
 import { AudioPlayer } from "@/components/audio-player";
 import { RouteNavigation } from "@/components/route-navigation";
+import { NavigationOptions } from "@/components/navigation-options";
 import { ReviewsSection } from "@/components/reviews-section";
 import { PhotosSection } from "@/components/photos-section";
 import { Footer } from "@/components/footer";
@@ -192,7 +193,7 @@ export default function RouteDetailPage() {
                 ))}
               </div>
             ) : (
-              <p className="text-gray-500 text-center py-4">Geen stops gevonden voor deze route.</p>
+              <NavigationOptions route={route} />
             )}
           </div>
 
