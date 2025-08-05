@@ -1,19 +1,104 @@
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
-import { MapPin, Route, Clock } from "lucide-react";
+import { MapPin, Route, Clock, ChevronLeft, ChevronRight } from "lucide-react";
+import { useState, useEffect } from "react";
+
+// Background images for the carousel
+const backgroundImages = [
+  {
+    url: 'https://images.unsplash.com/photo-1584464491033-06628f3a6b7b?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80',
+    alt: 'Rivier de Vecht met historische villa\'s',
+    location: 'Rivier de Vecht'
+  },
+  {
+    url: 'https://images.unsplash.com/photo-1581833971358-2c8b550f87b3?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80',
+    alt: 'Historische binnenstad van Gouda',
+    location: 'Gouda Binnenstad'
+  },
+  {
+    url: 'https://images.unsplash.com/photo-1551632811-561732d1e306?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80',
+    alt: 'Bossen van de Belgische Ardennen',
+    location: 'Belgische Ardennen'
+  }
+];
 
 export function HeroBanner() {
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  // Auto-advance carousel every 5 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prev) => (prev + 1) % backgroundImages.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const nextImage = () => {
+    setCurrentImageIndex((prev) => (prev + 1) % backgroundImages.length);
+  };
+
+  const prevImage = () => {
+    setCurrentImageIndex((prev) => (prev - 1 + backgroundImages.length) % backgroundImages.length);
+  };
   return (
     <div className="relative py-20 overflow-hidden">
-      {/* Background Image */}
-      <div 
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style={{
-          backgroundImage: `url('https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80')`
-        }}
-      ></div>
+      {/* Background Image Carousel */}
+      <div className="absolute inset-0">
+        {backgroundImages.map((image, index) => (
+          <div
+            key={index}
+            className={`absolute inset-0 bg-cover bg-center bg-no-repeat transition-opacity duration-1000 ${
+              index === currentImageIndex ? 'opacity-100' : 'opacity-0'
+            }`}
+            style={{
+              backgroundImage: `url('${image.url}')`
+            }}
+          />
+        ))}
+      </div>
+      
+      {/* Carousel Controls */}
+      <button
+        onClick={prevImage}
+        className="absolute left-4 top-1/2 transform -translate-y-1/2 z-10 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full p-3 transition-all duration-200 group"
+        data-testid="carousel-prev"
+      >
+        <ChevronLeft className="h-6 w-6 text-white group-hover:scale-110 transition-transform" />
+      </button>
+      
+      <button
+        onClick={nextImage}
+        className="absolute right-4 top-1/2 transform -translate-y-1/2 z-10 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full p-3 transition-all duration-200 group"
+        data-testid="carousel-next"
+      >
+        <ChevronRight className="h-6 w-6 text-white group-hover:scale-110 transition-transform" />
+      </button>
+      
+      {/* Carousel Indicators */}
+      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-10 flex space-x-2">
+        {backgroundImages.map((_, index) => (
+          <button
+            key={index}
+            onClick={() => setCurrentImageIndex(index)}
+            className={`w-3 h-3 rounded-full transition-all duration-200 ${
+              index === currentImageIndex
+                ? 'bg-white shadow-lg scale-110'
+                : 'bg-white/50 hover:bg-white/75'
+            }`}
+            data-testid={`carousel-indicator-${index}`}
+          />
+        ))}
+      </div>
+      
+      {/* Location Label */}
+      <div className="absolute top-4 right-4 z-10 bg-black/30 backdrop-blur-sm rounded-lg px-4 py-2">
+        <p className="text-white text-sm font-medium">
+          📍 {backgroundImages[currentImageIndex].location}
+        </p>
+      </div>
+      
       {/* Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-900/70 to-orange-800/70"></div>
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-900/60 to-orange-800/60"></div>
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
         <div className="text-center mb-12">
