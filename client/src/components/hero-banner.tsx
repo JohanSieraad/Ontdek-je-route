@@ -73,10 +73,13 @@ export function HeroBanner() {
           </div>
         </div>
 
-        {/* Floating Discovery Button */}
-        <div className="flex justify-center animate-float mb-8">
-          <div className="bg-gradient-to-r from-dutch-orange to-sunset-pink text-white px-4 py-2 rounded-full text-sm font-medium shadow-lg animate-pulse-glow">
-            ✨ Ontdek je perfecte autoroute
+        {/* Floating Discovery Stats */}
+        <div className="flex justify-center space-x-4 animate-float mb-8">
+          <div className="bg-gradient-to-r from-dutch-orange to-sunset-pink text-white px-6 py-3 rounded-full text-sm font-medium shadow-lg animate-pulse-glow">
+            🚗 22 autoroutes beschikbaar
+          </div>
+          <div className="bg-gradient-to-r from-royal-blue to-sky-blue text-white px-6 py-3 rounded-full text-sm font-medium shadow-lg animate-pulse-glow">
+            📍 1.200+ km routes
           </div>
         </div>
 

@@ -15,6 +15,7 @@ This is a full-stack web application for exploring historical routes throughout 
 - **Photography focus**: Instagram-worthy stops at castles, villages, and scenic viewpoints
 - **Updated UI/UX**: Hero banner, navigation, and route cards now reflect automotive theme
 - **Enhanced descriptions**: All routes now feature parking info, restaurant recommendations, and photo opportunities
+- **Playful micro-interactions**: Added discovery animations, hover effects, floating elements, and route stats in hero banner
 
 ### Belgian Ardennes Expansion (January 2025)
 - Added Belgium as new country with focus on Belgian Ardennes region
