@@ -33,29 +33,30 @@ export function RouteCard({ route }: RouteCardProps) {
 
   return (
     <div 
-      className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow"
+      className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transform hover:scale-105 transition-all duration-300 hover:-translate-y-2 group"
       data-testid={`card-route-${route.id}`}
     >
       <div className="md:flex">
-        <div className="md:w-1/2">
+        <div className="md:w-1/2 relative overflow-hidden">
           <img 
             src={route.imageUrl} 
             alt={route.title} 
-            className="w-full h-48 md:h-full object-cover"
+            className="w-full h-48 md:h-full object-cover group-hover:scale-110 transition-transform duration-500"
             data-testid={`img-route-${route.id}`}
           />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
         </div>
         <div className="md:w-1/2 p-6">
           <div className="flex items-center justify-between mb-3">
             <Badge 
-              className={getCategoryColor(route.category)}
+              className={`${getCategoryColor(route.category)} transform group-hover:scale-110 transition-transform duration-200 shadow-md`}
               data-testid={`badge-category-${route.id}`}
             >
               {route.category}
             </Badge>
-            <div className="flex items-center text-yellow-500">
-              <Star className="h-4 w-4" />
-              <span className="ml-1 text-sm font-medium text-gray-700" data-testid={`text-rating-${route.id}`}>
+            <div className="flex items-center text-yellow-500 group-hover:text-yellow-400 transition-colors duration-200">
+              <Star className="h-4 w-4 group-hover:animate-pulse" />
+              <span className="ml-1 text-sm font-medium text-gray-700 group-hover:text-gray-900 transition-colors duration-200" data-testid={`text-rating-${route.id}`}>
                 {route.rating}
               </span>
             </div>
@@ -75,7 +76,7 @@ export function RouteCard({ route }: RouteCardProps) {
             </div>
             <Link href={`/route/${route.id}`}>
               <Button 
-                className="bg-gradient-to-r from-dutch-orange to-sunset-pink text-white hover:from-dutch-orange/90 hover:to-sunset-pink/90 text-sm shadow-md"
+                className="bg-gradient-to-r from-dutch-orange to-sunset-pink text-white hover:from-dutch-orange/90 hover:to-sunset-pink/90 text-sm shadow-md transform hover:scale-105 transition-all duration-200 hover:shadow-lg animate-bounce-subtle group-hover:animate-none"
                 data-testid={`button-start-route-${route.id}`}
               >
                 🚗 Start Autoroute

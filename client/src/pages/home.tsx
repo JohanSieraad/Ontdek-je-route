@@ -72,8 +72,10 @@ export default function Home() {
                   <h4 className="text-2xl font-bold text-gray-900">Nederland</h4>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {regions.filter(region => !region.name.includes("Belgische")).map((region) => (
-                    <RegionCard key={region.id} region={region} />
+                  {regions.filter(region => !region.name.includes("Belgische")).map((region, index) => (
+                    <div key={region.id} className={`animate-discovery-reveal animate-discovery-delay-${Math.min(index + 1, 4)}`}>
+                      <RegionCard region={region} />
+                    </div>
                   ))}
                 </div>
               </div>
@@ -91,8 +93,10 @@ export default function Home() {
                   <h4 className="text-2xl font-bold text-gray-900">België</h4>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {regions.filter(region => region.name.includes("Belgische")).map((region) => (
-                    <RegionCard key={region.id} region={region} />
+                  {regions.filter(region => region.name.includes("Belgische")).map((region, index) => (
+                    <div key={region.id} className={`animate-discovery-reveal animate-discovery-delay-${Math.min(index + 1, 4)}`}>
+                      <RegionCard region={region} />
+                    </div>
                   ))}
                 </div>
               </div>
@@ -134,8 +138,10 @@ export default function Home() {
             </div>
           ) : popularRoutes && popularRoutes.length > 0 ? (
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              {popularRoutes.map((route) => (
-                <RouteCard key={route.id} route={route} />
+              {popularRoutes.map((route, index) => (
+                <div key={route.id} className={`animate-discovery-reveal animate-discovery-delay-${Math.min(index + 1, 4)}`}>
+                  <RouteCard route={route} />
+                </div>
               ))}
             </div>
           ) : (

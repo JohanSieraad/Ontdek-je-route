@@ -47,9 +47,9 @@ export function Navigation() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <Link href="/">
-            <div className="flex items-center space-x-2 cursor-pointer" data-testid="link-home">
-              <MapPin className="h-8 w-8 text-dutch-orange" />
-              <h1 className="text-xl font-bold text-gray-900">AutoRoutes Nederland</h1>
+            <div className="flex items-center space-x-2 cursor-pointer group" data-testid="link-home">
+              <MapPin className="h-8 w-8 text-dutch-orange group-hover:animate-wiggle transition-all duration-200" />
+              <h1 className="text-xl font-bold text-gray-900 group-hover:text-dutch-orange transition-colors duration-200">AutoRoutes Nederland</h1>
             </div>
           </Link>
           
@@ -58,8 +58,8 @@ export function Navigation() {
             {navLinks.map((link) => (
               <Link key={link.href} href={link.href}>
                 <a 
-                  className={`text-gray-700 hover:text-dutch-orange transition-colors font-medium ${
-                    isActive(link.href) ? 'text-dutch-orange' : ''
+                  className={`text-gray-700 hover:text-dutch-orange transition-all duration-200 font-medium transform hover:scale-105 ${
+                    isActive(link.href) ? 'text-dutch-orange animate-bounce-subtle' : ''
                   }`}
                   data-testid={`link-${link.label.toLowerCase().replace(' ', '-')}`}
                 >

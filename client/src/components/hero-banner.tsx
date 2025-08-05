@@ -17,10 +17,10 @@ export function HeroBanner() {
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
         <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 drop-shadow-lg">
+          <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 drop-shadow-lg animate-discovery-reveal">
             Ontdek de Mooiste Autoroutes
           </h1>
-          <p className="text-xl text-white/90 max-w-3xl mx-auto mb-8 drop-shadow-md">
+          <p className="text-xl text-white/90 max-w-3xl mx-auto mb-8 drop-shadow-md animate-discovery-reveal animate-discovery-delay-1">
             Rijd langs kastelen, pittoreske dorpjes en toprestaurants in Nederland en België. 
             Compleet met parkeerplekken, fotostops en culinaire ervaringen.
           </p>
@@ -30,7 +30,7 @@ export function HeroBanner() {
             <a href="#dutch-regions">
               <Button 
                 size="lg" 
-                className="bg-white/95 hover:bg-white text-gray-900 border-2 border-white/30 hover:border-dutch-orange transition-all duration-200 min-w-[200px] h-16 shadow-lg hover:shadow-xl"
+                className="bg-white/95 hover:bg-white text-gray-900 border-2 border-white/30 hover:border-dutch-orange transition-all duration-300 min-w-[200px] h-16 shadow-lg hover:shadow-2xl transform hover:scale-105 hover:-translate-y-1 interactive-hover animate-discovery-reveal animate-discovery-delay-2"
                 data-testid="button-nederland"
               >
                 <div className="flex items-center gap-3">
@@ -52,7 +52,7 @@ export function HeroBanner() {
             <a href="#belgian-regions">
               <Button 
                 size="lg" 
-                className="bg-white/95 hover:bg-white text-gray-900 border-2 border-white/30 hover:border-dutch-orange transition-all duration-200 min-w-[200px] h-16 shadow-lg hover:shadow-xl"
+                className="bg-white/95 hover:bg-white text-gray-900 border-2 border-white/30 hover:border-dutch-orange transition-all duration-300 min-w-[200px] h-16 shadow-lg hover:shadow-2xl transform hover:scale-105 hover:-translate-y-1 interactive-hover animate-discovery-reveal animate-discovery-delay-3"
                 data-testid="button-belgie"
               >
                 <div className="flex items-center gap-3">
@@ -73,10 +73,17 @@ export function HeroBanner() {
           </div>
         </div>
 
+        {/* Floating Discovery Button */}
+        <div className="flex justify-center animate-float mb-8">
+          <div className="bg-gradient-to-r from-dutch-orange to-sunset-pink text-white px-4 py-2 rounded-full text-sm font-medium shadow-lg animate-pulse-glow">
+            ✨ Ontdek je perfecte autoroute
+          </div>
+        </div>
+
         {/* Feature highlights */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
-          <div className="text-center">
-            <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-lg flex items-center justify-center mx-auto mb-4">
+          <div className="text-center animate-discovery-reveal animate-discovery-delay-1">
+            <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-lg flex items-center justify-center mx-auto mb-4 group-hover:animate-float">
               <MapPin className="h-6 w-6 text-white" />
             </div>
             <h3 className="font-semibold text-white mb-2">GPS Navigatie</h3>
