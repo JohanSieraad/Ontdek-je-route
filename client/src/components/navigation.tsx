@@ -17,6 +17,31 @@ export function Navigation() {
     { href: "#about", label: "Over Ons" },
   ];
 
+  const countryNavLinks = [
+    { 
+      href: "/region/nederland", 
+      label: "Nederland",
+      flag: (
+        <svg viewBox="0 0 9 6" className="w-full h-full">
+          <rect width="9" height="2" fill="#AE1C28"/>
+          <rect width="9" height="2" y="2" fill="#FFFFFF"/>
+          <rect width="9" height="2" y="4" fill="#21468B"/>
+        </svg>
+      )
+    },
+    { 
+      href: "/region/belgie", 
+      label: "België",
+      flag: (
+        <svg viewBox="0 0 15 10" className="w-full h-full">
+          <rect width="5" height="10" fill="#000000"/>
+          <rect x="5" width="5" height="10" fill="#FFD700"/>
+          <rect x="10" width="5" height="10" fill="#FF0000"/>
+        </svg>
+      )
+    }
+  ];
+
   return (
     <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -42,6 +67,34 @@ export function Navigation() {
                 </a>
               </Link>
             ))}
+            
+            {/* Country Dropdown */}
+            <div className="relative group">
+              <button className="text-gray-700 hover:text-dutch-orange transition-colors font-medium flex items-center gap-1" data-testid="button-landen">
+                Landen
+                <svg className="w-4 h-4 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              <div className="absolute top-full left-0 mt-2 w-48 bg-white rounded-md shadow-lg border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                <div className="py-2">
+                  {countryNavLinks.map((country) => (
+                    <Link key={country.href} href={country.href}>
+                      <a 
+                        className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-50 hover:text-dutch-orange transition-colors"
+                        data-testid={`link-${country.label.toLowerCase()}`}
+                      >
+                        <div className="w-6 h-4 mr-3 border border-gray-300 rounded-sm overflow-hidden">
+                          {country.flag}
+                        </div>
+                        {country.label}
+                      </a>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            </div>
+            
             <Button className="bg-dutch-orange text-white hover:bg-dutch-orange/90" data-testid="button-search">
               <Search className="mr-2 h-4 w-4" />
               Zoeken

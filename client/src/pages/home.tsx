@@ -1,5 +1,5 @@
 import { Navigation } from "@/components/navigation";
-import { HeroSection } from "@/components/hero-section";
+import { HeroBanner } from "@/components/hero-banner";
 import { RegionCard } from "@/components/region-card";
 import { RouteCard } from "@/components/route-card";
 import { InteractiveMap } from "@/components/interactive-map";
@@ -25,7 +25,7 @@ export default function Home() {
     <div className="min-h-screen bg-gray-50">
       <Navigation />
       
-      <HeroSection />
+      <HeroBanner />
 
       {/* Country and Region Selection */}
       <section className="py-16 bg-white">

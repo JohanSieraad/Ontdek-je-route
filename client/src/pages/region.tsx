@@ -1,6 +1,7 @@
 import { useParams, Link } from "wouter";
 import { Navigation } from "@/components/navigation";
 import { RouteCard } from "@/components/route-card";
+import { AddRouteSection } from "@/components/add-route-section";
 import { Footer } from "@/components/footer";
 import { useQuery } from "@tanstack/react-query";
 import { Region, Route } from "@shared/schema";
@@ -135,6 +136,13 @@ export default function RegionPage() {
               <p className="text-gray-500">Geen routes gevonden voor deze regio.</p>
             </div>
           )}
+        </div>
+      </section>
+
+      {/* Add Route Section */}
+      <section className="py-16 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <AddRouteSection region={region} />
         </div>
       </section>
 

@@ -117,8 +117,8 @@ export class MemStorage implements IStorage {
       this.createRegion(region);
     });
 
-    // Initialize with popular routes
-    const popularRoutes: InsertRoute[] = [
+    // Initialize with authentic Dutch routes (8 routes for Noord-Holland)
+    const dutchRoutes: InsertRoute[] = [
       {
         title: "Amsterdam Grachtenroute",
         description: "Wandel langs de beroemde grachtengordel en ontdek de Gouden Eeuw van Amsterdam. Bezoek historische koopmanspanden en verborgen hofjes.",
@@ -130,6 +130,90 @@ export class MemStorage implements IStorage {
         imageUrl: "https://images.unsplash.com/photo-1548707309-dcebeab9ea9b?ixlib=rb-4.0.3",
         difficulty: "gemakkelijk",
         isPopular: 1
+      },
+      {
+        title: "Legmeerroute Uithoorn",
+        description: "Fietsroute door het groene hart van de Randstad, langs de Legmeer en door historische dorpjes.",
+        regionId: Array.from(this.regions.values()).find(r => r.name === "Noord-Holland")?.id || "",
+        category: "Fietsen",
+        rating: 4.3,
+        duration: "3 uur",
+        distance: "35 km",
+        imageUrl: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3",
+        difficulty: "gemiddeld",
+        isPopular: 0
+      },
+      {
+        title: "Duinwaterroute Castricum",
+        description: "Ontdek de duinen en het strand van Castricum op deze prachtige fietsroute door het Noord-Hollands Duinreservaat.",
+        regionId: Array.from(this.regions.values()).find(r => r.name === "Noord-Holland")?.id || "",
+        category: "Natuur",
+        rating: 4.5,
+        duration: "4 uur",
+        distance: "43 km",
+        imageUrl: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3",
+        difficulty: "gemiddeld",
+        isPopular: 1
+      },
+      {
+        title: "Ronde van Noord-Holland",
+        description: "De klassieke Ronde van Noord-Holland, startend vanuit Alkmaar door het prachtige West-Friese landschap.",
+        regionId: Array.from(this.regions.values()).find(r => r.name === "Noord-Holland")?.id || "",
+        category: "Fietsen",
+        rating: 4.6,
+        duration: "6 uur",
+        distance: "85 km",
+        imageUrl: "https://images.unsplash.com/photo-1502780402662-acc01917478e?ixlib=rb-4.0.3",
+        difficulty: "zwaar",
+        isPopular: 1
+      },
+      {
+        title: "Gooise Heideroute",
+        description: "Fietsroute door de heide en bossen van het Gooi, met prachtige uitzichten en historische landgoederen.",
+        regionId: Array.from(this.regions.values()).find(r => r.name === "Noord-Holland")?.id || "",
+        category: "Natuur",
+        rating: 4.4,
+        duration: "2.5 uur",
+        distance: "30 km",
+        imageUrl: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?ixlib=rb-4.0.3",
+        difficulty: "gemiddeld",
+        isPopular: 0
+      },
+      {
+        title: "Texel Natuurroute",
+        description: "Ontdek de natuurgebieden van Texel per fiets, van De Hoge Berg tot De Slufter.",
+        regionId: Array.from(this.regions.values()).find(r => r.name === "Noord-Holland")?.id || "",
+        category: "Natuur",
+        rating: 4.8,
+        duration: "4 uur",
+        distance: "42 km",
+        imageUrl: "https://images.unsplash.com/photo-1516833398908-1e85ac4c4b56?ixlib=rb-4.0.3",
+        difficulty: "gemiddeld",
+        isPopular: 1
+      },
+      {
+        title: "Zaanse Schans Cultuurroute",
+        description: "Wandelroute langs de historische molens en ambachten van de Zaanse Schans.",
+        regionId: Array.from(this.regions.values()).find(r => r.name === "Noord-Holland")?.id || "",
+        category: "Cultuur",
+        rating: 4.5,
+        duration: "2 uur",
+        distance: "4.5 km",
+        imageUrl: "https://images.unsplash.com/photo-1602328493548-21e1b34d92d8?ixlib=rb-4.0.3",
+        difficulty: "gemakkelijk",
+        isPopular: 1
+      },
+      {
+        title: "Noord-Hollandpad Wandeling",
+        description: "Een etappe van het 284 km lange Noord-Hollandpad, door diverse landschappen van Noord-Holland.",
+        regionId: Array.from(this.regions.values()).find(r => r.name === "Noord-Holland")?.id || "",
+        category: "Wandelen",
+        rating: 4.2,
+        duration: "5 uur",
+        distance: "18 km",
+        imageUrl: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3",
+        difficulty: "gemiddeld",
+        isPopular: 0
       },
       {
         title: "Kinderdijk Molens Route",
@@ -193,8 +277,36 @@ export class MemStorage implements IStorage {
       });
     }
 
+    // Also add Zuid-Holland and other region routes
+    const zuidHollandRoutes: InsertRoute[] = [
+      {
+        title: "Kinderdijk Molens Route",
+        description: "Verken de iconische 19 molens van Kinderdijk en leer over de Nederlandse strijd tegen het water. UNESCO Werelderfgoed.",
+        regionId: Array.from(this.regions.values()).find(r => r.name === "Zuid-Holland")?.id || "",
+        category: "Natuur & Cultuur",
+        rating: 4.9,
+        duration: "3 uur",
+        distance: "4.5 km",
+        imageUrl: "https://images.unsplash.com/photo-1506197603052-3cc9c3a201bd?ixlib=rb-4.0.3",
+        difficulty: "gemiddeld",
+        isPopular: 1
+      },
+      {
+        title: "Kastelen Route Utrecht",
+        description: "Deze prachtige route voert u langs drie historische kastelen in de provincie Utrecht. Ontdek de rijke geschiedenis van de Nederlandse adel.",
+        regionId: Array.from(this.regions.values()).find(r => r.name === "Utrecht")?.id || "",
+        category: "Geschiedenis",
+        rating: 4.7,
+        duration: "4 uur",
+        distance: "6.5 km",
+        imageUrl: "https://images.unsplash.com/photo-1515542622106-78bda8ba0e5b?ixlib=rb-4.0.3",
+        difficulty: "gemiddeld",
+        isPopular: 1
+      }
+    ];
+
     // Create all routes
-    [...popularRoutes, ...ardennesRoutes].forEach(route => {
+    [...dutchRoutes, ...zuidHollandRoutes, ...ardennesRoutes].forEach(route => {
       this.createRoute(route);
     });
 
