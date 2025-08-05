@@ -16,6 +16,7 @@ This is a full-stack web application for exploring historical routes throughout 
 ## User Preferences
 
 Preferred communication style: Simple, everyday language.
+User frequently asks about navigation integration: Confirm Google Maps/Waze route integration with highway avoidance is implemented and working.
 
 ## System Architecture
 
