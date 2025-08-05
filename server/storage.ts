@@ -126,9 +126,21 @@ export class MemStorage implements IStorage {
       }
     ];
 
-    // Initialize all regions
+    // Initialize all regions with fixed IDs
+    const regionIds = {
+      "Noord-Holland": "region-noord-holland",
+      "Zuid-Holland": "region-zuid-holland", 
+      "Utrecht": "region-utrecht",
+      "Zeeland": "region-zeeland",
+      "Gelderland": "region-gelderland",
+      "Overijssel": "region-overijssel",
+      "Belgische Ardennen": "region-belgische-ardennen"
+    };
+
     [...dutchRegions, ...belgianRegions].forEach(region => {
-      this.createRegion(region);
+      const id = regionIds[region.name] || randomUUID();
+      const newRegion: Region = { id, ...region };
+      this.regions.set(id, newRegion);
     });
 
     // Automotive routes voor autorijders - echte routes langs mooie dorpjes en bezienswaardigheden
@@ -136,7 +148,7 @@ export class MemStorage implements IStorage {
       {
         title: "Kastelen Route Noord-Holland",
         description: "Spectaculaire autoroute langs Nederlandse kastelen: Muiderslot, Kasteel De Haar en Slot Assumburg. Stop bij Restaurant De Kazerne (Muiden) voor lunch met kasteelzicht. Perfecte fotomomenten bij historische vestingwerken.",
-        regionId: Array.from(this.regions.values()).find(r => r.name === "Noord-Holland")?.id || "",
+        regionId: "region-noord-holland",
         category: "Kastelen & Eten",
         rating: 4.9,
         duration: "6 uur rijden",
@@ -148,7 +160,7 @@ export class MemStorage implements IStorage {
       {
         title: "Pittoreske Dorpjes Route",
         description: "Autoroute langs de mooiste dorpjes: Volendam, Marken, Giethoorn en Staphorst. Stop bij Restaurant Spaander (Volendam) voor verse vis en bij Grand Café Giethoorn voor koffie met dorpszicht. Instagram-waardige fotostops bij traditionele huizen.",
-        regionId: Array.from(this.regions.values()).find(r => r.name === "Noord-Holland")?.id || "",
+        regionId: "region-noord-holland",
         category: "Dorpjes & Fotografie",
         rating: 4.7,
         duration: "8 uur rijden",
@@ -160,7 +172,7 @@ export class MemStorage implements IStorage {
       {
         title: "Nederlandse Bierroute",
         description: "Autoroute langs ambachtelijke brouwerijen: Brouwerij 't IJ (Amsterdam), Jopen Brouwerij (Haarlem) en Brouwerij De Molen (Bodegraven). Inclusief proeverijen, biertuinen voor lunch en brouwerij tours. Designate driver aanbevolen!",
-        regionId: Array.from(this.regions.values()).find(r => r.name === "Noord-Holland")?.id || "",
+        regionId: "region-noord-holland",
         category: "Bier & Cultuur",
         rating: 4.8,
         duration: "7 uur rijden",
@@ -172,7 +184,7 @@ export class MemStorage implements IStorage {
       {
         title: "Kustroute met Strandpaviljoen Stops",
         description: "Prachtige autoroute langs de Nederlandse kust: Zandvoort, Noordwijk, Scheveningen. Stop bij Beach Restaurant Tijn (Zandvoort) voor lunch op het strand, Strandpaviljoen De Brekers (Noordwijk) voor cocktails met zeezicht. Perfect voor zonsondergangfoto's.",
-        regionId: Array.from(this.regions.values()).find(r => r.name === "Noord-Holland")?.id || "",
+        regionId: "region-noord-holland",
         category: "Strand & Restaurants",
         rating: 4.6,
         duration: "5 uur rijden",
@@ -184,7 +196,7 @@ export class MemStorage implements IStorage {
       {
         title: "Landgoederen & Tuinen Route",
         description: "Luxe autoroute langs historische landgoederen: Keukenhof, Hortus Botanicus en Kasteel Groeneveld. Stop bij Restaurant De Kas (Utrecht) voor lunchen tussen de bloemen. Fotogenie tuinen en perfecte picknickplekken bij historische villa's.",
-        regionId: Array.from(this.regions.values()).find(r => r.name === "Noord-Holland")?.id || "",
+        regionId: "region-noord-holland",
         category: "Natuur & Fotografie",
         rating: 4.8,
         duration: "5 uur rijden",
@@ -196,7 +208,7 @@ export class MemStorage implements IStorage {
       {
         title: "Waddeneiland Auto & Ferry Avontuur",
         description: "Unieke autoroute inclusief veerboten naar Texel en Vlieland. Stop bij Strandpaviljoen Paal 17 voor lunch op het strand, Restaurant Topido (Den Burg) voor lokale specialiteiten. Vuurtoren De Cocksdorp voor iconische zonsondergangfoto's.",
-        regionId: Array.from(this.regions.values()).find(r => r.name === "Noord-Holland")?.id || "",
+        regionId: "region-noord-holland",
         category: "Eilanden & Zee",
         rating: 4.8,
         duration: "Volledige dag",
@@ -208,7 +220,7 @@ export class MemStorage implements IStorage {
       {
         title: "Hollands Erfgoed Auto Route",
         description: "Autoroute langs Nederlandse iconen: Zaanse Schans molens, Kinderdijk en Waterland. Stop bij Restaurant De Hoop op Swarte Walvis (Zaandam) voor traditionele Nederlandse keuken. Molens en historische huizen perfect voor Instagram-foto's.",
-        regionId: Array.from(this.regions.values()).find(r => r.name === "Noord-Holland")?.id || "",
+        regionId: "region-noord-holland",
         category: "Nederlandse Cultuur",
         rating: 4.7,
         duration: "6 uur rijden",
@@ -220,7 +232,7 @@ export class MemStorage implements IStorage {
       {
         title: "Nederlandse Kaas & Boerderij Route",
         description: "Culinaire autoroute langs kaasboerderijen: Reypenaer Kaasmakerij (Amsterdam), Alkmaar Kaasmarkt en Beenster Cheese. Stop bij Boerderij Restaurant De Vier Seizoenen voor kaasplank met wijn. Authentieke kaasmakerijen en koeienweiden voor landelijke foto's.",
-        regionId: Array.from(this.regions.values()).find(r => r.name === "Noord-Holland")?.id || "",
+        regionId: "region-noord-holland",
         category: "Eten & Cultuur",
         rating: 4.6,
         duration: "5 uur rijden",
@@ -232,7 +244,7 @@ export class MemStorage implements IStorage {
       {
         title: "Kinderdijk Molens Route",
         description: "Verken de iconische 19 molens van Kinderdijk en leer over de Nederlandse strijd tegen het water. UNESCO Werelderfgoed.",
-        regionId: Array.from(this.regions.values()).find(r => r.name === "Zuid-Holland")?.id || "",
+        regionId: "region-zuid-holland",
         category: "Natuur & Cultuur",
         rating: 4.9,
         duration: "3 uur",
@@ -244,7 +256,7 @@ export class MemStorage implements IStorage {
       {
         title: "Kastelen Route Utrecht",
         description: "Deze prachtige route voert u langs drie historische kastelen in de provincie Utrecht. Ontdek de rijke geschiedenis van de Nederlandse adel.",
-        regionId: Array.from(this.regions.values()).find(r => r.name === "Utrecht")?.id || "",
+        regionId: "region-utrecht",
         category: "Geschiedenis",
         rating: 4.7,
         duration: "4 uur",
@@ -260,7 +272,7 @@ export class MemStorage implements IStorage {
       {
         title: "Kastelen Route Ardennen",
         description: "Ontdek de middeleeuwse kastelen van de Belgische Ardennen, van Bouillon tot La Roche-en-Ardenne. Een reis door de geschiedenis.",
-        regionId: "", // Will be set after region creation
+        regionId: "region-belgische-ardennen", // Will be set after region creation
         category: "Geschiedenis & Kastelen",
         rating: 4.6,
         duration: "5 uur",
@@ -272,7 +284,7 @@ export class MemStorage implements IStorage {
       {
         title: "Ardennen Natuur Route",
         description: "Wandel door de dichte bossen en langs de kronkelige rivieren van de Ardennen. Spot wilde dieren en geniet van de ongerepte natuur.",
-        regionId: "", // Will be set after region creation
+        regionId: "region-belgische-ardennen", // Will be set after region creation
         category: "Natuur & Wildlife",
         rating: 4.8,
         duration: "4.5 uur",
@@ -284,19 +296,16 @@ export class MemStorage implements IStorage {
     ];
 
     // Set regionId for Belgian routes
-    const ardennesRegion = Array.from(this.regions.values()).find(r => r.name === "Belgische Ardennen");
-    if (ardennesRegion) {
-      ardennesRoutes.forEach(route => {
-        route.regionId = ardennesRegion.id;
-      });
-    }
+    ardennesRoutes.forEach(route => {
+      route.regionId = "region-belgische-ardennen";
+    });
 
     // Also add Zuid-Holland and other region routes
     const zuidHollandRoutes: InsertRoute[] = [
       {
         title: "Kinderdijk Molens Route",
         description: "Verken de iconische 19 molens van Kinderdijk en leer over de Nederlandse strijd tegen het water. UNESCO Werelderfgoed.",
-        regionId: Array.from(this.regions.values()).find(r => r.name === "Zuid-Holland")?.id || "",
+        regionId: "region-zuid-holland",
         category: "Natuur & Cultuur",
         rating: 4.9,
         duration: "3 uur",
@@ -308,7 +317,7 @@ export class MemStorage implements IStorage {
       {
         title: "Kastelen Route Utrecht",
         description: "Deze prachtige route voert u langs drie historische kastelen in de provincie Utrecht. Ontdek de rijke geschiedenis van de Nederlandse adel.",
-        regionId: Array.from(this.regions.values()).find(r => r.name === "Utrecht")?.id || "",
+        regionId: "region-utrecht",
         category: "Geschiedenis",
         rating: 4.7,
         duration: "4 uur",
@@ -319,13 +328,39 @@ export class MemStorage implements IStorage {
       }
     ];
 
-    // Create all routes
-    [...dutchRoutes, ...zuidHollandRoutes, ...ardennesRoutes].forEach(route => {
-      this.createRoute(route);
+    // Create all routes with fixed IDs
+    const routeIds = [
+      "route-kastelen-noord-holland",
+      "route-dorpjes-noord-holland", 
+      "route-bier-noord-holland",
+      "route-kust-noord-holland",
+      "route-landgoederen-noord-holland",
+      "route-wadden-noord-holland",
+      "route-erfgoed-noord-holland",
+      "route-kaas-noord-holland",
+      "route-kinderdijk-zuid-holland",
+      "route-kastelen-utrecht",
+      "route-kinderdijk-dup-zuid-holland",
+      "route-kastelen-dup-utrecht", 
+      "route-kastelen-ardennen",
+      "route-natuur-ardennen"
+    ];
+
+    [...dutchRoutes, ...zuidHollandRoutes, ...ardennesRoutes].forEach((route, index) => {
+      const id = routeIds[index] || randomUUID();
+      const newRoute: Route = {
+        id,
+        ...route,
+        isUserCreated: route.isUserCreated ?? false,
+        createdBy: route.createdBy || null,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      };
+      this.routes.set(id, newRoute);
     });
 
     // Add route stops for the Kinderdijk route
-    const kinderdjikRoute = Array.from(this.routes.values()).find(r => r.title === "Kinderdijk Molens Route");
+    const kinderdjikRoute = this.routes.get("route-kinderdijk-zuid-holland");
     if (kinderdjikRoute) {
       const kinderdjikStops: InsertRouteStop[] = [
         {
