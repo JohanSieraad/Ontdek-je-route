@@ -57,9 +57,13 @@ export default function Home() {
               {/* Nederlandse Regio's */}
               <div className="mb-16">
                 <div className="flex items-center mb-8">
-                  <div className="w-8 h-6 bg-red-500 mr-3"></div>
-                  <div className="w-8 h-6 bg-white border border-gray-300 mr-3"></div>
-                  <div className="w-8 h-6 bg-blue-500 mr-4"></div>
+                  <div className="w-10 h-7 mr-4 border border-gray-300 rounded-sm overflow-hidden">
+                    <svg viewBox="0 0 9 6" className="w-full h-full">
+                      <rect width="9" height="2" fill="#AE1C28"/>
+                      <rect width="9" height="2" y="2" fill="#FFFFFF"/>
+                      <rect width="9" height="2" y="4" fill="#21468B"/>
+                    </svg>
+                  </div>
                   <h4 className="text-2xl font-bold text-gray-900">Nederland</h4>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -72,9 +76,13 @@ export default function Home() {
               {/* Belgische Regio's */}
               <div className="mb-8">
                 <div className="flex items-center mb-8">
-                  <div className="w-8 h-6 bg-black mr-3"></div>
-                  <div className="w-8 h-6 bg-yellow-400 mr-3"></div>
-                  <div className="w-8 h-6 bg-red-500 mr-4"></div>
+                  <div className="w-10 h-7 mr-4 border border-gray-300 rounded-sm overflow-hidden">
+                    <svg viewBox="0 0 15 13" className="w-full h-full">
+                      <rect width="5" height="13" fill="#000000"/>
+                      <rect width="5" height="13" x="5" fill="#FFD700"/>
+                      <rect width="5" height="13" x="10" fill="#FF0000"/>
+                    </svg>
+                  </div>
                   <h4 className="text-2xl font-bold text-gray-900">België</h4>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
