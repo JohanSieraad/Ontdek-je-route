@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { insertRouteSchema, insertRegionSchema, insertRouteStopSchema, insertAudioTrackSchema } from "@shared/schema";
+import { insertRouteSchema, insertRegionSchema, insertRouteStopSchema, insertAudioTrackSchema, insertReviewSchema, insertPhotoSchema } from "@shared/schema";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Regions
@@ -130,6 +130,85 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(201).json(track);
     } catch (error) {
       res.status(400).json({ message: "Ongeldige audio gegevens" });
+    }
+  });
+
+  // Reviews
+  app.get("/api/routes/:routeId/reviews", async (req, res) => {
+    try {
+      const reviews = await storage.getReviewsByRoute(req.params.routeId);
+      res.json(reviews);
+    } catch (error) {
+      res.status(500).json({ message: "Fout bij ophalen van reviews" });
+    }
+  });
+
+  app.post("/api/routes/:routeId/reviews", async (req, res) => {
+    try {
+      const validated = insertReviewSchema.parse({
+        ...req.body,
+        routeId: req.params.routeId
+      });
+      const review = await storage.createReview(validated);
+      res.status(201).json(review);
+    } catch (error) {
+      res.status(400).json({ message: "Ongeldige review gegevens" });
+    }
+  });
+
+  app.get("/api/reviews/:id", async (req, res) => {
+    try {
+      const review = await storage.getReviewById(req.params.id);
+      if (!review) {
+        return res.status(404).json({ message: "Review niet gevonden" });
+      }
+      res.json(review);
+    } catch (error) {
+      res.status(500).json({ message: "Fout bij ophalen van review" });
+    }
+  });
+
+  // Photos
+  app.get("/api/routes/:routeId/photos", async (req, res) => {
+    try {
+      const photos = await storage.getPhotosByRoute(req.params.routeId);
+      res.json(photos);
+    } catch (error) {
+      res.status(500).json({ message: "Fout bij ophalen van foto's" });
+    }
+  });
+
+  app.get("/api/stops/:stopId/photos", async (req, res) => {
+    try {
+      const photos = await storage.getPhotosByStop(req.params.stopId);
+      res.json(photos);
+    } catch (error) {
+      res.status(500).json({ message: "Fout bij ophalen van foto's" });
+    }
+  });
+
+  app.post("/api/routes/:routeId/photos", async (req, res) => {
+    try {
+      const validated = insertPhotoSchema.parse({
+        ...req.body,
+        routeId: req.params.routeId
+      });
+      const photo = await storage.createPhoto(validated);
+      res.status(201).json(photo);
+    } catch (error) {
+      res.status(400).json({ message: "Ongeldige foto gegevens" });
+    }
+  });
+
+  app.get("/api/photos/:id", async (req, res) => {
+    try {
+      const photo = await storage.getPhotoById(req.params.id);
+      if (!photo) {
+        return res.status(404).json({ message: "Foto niet gevonden" });
+      }
+      res.json(photo);
+    } catch (error) {
+      res.status(500).json({ message: "Fout bij ophalen van foto" });
     }
   });
 

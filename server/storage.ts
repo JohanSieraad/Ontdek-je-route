@@ -1,4 +1,4 @@
-import { type Region, type InsertRegion, type Route, type InsertRoute, type RouteStop, type InsertRouteStop, type AudioTrack, type InsertAudioTrack } from "@shared/schema";
+import { type Region, type InsertRegion, type Route, type InsertRoute, type RouteStop, type InsertRouteStop, type AudioTrack, type InsertAudioTrack, type Review, type InsertReview, type Photo, type InsertPhoto } from "@shared/schema";
 import { randomUUID } from "crypto";
 
 export interface IStorage {
@@ -22,6 +22,17 @@ export interface IStorage {
   getAudioTracksByRoute(routeId: string): Promise<AudioTrack[]>;
   getAudioTrackByStop(stopId: string): Promise<AudioTrack | undefined>;
   createAudioTrack(track: InsertAudioTrack): Promise<AudioTrack>;
+
+  // Reviews
+  getReviewsByRoute(routeId: string): Promise<Review[]>;
+  createReview(review: InsertReview): Promise<Review>;
+  getReviewById(id: string): Promise<Review | undefined>;
+
+  // Photos
+  getPhotosByRoute(routeId: string): Promise<Photo[]>;
+  getPhotosByStop(stopId: string): Promise<Photo[]>;
+  createPhoto(photo: InsertPhoto): Promise<Photo>;
+  getPhotoById(id: string): Promise<Photo | undefined>;
 }
 
 export class MemStorage implements IStorage {
@@ -29,13 +40,18 @@ export class MemStorage implements IStorage {
   private routes: Map<string, Route>;
   private routeStops: Map<string, RouteStop>;
   private audioTracks: Map<string, AudioTrack>;
+  private reviews: Map<string, Review>;
+  private photos: Map<string, Photo>;
 
   constructor() {
     this.regions = new Map();
     this.routes = new Map();
     this.routeStops = new Map();
     this.audioTracks = new Map();
+    this.reviews = new Map();
+    this.photos = new Map();
     this.initializeData();
+    this.initializeReviewsAndPhotos();
   }
 
   private initializeData() {
@@ -460,6 +476,150 @@ export class MemStorage implements IStorage {
     };
     this.audioTracks.set(id, track);
     return track;
+  }
+
+  // Reviews methods
+  async getReviewsByRoute(routeId: string): Promise<Review[]> {
+    return Array.from(this.reviews.values())
+      .filter(review => review.routeId === routeId)
+      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+  }
+
+  async createReview(insertReview: InsertReview): Promise<Review> {
+    const id = randomUUID();
+    const review: Review = {
+      ...insertReview,
+      id,
+      userEmail: insertReview.userEmail ?? null,
+      visitDate: insertReview.visitDate ?? null,
+      createdAt: new Date().toISOString(),
+      isVerified: insertReview.isVerified ?? 0
+    };
+    this.reviews.set(id, review);
+    return review;
+  }
+
+  async getReviewById(id: string): Promise<Review | undefined> {
+    return this.reviews.get(id);
+  }
+
+  // Photos methods
+  async getPhotosByRoute(routeId: string): Promise<Photo[]> {
+    return Array.from(this.photos.values())
+      .filter(photo => photo.routeId === routeId)
+      .sort((a, b) => new Date(b.uploadedAt).getTime() - new Date(a.uploadedAt).getTime());
+  }
+
+  async getPhotosByStop(stopId: string): Promise<Photo[]> {
+    return Array.from(this.photos.values())
+      .filter(photo => photo.stopId === stopId)
+      .sort((a, b) => new Date(b.uploadedAt).getTime() - new Date(a.uploadedAt).getTime());
+  }
+
+  async createPhoto(insertPhoto: InsertPhoto): Promise<Photo> {
+    const id = randomUUID();
+    const photo: Photo = {
+      ...insertPhoto,
+      id,
+      stopId: insertPhoto.stopId ?? null,
+      reviewId: insertPhoto.reviewId ?? null,
+      caption: insertPhoto.caption ?? null,
+      uploadedAt: new Date().toISOString(),
+      isApproved: insertPhoto.isApproved ?? 0
+    };
+    this.photos.set(id, photo);
+    return photo;
+  }
+
+  async getPhotoById(id: string): Promise<Photo | undefined> {
+    return this.photos.get(id);
+  }
+
+  // Initialize sample reviews and photos
+  private initializeReviewsAndPhotos() {
+    // Get some existing routes for sample data
+    const routes = Array.from(this.routes.values());
+    if (routes.length === 0) return;
+
+    const amsterdamRoute = routes.find(r => r.title.includes("Amsterdam"));
+    const kastelenRoute = routes.find(r => r.title.includes("Kastelen"));
+
+    if (amsterdamRoute) {
+      // Sample reviews for Amsterdam route
+      this.createReview({
+        routeId: amsterdamRoute.id,
+        userName: "Emma van der Berg",
+        userEmail: "emma@example.com",
+        rating: 5,
+        title: "Prachtige rondleiding door de grachten",
+        comment: "Wat een geweldige manier om Amsterdam te ontdekken! De audio gids was informatief en de route bracht ons langs alle belangrijke bezienswaardigheden. Zeker een aanrader voor toeristen en locals.",
+        visitDate: "2024-12-15",
+        isVerified: 1
+      });
+
+      this.createReview({
+        routeId: amsterdamRoute.id,
+        userName: "Michael Schmidt",
+        userEmail: "m.schmidt@example.com", 
+        rating: 4,
+        title: "Leuke historische route",
+        comment: "Mooie route met veel interessante verhalen over de geschiedenis van Amsterdam. Alleen jammer dat het zo druk was op sommige plekken. Verder een zeer geslaagde ervaring!",
+        visitDate: "2024-12-10",
+        isVerified: 1
+      });
+
+      // Sample photos for Amsterdam route
+      this.createPhoto({
+        routeId: amsterdamRoute.id,
+        stopId: null,
+        reviewId: null,
+        fileName: "amsterdam-grachten-1.jpg",
+        originalName: "IMG_2024_amsterdam.jpg",
+        fileUrl: "https://images.unsplash.com/photo-1534351590666-13e3e96b5017?ixlib=rb-4.0.3&w=800",
+        caption: "Prachtig uitzicht over de grachten vanaf de brug",
+        userName: "Emma van der Berg",
+        isApproved: 1
+      });
+
+      this.createPhoto({
+        routeId: amsterdamRoute.id,
+        stopId: null,
+        reviewId: null,
+        fileName: "amsterdam-grachten-2.jpg",
+        originalName: "canal-houses.jpg", 
+        fileUrl: "https://images.unsplash.com/photo-1471002634840-4bbe1b8b10a1?ixlib=rb-4.0.3&w=800",
+        caption: "Traditionele grachtenpanden in het avondlicht",
+        userName: "Michael Schmidt",
+        isApproved: 1
+      });
+    }
+
+    if (kastelenRoute) {
+      // Sample review for Belgian castle route
+      this.createReview({
+        routeId: kastelenRoute.id,
+        userName: "Sophie Dubois",
+        userEmail: "sophie.dubois@example.be",
+        rating: 5,
+        title: "Magnifieke kastelen in de Ardennen",
+        comment: "Une route absolument fantastique à travers les plus beaux châteaux des Ardennes! Le château de Bouillon était particulièrement impressionnant. Parfait pour un weekend découverte.",
+        visitDate: "2024-11-28",
+        isVerified: 1
+      });
+
+      // Sample photo for Belgian route
+      this.createPhoto({
+        routeId: kastelenRoute.id,
+        stopId: null,
+        reviewId: null,
+        fileName: "bouillon-castle.jpg",
+        originalName: "chateau-bouillon.jpg",
+        fileUrl: "https://images.unsplash.com/photo-1584464491033-06628f3a6b7b?ixlib=rb-4.0.3&w=800",
+        caption: "Het imposante kasteel van Bouillon boven de rivier",
+        userName: "Sophie Dubois", 
+        isApproved: 1
+      });
+    }
   }
 }
 

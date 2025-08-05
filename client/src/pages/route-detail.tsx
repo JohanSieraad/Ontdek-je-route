@@ -2,6 +2,8 @@ import { useParams, Link } from "wouter";
 import { Navigation } from "@/components/navigation";
 import { AudioPlayer } from "@/components/audio-player";
 import { RouteNavigation } from "@/components/route-navigation";
+import { ReviewsSection } from "@/components/reviews-section";
+import { PhotosSection } from "@/components/photos-section";
 import { Footer } from "@/components/footer";
 import { useQuery } from "@tanstack/react-query";
 import { Route, RouteStop, AudioTrack } from "@shared/schema";

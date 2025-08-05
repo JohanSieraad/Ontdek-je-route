@@ -60,6 +60,36 @@ export const navigationRoutes = pgTable("navigation_routes", {
   expiresAt: text("expires_at"), // Route cache expiration
 });
 
+// User reviews table
+export const reviews = pgTable("reviews", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  routeId: varchar("route_id").notNull(),
+  userName: text("user_name").notNull(),
+  userEmail: text("user_email"),
+  rating: integer("rating").notNull(), // 1-5 stars
+  title: text("title").notNull(),
+  comment: text("comment").notNull(),
+  visitDate: text("visit_date"), // When they visited the route
+  createdAt: text("created_at").notNull().default(sql`(datetime('now'))`),
+  isVerified: integer("is_verified").notNull().default(0), // 0 or 1
+});
+
+// User photos table
+export const photos = pgTable("photos", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  routeId: varchar("route_id").notNull(),
+  stopId: varchar("stop_id"), // Optional - photo can be for specific stop
+  reviewId: varchar("review_id"), // Optional - photo can be attached to review
+  fileName: text("file_name").notNull(),
+  originalName: text("original_name").notNull(),
+  fileUrl: text("file_url").notNull(),
+  caption: text("caption"),
+  userName: text("user_name").notNull(),
+  uploadedAt: text("uploaded_at").notNull().default(sql`(datetime('now'))`),
+  isApproved: integer("is_approved").notNull().default(0), // 0 or 1 - moderation
+});
+
+// Schema exports
 export const insertRegionSchema = createInsertSchema(regions).omit({
   id: true,
 });
@@ -76,10 +106,17 @@ export const insertAudioTrackSchema = createInsertSchema(audioTracks).omit({
   id: true,
 });
 
-export const insertNavigationRouteSchema = createInsertSchema(navigationRoutes).omit({
+export const insertReviewSchema = createInsertSchema(reviews).omit({
   id: true,
   createdAt: true,
 });
+
+export const insertPhotoSchema = createInsertSchema(photos).omit({
+  id: true,
+  uploadedAt: true,
+});
+
+
 
 export type InsertRegion = z.infer<typeof insertRegionSchema>;
 export type Region = typeof regions.$inferSelect;
@@ -95,6 +132,12 @@ export type AudioTrack = typeof audioTracks.$inferSelect;
 
 export type InsertNavigationRoute = z.infer<typeof insertNavigationRouteSchema>;
 export type NavigationRoute = typeof navigationRoutes.$inferSelect;
+
+export type InsertReview = z.infer<typeof insertReviewSchema>;
+export type Review = typeof reviews.$inferSelect;
+
+export type InsertPhoto = z.infer<typeof insertPhotoSchema>;
+export type Photo = typeof photos.$inferSelect;
 
 // Navigation types for future implementation
 export interface RoutePreferences {
