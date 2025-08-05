@@ -6,7 +6,7 @@ import { useState, useEffect } from "react";
 // Background images for the carousel
 const backgroundImages = [
   {
-    url: 'https://images.unsplash.com/photo-1565516936825-b6b08c14b62c?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80',
+    url: 'https://images.unsplash.com/photo-1583850112438-5ac05e3b8c4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80',
     alt: 'Kasteel de Haar - grootste kasteel van Nederland',
     location: 'Kasteel de Haar'
   },
@@ -51,8 +51,10 @@ export function HeroBanner() {
               index === currentImageIndex ? 'opacity-100' : 'opacity-0'
             }`}
             style={{
-              backgroundImage: `url('${image.url}')`
+              backgroundImage: `url('${image.url}')`,
+              minHeight: '500px'
             }}
+            onError={(e) => console.log(`Failed to load image: ${image.url}`)}
           />
         ))}
       </div>
