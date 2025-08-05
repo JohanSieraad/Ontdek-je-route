@@ -1,7 +1,8 @@
 import { sql } from "drizzle-orm";
-import { pgTable, text, varchar, integer, real, jsonb } from "drizzle-orm/pg-core";
+import { pgTable, text, varchar, integer, real, jsonb, timestamp, boolean } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
+import { relations } from "drizzle-orm";
 
 export const regions = pgTable("regions", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
@@ -24,6 +25,10 @@ export const routes = pgTable("routes", {
   imageUrl: text("image_url").notNull(),
   difficulty: text("difficulty").notNull().default("gemakkelijk"),
   isPopular: integer("is_popular").notNull().default(0),
+  isUserCreated: boolean("is_user_created").notNull().default(false),
+  createdBy: varchar("created_by"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
 });
 
 export const routeStops = pgTable("route_stops", {
@@ -56,8 +61,8 @@ export const navigationRoutes = pgTable("navigation_routes", {
   preferences: jsonb("preferences"), // {avoidHighways: boolean, avoidTolls: boolean, avoidFerries: boolean}
   estimatedDuration: integer("estimated_duration"), // in minutes
   estimatedDistance: integer("estimated_distance"), // in meters
-  createdAt: text("created_at").notNull().default(sql`(datetime('now'))`),
-  expiresAt: text("expires_at"), // Route cache expiration
+  createdAt: timestamp("created_at").defaultNow(),
+  expiresAt: timestamp("expires_at"), // Route cache expiration
 });
 
 // User reviews table
@@ -69,8 +74,8 @@ export const reviews = pgTable("reviews", {
   rating: integer("rating").notNull(), // 1-5 stars
   title: text("title").notNull(),
   comment: text("comment").notNull(),
-  visitDate: text("visit_date"), // When they visited the route
-  createdAt: text("created_at").notNull().default(sql`(datetime('now'))`),
+  visitDate: timestamp("visit_date"), // When they visited the route
+  createdAt: timestamp("created_at").defaultNow(),
   isVerified: integer("is_verified").notNull().default(0), // 0 or 1
 });
 
@@ -85,7 +90,7 @@ export const photos = pgTable("photos", {
   fileUrl: text("file_url").notNull(),
   caption: text("caption"),
   userName: text("user_name").notNull(),
-  uploadedAt: text("uploaded_at").notNull().default(sql`(datetime('now'))`),
+  uploadedAt: timestamp("uploaded_at").defaultNow(),
   isApproved: integer("is_approved").notNull().default(0), // 0 or 1 - moderation
 });
 

@@ -68,6 +68,43 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Create a new user route
+  app.post("/api/routes", async (req, res) => {
+    try {
+      const validated = insertRouteSchema.parse(req.body);
+      const route = await storage.createRoute(validated);
+      res.status(201).json(route);
+    } catch (error) {
+      console.error("Error creating route:", error);
+      res.status(400).json({ message: "Ongeldige route gegevens" });
+    }
+  });
+
+  // Update an existing route
+  app.put("/api/routes/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const validated = insertRouteSchema.partial().parse(req.body);
+      const route = await storage.updateRoute(id, validated);
+      res.json(route);
+    } catch (error) {
+      console.error("Error updating route:", error);
+      res.status(400).json({ message: "Fout bij updaten van route" });
+    }
+  });
+
+  // Delete a route
+  app.delete("/api/routes/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      await storage.deleteRoute(id);
+      res.status(204).send();
+    } catch (error) {
+      console.error("Error deleting route:", error);
+      res.status(500).json({ message: "Fout bij verwijderen van route" });
+    }
+  });
+
   app.post("/api/routes", async (req, res) => {
     try {
       const validated = insertRouteSchema.parse(req.body);

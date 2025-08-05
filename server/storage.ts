@@ -1,5 +1,8 @@
 import { type Region, type InsertRegion, type Route, type InsertRoute, type RouteStop, type InsertRouteStop, type AudioTrack, type InsertAudioTrack, type Review, type InsertReview, type Photo, type InsertPhoto, type CastleLandmark, type InsertCastleLandmark } from "@shared/schema";
 import { randomUUID } from "crypto";
+import { db } from "./db";
+import { routes, regions, routeStops, audioTracks, reviews, photos, castleLandmarks } from "@shared/schema";
+import { eq, desc } from "drizzle-orm";
 
 export interface IStorage {
   // Regions
@@ -13,6 +16,8 @@ export interface IStorage {
   getRoutesByRegion(regionId: string): Promise<Route[]>;
   getPopularRoutes(): Promise<Route[]>;
   createRoute(route: InsertRoute): Promise<Route>;
+  updateRoute(id: string, route: Partial<InsertRoute>): Promise<Route>;
+  deleteRoute(id: string): Promise<void>;
 
   // Route Stops
   getRouteStops(routeId: string): Promise<RouteStop[]>;
@@ -885,4 +890,284 @@ export class MemStorage implements IStorage {
   }
 }
 
-export const storage = new MemStorage();
+// Database Storage Implementation
+export class DatabaseStorage implements IStorage {
+  // Regions
+  async getAllRegions(): Promise<Region[]> {
+    return await db.select().from(regions);
+  }
+
+  async getRegionById(id: string): Promise<Region | undefined> {
+    const [region] = await db.select().from(regions).where(eq(regions.id, id));
+    return region;
+  }
+
+  async createRegion(region: InsertRegion): Promise<Region> {
+    const [newRegion] = await db.insert(regions).values(region).returning();
+    return newRegion;
+  }
+
+  // Routes
+  async getAllRoutes(): Promise<Route[]> {
+    return await db.select().from(routes).orderBy(desc(routes.createdAt));
+  }
+
+  async getRouteById(id: string): Promise<Route | undefined> {
+    const [route] = await db.select().from(routes).where(eq(routes.id, id));
+    return route;
+  }
+
+  async getRoutesByRegion(regionId: string): Promise<Route[]> {
+    return await db.select().from(routes).where(eq(routes.regionId, regionId));
+  }
+
+  async getPopularRoutes(): Promise<Route[]> {
+    return await db.select().from(routes).where(eq(routes.isPopular, 1));
+  }
+
+  async createRoute(route: InsertRoute): Promise<Route> {
+    const [newRoute] = await db.insert(routes).values({
+      ...route,
+      isUserCreated: true,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    }).returning();
+    return newRoute;
+  }
+
+  async updateRoute(id: string, route: Partial<InsertRoute>): Promise<Route> {
+    const [updatedRoute] = await db.update(routes)
+      .set({ ...route, updatedAt: new Date() })
+      .where(eq(routes.id, id))
+      .returning();
+    return updatedRoute;
+  }
+
+  async deleteRoute(id: string): Promise<void> {
+    await db.delete(routes).where(eq(routes.id, id));
+  }
+
+  // Route Stops
+  async getRouteStops(routeId: string): Promise<RouteStop[]> {
+    return await db.select().from(routeStops).where(eq(routeStops.routeId, routeId));
+  }
+
+  async createRouteStop(stop: InsertRouteStop): Promise<RouteStop> {
+    const [newStop] = await db.insert(routeStops).values(stop).returning();
+    return newStop;
+  }
+
+  // Audio Tracks
+  async getAudioTracksByRoute(routeId: string): Promise<AudioTrack[]> {
+    return await db.select().from(audioTracks).where(eq(audioTracks.routeId, routeId));
+  }
+
+  async getAudioTrackByStop(stopId: string): Promise<AudioTrack | undefined> {
+    const [track] = await db.select().from(audioTracks).where(eq(audioTracks.stopId, stopId));
+    return track;
+  }
+
+  async createAudioTrack(track: InsertAudioTrack): Promise<AudioTrack> {
+    const [newTrack] = await db.insert(audioTracks).values(track).returning();
+    return newTrack;
+  }
+
+  // Reviews
+  async getReviewsByRoute(routeId: string): Promise<Review[]> {
+    return await db.select().from(reviews).where(eq(reviews.routeId, routeId));
+  }
+
+  async createReview(review: InsertReview): Promise<Review> {
+    const [newReview] = await db.insert(reviews).values(review).returning();
+    return newReview;
+  }
+
+  async getReviewById(id: string): Promise<Review | undefined> {
+    const [review] = await db.select().from(reviews).where(eq(reviews.id, id));
+    return review;
+  }
+
+  // Photos
+  async getPhotosByRoute(routeId: string): Promise<Photo[]> {
+    return await db.select().from(photos).where(eq(photos.routeId, routeId));
+  }
+
+  async getPhotosByStop(stopId: string): Promise<Photo[]> {
+    return await db.select().from(photos).where(eq(photos.stopId, stopId));
+  }
+
+  async createPhoto(photo: InsertPhoto): Promise<Photo> {
+    const [newPhoto] = await db.insert(photos).values(photo).returning();
+    return newPhoto;
+  }
+
+  async getPhotoById(id: string): Promise<Photo | undefined> {
+    const [photo] = await db.select().from(photos).where(eq(photos.id, id));
+    return photo;
+  }
+
+  // Castle Landmarks
+  async getAllCastleLandmarks(): Promise<CastleLandmark[]> {
+    return await db.select().from(castleLandmarks);
+  }
+
+  async getCastleLandmarkById(id: string): Promise<CastleLandmark | undefined> {
+    const [castle] = await db.select().from(castleLandmarks).where(eq(castleLandmarks.id, id));
+    return castle;
+  }
+
+  async getCastleLandmarksByRoute(routeId: string): Promise<CastleLandmark[]> {
+    return await db.select().from(castleLandmarks).where(
+      // This is a simplified query. In a real implementation, we'd use a proper join or SQL function
+      // For now, we filter in-memory which works for this use case
+      eq(castleLandmarks.id, castleLandmarks.id)
+    ).then(castles => 
+      castles.filter(castle => 
+        Array.isArray(castle.routeIds) && castle.routeIds.includes(routeId)
+      )
+    );
+  }
+
+  async createCastleLandmark(castle: InsertCastleLandmark): Promise<CastleLandmark> {
+    const [newCastle] = await db.insert(castleLandmarks).values(castle).returning();
+    return newCastle;
+  }
+}
+
+// Create hybrid storage that uses database when available, falls back to memory
+class HybridStorage implements IStorage {
+  private memStorage: MemStorage;
+  private dbStorage: DatabaseStorage;
+  private useDatabase: boolean = true;
+
+  constructor() {
+    this.memStorage = new MemStorage();
+    this.dbStorage = new DatabaseStorage();
+  }
+
+  // Route through to appropriate storage
+  private getStorage(): IStorage {
+    return this.useDatabase ? this.dbStorage : this.memStorage;
+  }
+
+  // Regions
+  async getAllRegions(): Promise<Region[]> {
+    try {
+      if (this.useDatabase) {
+        return await this.dbStorage.getAllRegions();
+      }
+    } catch (error) {
+      console.error('Database error, falling back to memory storage:', error);
+      this.useDatabase = false;
+    }
+    return await this.memStorage.getAllRegions();
+  }
+
+  async getRegionById(id: string): Promise<Region | undefined> {
+    return await this.getStorage().getRegionById(id);
+  }
+
+  async createRegion(region: InsertRegion): Promise<Region> {
+    return await this.getStorage().createRegion(region);
+  }
+
+  // Routes
+  async getAllRoutes(): Promise<Route[]> {
+    return await this.getStorage().getAllRoutes();
+  }
+
+  async getRouteById(id: string): Promise<Route | undefined> {
+    return await this.getStorage().getRouteById(id);
+  }
+
+  async getRoutesByRegion(regionId: string): Promise<Route[]> {
+    return await this.getStorage().getRoutesByRegion(regionId);
+  }
+
+  async getPopularRoutes(): Promise<Route[]> {
+    return await this.getStorage().getPopularRoutes();
+  }
+
+  async createRoute(route: InsertRoute): Promise<Route> {
+    return await this.getStorage().createRoute(route);
+  }
+
+  async updateRoute(id: string, route: Partial<InsertRoute>): Promise<Route> {
+    return await this.getStorage().updateRoute(id, route);
+  }
+
+  async deleteRoute(id: string): Promise<void> {
+    return await this.getStorage().deleteRoute(id);
+  }
+
+  // Route Stops
+  async getRouteStops(routeId: string): Promise<RouteStop[]> {
+    return await this.getStorage().getRouteStops(routeId);
+  }
+
+  async createRouteStop(stop: InsertRouteStop): Promise<RouteStop> {
+    return await this.getStorage().createRouteStop(stop);
+  }
+
+  // Audio Tracks
+  async getAudioTracksByRoute(routeId: string): Promise<AudioTrack[]> {
+    return await this.getStorage().getAudioTracksByRoute(routeId);
+  }
+
+  async getAudioTrackByStop(stopId: string): Promise<AudioTrack | undefined> {
+    return await this.getStorage().getAudioTrackByStop(stopId);
+  }
+
+  async createAudioTrack(track: InsertAudioTrack): Promise<AudioTrack> {
+    return await this.getStorage().createAudioTrack(track);
+  }
+
+  // Reviews
+  async getReviewsByRoute(routeId: string): Promise<Review[]> {
+    return await this.getStorage().getReviewsByRoute(routeId);
+  }
+
+  async createReview(review: InsertReview): Promise<Review> {
+    return await this.getStorage().createReview(review);
+  }
+
+  async getReviewById(id: string): Promise<Review | undefined> {
+    return await this.getStorage().getReviewById(id);
+  }
+
+  // Photos
+  async getPhotosByRoute(routeId: string): Promise<Photo[]> {
+    return await this.getStorage().getPhotosByRoute(routeId);
+  }
+
+  async getPhotosByStop(stopId: string): Promise<Photo[]> {
+    return await this.getStorage().getPhotosByStop(stopId);
+  }
+
+  async createPhoto(photo: InsertPhoto): Promise<Photo> {
+    return await this.getStorage().createPhoto(photo);
+  }
+
+  async getPhotoById(id: string): Promise<Photo | undefined> {
+    return await this.getStorage().getPhotoById(id);
+  }
+
+  // Castle Landmarks
+  async getAllCastleLandmarks(): Promise<CastleLandmark[]> {
+    return await this.getStorage().getAllCastleLandmarks();
+  }
+
+  async getCastleLandmarkById(id: string): Promise<CastleLandmark | undefined> {
+    return await this.getStorage().getCastleLandmarkById(id);
+  }
+
+  async getCastleLandmarksByRoute(routeId: string): Promise<CastleLandmark[]> {
+    return await this.getStorage().getCastleLandmarksByRoute(routeId);
+  }
+
+  async createCastleLandmark(castle: InsertCastleLandmark): Promise<CastleLandmark> {
+    return await this.getStorage().createCastleLandmark(castle);
+  }
+}
+
+export const storage = new HybridStorage();
