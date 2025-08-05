@@ -6,9 +6,9 @@ import { useState, useEffect } from "react";
 // Background images for the carousel
 const backgroundImages = [
   {
-    url: 'https://images.unsplash.com/photo-1584464491033-06628f3a6b7b?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80',
-    alt: 'Rivier de Vecht met historische villa\'s',
-    location: 'Rivier de Vecht'
+    url: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80',
+    alt: 'Kasteel de Haar - grootste kasteel van Nederland',
+    location: 'Kasteel de Haar'
   },
   {
     url: 'https://images.unsplash.com/photo-1581833971358-2c8b550f87b3?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80',
