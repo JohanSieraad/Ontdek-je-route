@@ -1,21 +1,21 @@
-# Nederlandse Routes Application
+# Laadpaal Sales Funnel Application
 
 ## Overview
 
-This is a full-stack web application for exploring historical routes throughout the Netherlands. The application allows users to discover various regions, browse curated historical routes, and access audio guides for an immersive cultural experience. Built with React on the frontend and Express.js on the backend, it features a modern, responsive design using shadcn/ui components and Tailwind CSS.
+This is a high-performing sales funnel web application for www.delaadpaalshop.com that provides extensive information about charging point options followed by lead generation. The application features an information-first approach with expandable categories covering installation, costs, subsidies, and technical details, culminating in a comprehensive lead capture form. Built with React on the frontend and Express.js on the backend, it features authentic Laadpaalshop brand styling using shadcn/ui components and Tailwind CSS.
 
 ## Recent Changes
 
-### Complete Automotive Transformation (August 2025)
-- **Full automotive focus**: Transformed from cycling/walking to car driving experience
-- **Summer color scheme**: Added fresh, inviting colors (summer orange, sky blue, vibrant purple, sunset pink)
-- **Authentic autoroutes**: 8 real car routes with restaurant stops, castle visits, and Instagram photo spots
-- **Route categories**: Kastelen & Eten, Dorpjes & Fotografie, Bier & Cultuur, Strand & Restaurants
-- **Culinary integration**: Each route includes specific restaurants, cafes, and picnic locations
-- **Photography focus**: Instagram-worthy stops at castles, villages, and scenic viewpoints
-- **Updated UI/UX**: Hero banner, navigation, and route cards now reflect automotive theme
-- **Enhanced descriptions**: All routes now feature parking info, restaurant recommendations, and photo opportunities
-- **Playful micro-interactions**: Added discovery animations, hover effects, floating elements, and route stats in hero banner
+### Complete Laadpaal Sales Funnel Implementation (August 2025)
+- **Brand identity transformation**: Converted to authentic Laadpaalshop styling with blue/orange color scheme
+- **Sales funnel architecture**: Information-first approach with expandable content sections followed by lead capture
+- **Comprehensive database schema**: Brands, charging stations, information categories, information items, and leads
+- **API implementation**: Full REST API for brands, charging points, information content, and lead management
+- **Information categorization**: Four main categories (Installation, Costs, Subsidies, Smart Features) with detailed content
+- **Lead generation form**: Complete form with housing situation, car details, budget, installation needs, and timeline
+- **Popular products section**: Real charging point data with pricing and feature information
+- **Trust indicators**: Personal advice, recognized brands, and complete installation messaging
+- **Responsive design**: Mobile-optimized funnel with clear call-to-action buttons
 
 ### Belgian Ardennes Expansion (January 2025)
 - Added Belgium as new country with focus on Belgian Ardennes region
@@ -57,13 +57,13 @@ User repeatedly asks about navigation integration despite it being implemented: 
 ### Database Schema
 - **ORM**: Drizzle ORM configured for PostgreSQL with type-safe schema definitions
 - **Tables**: 
-  - `regions` - Geographic areas with route counts and descriptions
-  - `routes` - Individual historical routes with metadata and ratings
-  - `routeStops` - Waypoints along routes with coordinates and descriptions  
-  - `audioTracks` - Audio guide content linked to routes and stops
-  - `navigationRoutes` - Navigation data cache for external routing providers
+  - `brands` - Charging point manufacturers with logos and popularity flags
+  - `chargingStations` - Product catalog with pricing, power ratings, and features
+  - `infoCategories` - Information sections (Installation, Costs, Subsidies, Smart Features)
+  - `infoItems` - Detailed content items within each information category
+  - `leads` - Customer inquiries with contact info, housing situation, car details, and preferences
 - **Validation**: Zod schemas for runtime type validation and API request/response validation
-- **Navigation Types**: Support for route preferences, coordinates, and multi-provider navigation
+- **Lead Management**: Comprehensive lead capture with installation needs, budget, and timeline tracking
 
 ### Component Architecture
 - **Layout Components**: Navigation, footer, and responsive mobile-friendly design
