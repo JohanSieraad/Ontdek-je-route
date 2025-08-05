@@ -6,7 +6,7 @@ import { useState, useEffect } from "react";
 // Background images for the carousel
 const backgroundImages = [
   {
-    url: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80',
+    url: 'https://images.unsplash.com/photo-1565516936825-b6b08c14b62c?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80',
     alt: 'Kasteel de Haar - grootste kasteel van Nederland',
     location: 'Kasteel de Haar'
   },
