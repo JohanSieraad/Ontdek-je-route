@@ -514,6 +514,282 @@ export class MemStorage implements IStorage {
         transcript: "Welkom bij de Natuur Route van de Belgische Ardennen..."
       });
     }
+
+    // Add stops for all other Dutch routes
+    this.addDutchRouteStops();
+  }
+
+  private addDutchRouteStops() {
+    // Add stops for Noord-Holland kastelen route
+    const noordHollandKastelenRoute = Array.from(this.routes.values()).find(r => r.title === "Kastelen Route Noord-Holland");
+    if (noordHollandKastelenRoute) {
+      const stops: InsertRouteStop[] = [
+        {
+          routeId: noordHollandKastelenRoute.id,
+          number: 1,
+          title: "Muiderslot",
+          description: "Het beroemdste kasteel van Nederland in Muiden, bekend van de Geuzen en Hooft.",
+          duration: "50 min",
+          hasAudio: 1,
+          coordinates: { lat: 52.3276, lng: 5.0689 }
+        },
+        {
+          routeId: noordHollandKastelenRoute.id,
+          number: 2,
+          title: "Restaurant De Kazerne",
+          description: "Lunchen met kasteelzicht in Muiden, gevestigd in een oude kazerne.",
+          duration: "60 min",
+          hasAudio: 0,
+          coordinates: { lat: 52.3298, lng: 5.0712 }
+        },
+        {
+          routeId: noordHollandKastelenRoute.id,
+          number: 3,
+          title: "Slot Assumburg",
+          description: "Ruïne van een 13e-eeuws kasteel in Heemskerk, met een mysterieuze geschiedenis.",
+          duration: "30 min",
+          hasAudio: 1,
+          coordinates: { lat: 52.5089, lng: 4.6756 }
+        }
+      ];
+
+      stops.forEach(stop => {
+        this.createRouteStop(stop);
+      });
+
+      this.createAudioTrack({
+        routeId: noordHollandKastelenRoute.id,
+        stopId: undefined,
+        title: "Introductie - Kastelen van Noord-Holland",
+        duration: "11:45",
+        fileUrl: "/audio/noord-holland-kastelen-intro.mp3",
+        transcript: "Welkom bij de Kastelen Route Noord-Holland. Ontdek de verhalen achter Muiderslot..."
+      });
+    }
+
+    // Add stops for Zuid-Holland eten route
+    const zuidHollandEtenRoute = Array.from(this.routes.values()).find(r => r.title === "Eten & Drinken Route Zuid-Holland");
+    if (zuidHollandEtenRoute) {
+      const stops: InsertRouteStop[] = [
+        {
+          routeId: zuidHollandEtenRoute.id,
+          number: 1,
+          title: "Kaasmarkt Gouda",
+          description: "Traditionele kaasmarkt op het historische marktplein, elke donderdag in de zomer.",
+          duration: "45 min",
+          hasAudio: 1,
+          coordinates: { lat: 52.0115, lng: 4.7077 }
+        },
+        {
+          routeId: zuidHollandEtenRoute.id,
+          number: 2,
+          title: "Restaurant De Mallemolen",
+          description: "Sterrenrestaurant in Gouda, perfect voor een culinaire lunch.",
+          duration: "90 min",
+          hasAudio: 0,
+          coordinates: { lat: 52.0134, lng: 4.7156 }
+        },
+        {
+          routeId: zuidHollandEtenRoute.id,
+          number: 3,
+          title: "Stroopwafelbakkerij Gouda",
+          description: "Verse stroopwafels bij de oudste bakkerij van Nederland.",
+          duration: "20 min",
+          hasAudio: 0,
+          coordinates: { lat: 52.0108, lng: 4.7089 }
+        },
+        {
+          routeId: zuidHollandEtenRoute.id,
+          number: 4,
+          title: "Picknick bij Reeuwijkse Plassen",
+          description: "Instagram-waardig picknicken met uitzicht over de meren.",
+          duration: "60 min",
+          hasAudio: 0,
+          coordinates: { lat: 52.0456, lng: 4.7234 }
+        }
+      ];
+
+      stops.forEach(stop => {
+        this.createRouteStop(stop);
+      });
+
+      this.createAudioTrack({
+        routeId: zuidHollandEtenRoute.id,
+        stopId: undefined,
+        title: "Introductie - Eten & Drinken Zuid-Holland",
+        duration: "9:32",
+        fileUrl: "/audio/zuid-holland-eten-intro.mp3",
+        transcript: "Welkom bij de culinaire route door Zuid-Holland. Proef de authentieke smaken..."
+      });
+    }
+
+    // Add stops for Zeeland strand route
+    const zeelandStrandRoute = Array.from(this.routes.values()).find(r => r.title === "Strand & Restaurants Zeeland");
+    if (zeelandStrandRoute) {
+      const stops: InsertRouteStop[] = [
+        {
+          routeId: zeelandStrandRoute.id,
+          number: 1,
+          title: "Domburg Strand",
+          description: "Het meest fotogenieke strand van Zeeland, perfect voor zonsondergang foto's.",
+          duration: "40 min",
+          hasAudio: 1,
+          coordinates: { lat: 51.5656, lng: 3.4967 }
+        },
+        {
+          routeId: zeelandStrandRoute.id,
+          number: 2,
+          title: "Restaurant De Brekers",
+          description: "Strandpaviljoen met verse zeevruchten en zeezicht in Domburg.",
+          duration: "75 min",
+          hasAudio: 0,
+          coordinates: { lat: 51.5645, lng: 3.4945 }
+        },
+        {
+          routeId: zeelandStrandRoute.id,
+          number: 3,
+          title: "Westkapelle Lighthouse",
+          description: "Historische vuurtoren met panoramisch uitzicht, ideaal voor Instagram.",
+          duration: "30 min",
+          hasAudio: 1,
+          coordinates: { lat: 51.5289, lng: 3.4234 }
+        },
+        {
+          routeId: zeelandStrandRoute.id,
+          number: 4,
+          title: "Zeeuwse Oesterkwekerij",
+          description: "Proef verse oesters direct van de kwekerij met zeezicht.",
+          duration: "45 min",
+          hasAudio: 0,
+          coordinates: { lat: 51.5378, lng: 3.4567 }
+        }
+      ];
+
+      stops.forEach(stop => {
+        this.createRouteStop(stop);
+      });
+
+      this.createAudioTrack({
+        routeId: zeelandStrandRoute.id,
+        stopId: undefined,
+        title: "Introductie - Zeeland Strand Route",
+        duration: "10:15",
+        fileUrl: "/audio/zeeland-strand-intro.mp3",
+        transcript: "Welkom bij de Zeeland Strand Route. Ontdek de mooiste stranden..."
+      });
+    }
+
+    // Add stops for Gelderland natuur route
+    const gelderlandNatuurRoute = Array.from(this.routes.values()).find(r => r.title === "Natuur & Dorpjes Gelderland");
+    if (gelderlandNatuurRoute) {
+      const stops: InsertRouteStop[] = [
+        {
+          routeId: gelderlandNatuurRoute.id,
+          number: 1,
+          title: "Nationaal Park Hoge Veluwe",
+          description: "Iconische natuurgebied met het Kröller-Müller Museum en witte fietsjes.",
+          duration: "120 min",
+          hasAudio: 1,
+          coordinates: { lat: 52.0878, lng: 5.8345 }
+        },
+        {
+          routeId: gelderlandNatuurRoute.id,
+          number: 2,
+          title: "Bronkhorst",
+          description: "Het kleinste stadje van Nederland, perfect voor instagramfoto's.",
+          duration: "45 min",
+          hasAudio: 1,
+          coordinates: { lat: 52.1456, lng: 6.1978 }
+        },
+        {
+          routeId: gelderlandNatuurRoute.id,
+          number: 3,
+          title: "Restaurant In de Karkol",
+          description: "Sterrenrestaurant in Bronkhorst in een historisch pand.",
+          duration: "90 min",
+          hasAudio: 0,
+          coordinates: { lat: 52.1467, lng: 6.1989 }
+        },
+        {
+          routeId: gelderlandNatuurRoute.id,
+          number: 4,
+          title: "Zutphen Hanzestad",
+          description: "Middeleeuwse hanzestad met torens en Oude Boekenmarkt.",
+          duration: "60 min",
+          hasAudio: 1,
+          coordinates: { lat: 52.1456, lng: 6.2023 }
+        }
+      ];
+
+      stops.forEach(stop => {
+        this.createRouteStop(stop);
+      });
+
+      this.createAudioTrack({
+        routeId: gelderlandNatuurRoute.id,
+        stopId: undefined,
+        title: "Introductie - Gelderland Natuur Route",
+        duration: "11:28",
+        fileUrl: "/audio/gelderland-natuur-intro.mp3",
+        transcript: "Welkom bij de Gelderland Natuur Route. Ervaar de prachtige natuur..."
+      });
+    }
+
+    // Add stops for Overijssel bier route
+    const overijsselBierRoute = Array.from(this.routes.values()).find(r => r.title === "Bier & Cultuur Overijssel");
+    if (overijsselBierRoute) {
+      const stops: InsertRouteStop[] = [
+        {
+          routeId: overijsselBierRoute.id,
+          number: 1,
+          title: "Brouwerij Grolsch",
+          description: "Rondleiding bij de beroemdste brouwerij van Nederland in Enschede.",
+          duration: "75 min",
+          hasAudio: 1,
+          coordinates: { lat: 52.2234, lng: 6.8789 }
+        },
+        {
+          routeId: overijsselBierRoute.id,
+          number: 2,
+          title: "Deventer Bergkwartier",
+          description: "Historisch centrum met gezellige cafés en biertuinen.",
+          duration: "90 min",
+          hasAudio: 1,
+          coordinates: { lat: 52.2545, lng: 6.1634 }
+        },
+        {
+          routeId: overijsselBierRoute.id,
+          number: 3,
+          title: "De Lachende Koe",
+          description: "Ambachtelijke brouwerij met terras aan het water in Kampen.",
+          duration: "60 min",
+          hasAudio: 0,
+          coordinates: { lat: 52.5567, lng: 5.9156 }
+        },
+        {
+          routeId: overijsselBierRoute.id,
+          number: 4,
+          title: "Zwolle Hanzestad",
+          description: "Bruisende hanzestad met bierbrouwerijen en terrasjes.",
+          duration: "75 min",
+          hasAudio: 1,
+          coordinates: { lat: 52.5125, lng: 6.0944 }
+        }
+      ];
+
+      stops.forEach(stop => {
+        this.createRouteStop(stop);
+      });
+
+      this.createAudioTrack({
+        routeId: overijsselBierRoute.id,
+        stopId: undefined,
+        title: "Introductie - Overijssel Bier Route",
+        duration: "8:45",
+        fileUrl: "/audio/overijssel-bier-intro.mp3",
+        transcript: "Welkom bij de Overijssel Bier Route. Proef de beste bieren..."
+      });
+    }
   }
 
   async getAllRegions(): Promise<Region[]> {
