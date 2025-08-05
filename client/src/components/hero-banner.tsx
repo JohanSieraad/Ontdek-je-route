@@ -6,19 +6,34 @@ import { useState, useEffect } from "react";
 // Background images for the carousel
 const backgroundImages = [
   {
-    url: 'https://images.unsplash.com/photo-1549813069-f95e44d7f498?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80',
-    alt: 'Neuschwanstein kasteel - sprookjesachtig kasteel',
-    location: 'Sprookjeskasteel'
+    url: 'https://images.unsplash.com/photo-1583052014411-2da88450c3c5?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80',
+    alt: 'Kinderdijk windmolens - UNESCO werelderfgoed',
+    location: 'Kinderdijk Windmolens'
   },
   {
-    url: 'https://images.unsplash.com/photo-1581833971358-2c8b550f87b3?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80',
-    alt: 'Historische binnenstad van Gouda',
-    location: 'Gouda Binnenstad'
+    url: 'https://images.unsplash.com/photo-1544427920-c49ccfb85579?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80',
+    alt: 'Zaanse Schans windmolens en historische huizen',
+    location: 'Zaanse Schans'
   },
   {
-    url: 'https://images.unsplash.com/photo-1551632811-561732d1e306?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80',
-    alt: 'Bossen van de Belgische Ardennen',
-    location: 'Belgische Ardennen'
+    url: 'https://images.unsplash.com/photo-1553979459-d2229ba7433a?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80',
+    alt: 'Keukenhof tulpenvelden in volle bloei',
+    location: 'Keukenhof Tulpenvelden'
+  },
+  {
+    url: 'https://images.unsplash.com/photo-1605177019862-a78cd2bb40de?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80',
+    alt: 'Giethoorn - Venetië van Nederland',
+    location: 'Giethoorn Kanalen'
+  },
+  {
+    url: 'https://images.unsplash.com/photo-1520637836862-4d197d17c89a?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80',
+    alt: 'Amsterdam grachten met historische huizen',
+    location: 'Amsterdam Grachten'
+  },
+  {
+    url: 'https://images.unsplash.com/photo-1629462131018-abc19b10f099?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80',
+    alt: 'Hoge Veluwe Nationaal Park bossen',
+    location: 'Hoge Veluwe'
   }
 ];
 
