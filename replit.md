@@ -6,6 +6,15 @@ This is a full-stack web application for exploring historical routes throughout 
 
 ## Recent Changes
 
+### UI/UX Improvements (January 2025)
+- Added 8 authentic Noord-Holland routes from official Dutch tourism sources
+- Implemented hero banner with professional Dutch landscape background image
+- Fixed 404 navigation errors - country flag buttons now use smooth scroll to page sections
+- Added dropdown navigation menu with authentic Dutch and Belgian flag SVGs
+- Reorganized route detail pages: navigation controls first, then download options
+- Added route creation functionality with 3 methods (waypoints, GPS tracking, community sharing)
+- Implemented scroll-to-top functionality for all pages to ensure proper page loading experience
+
 ### Belgian Ardennes Expansion (January 2025)
 - Added Belgium as new country with focus on Belgian Ardennes region
 - Created 2 new Belgian routes: "Kastelen Route Ardennen" and "Ardennen Natuur Route"
@@ -13,8 +22,6 @@ This is a full-stack web application for exploring historical routes throughout 
 - Implemented nature route with Hoge Venen National Park and Ourthe River
 - Extended navigation system to support cross-border routing
 - Corrected route distances (Kastelen Route: 125 km, Natuur Route: 85 km)
-- Reorganized UI with country-based navigation (authentic Netherlands/Belgium flag SVGs and sections)
-- Moved download buttons after navigation controls for better user flow
 
 ### Navigation Integration (January 2025)
 - Added comprehensive navigation system architecture for future Google Maps/Waze integration
