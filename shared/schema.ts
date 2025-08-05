@@ -1,8 +1,54 @@
 import { sql } from "drizzle-orm";
-import { pgTable, text, varchar, integer, real, jsonb, timestamp, boolean } from "drizzle-orm/pg-core";
+import { pgTable, text, varchar, integer, real, jsonb, timestamp, boolean, index } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 import { relations } from "drizzle-orm";
+
+// User authentication tables
+export const users = pgTable("users", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  email: varchar("email").unique().notNull(),
+  firstName: varchar("first_name"),
+  lastName: varchar("last_name"),
+  displayName: varchar("display_name"),
+  profileImageUrl: varchar("profile_image_url"),
+  passwordHash: varchar("password_hash"), // For email signup
+  emailVerified: boolean("email_verified").default(false),
+  verificationToken: varchar("verification_token"),
+  resetToken: varchar("reset_token"),
+  resetTokenExpires: timestamp("reset_token_expires"),
+  lastLoginAt: timestamp("last_login_at"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const userSocialAccounts = pgTable("user_social_accounts", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  provider: varchar("provider").notNull(), // 'google', 'facebook', 'instagram'
+  providerId: varchar("provider_id").notNull(), // External user ID from provider
+  providerEmail: varchar("provider_email"),
+  providerData: jsonb("provider_data"), // Store additional profile data
+  accessToken: text("access_token"),
+  refreshToken: text("refresh_token"),
+  expiresAt: timestamp("expires_at"),
+  createdAt: timestamp("created_at").defaultNow(),
+}, (table) => [
+  index("user_social_provider_idx").on(table.provider, table.providerId),
+]);
+
+export const sessions = pgTable("sessions", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  token: varchar("token").unique().notNull(),
+  expiresAt: timestamp("expires_at").notNull(),
+  ipAddress: varchar("ip_address"),
+  userAgent: text("user_agent"),
+  createdAt: timestamp("created_at").defaultNow(),
+}, (table) => [
+  index("session_token_idx").on(table.token),
+  index("session_expires_idx").on(table.expiresAt),
+]);
 
 export const regions = pgTable("regions", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
@@ -26,7 +72,7 @@ export const routes = pgTable("routes", {
   difficulty: text("difficulty").notNull().default("gemakkelijk"),
   isPopular: integer("is_popular").notNull().default(0),
   isUserCreated: boolean("is_user_created").notNull().default(false),
-  createdBy: varchar("created_by"),
+  createdBy: varchar("created_by").references(() => users.id),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
@@ -175,6 +221,59 @@ export const insertCastleLandmarkSchema = createInsertSchema(castleLandmarks).om
 
 export type InsertCastleLandmark = z.infer<typeof insertCastleLandmarkSchema>;
 export type CastleLandmark = typeof castleLandmarks.$inferSelect;
+
+// User authentication schemas
+export const insertUserSchema = createInsertSchema(users).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export const insertSocialAccountSchema = createInsertSchema(userSocialAccounts).omit({
+  id: true,
+  createdAt: true,
+});
+
+export const insertSessionSchema = createInsertSchema(sessions).omit({
+  id: true,
+  createdAt: true,
+});
+
+// User auth types
+export type InsertUser = z.infer<typeof insertUserSchema>;
+export type User = typeof users.$inferSelect;
+export type InsertSocialAccount = z.infer<typeof insertSocialAccountSchema>;
+export type SocialAccount = typeof userSocialAccounts.$inferSelect;
+export type InsertSession = z.infer<typeof insertSessionSchema>;
+export type Session = typeof sessions.$inferSelect;
+
+// Login/Register schemas for API
+export const registerSchema = z.object({
+  email: z.string().email("Ongeldig email adres"),
+  password: z.string().min(8, "Wachtwoord moet minimaal 8 karakters zijn"),
+  firstName: z.string().min(2, "Voornaam is verplicht"),
+  lastName: z.string().min(2, "Achternaam is verplicht"),
+  displayName: z.string().optional(),
+});
+
+export const loginSchema = z.object({
+  email: z.string().email("Ongeldig email adres"),
+  password: z.string().min(1, "Wachtwoord is verplicht"),
+});
+
+export const resetPasswordSchema = z.object({
+  email: z.string().email("Ongeldig email adres"),
+});
+
+export const changePasswordSchema = z.object({
+  token: z.string(),
+  password: z.string().min(8, "Wachtwoord moet minimaal 8 karakters zijn"),
+});
+
+export type RegisterData = z.infer<typeof registerSchema>;
+export type LoginData = z.infer<typeof loginSchema>;
+export type ResetPasswordData = z.infer<typeof resetPasswordSchema>;
+export type ChangePasswordData = z.infer<typeof changePasswordSchema>;
 
 // Navigation types for future implementation
 export interface RoutePreferences {

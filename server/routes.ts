@@ -1,9 +1,80 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { insertRouteSchema, insertRegionSchema, insertRouteStopSchema, insertAudioTrackSchema, insertReviewSchema, insertPhotoSchema } from "@shared/schema";
+import { insertRouteSchema, insertRegionSchema, insertRouteStopSchema, insertAudioTrackSchema, insertReviewSchema, insertPhotoSchema, registerSchema, loginSchema } from "@shared/schema";
+import { authService } from "./auth";
+import { authenticateToken, optionalAuth } from "./middleware/auth";
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Authentication routes
+  app.post("/api/auth/register", async (req, res) => {
+    try {
+      const validated = registerSchema.parse(req.body);
+      const user = await authService.register(validated);
+      
+      // Remove sensitive data
+      const { passwordHash, verificationToken, resetToken, ...safeUser } = user;
+      
+      res.status(201).json({
+        message: "Account succesvol aangemaakt",
+        user: safeUser,
+      });
+    } catch (error) {
+      console.error("Registration error:", error);
+      const message = error instanceof Error ? error.message : "Fout bij registratie";
+      res.status(400).json({ message });
+    }
+  });
+
+  app.post("/api/auth/login", async (req, res) => {
+    try {
+      const validated = loginSchema.parse(req.body);
+      const { user, token } = await authService.login(validated.email, validated.password);
+      
+      // Remove sensitive data
+      const { passwordHash, verificationToken, resetToken, ...safeUser } = user;
+      
+      res.json({
+        message: "Succesvol ingelogd",
+        user: safeUser,
+        token,
+      });
+    } catch (error) {
+      console.error("Login error:", error);
+      const message = error instanceof Error ? error.message : "Fout bij inloggen";
+      res.status(401).json({ message });
+    }
+  });
+
+  app.post("/api/auth/logout", authenticateToken, async (req, res) => {
+    try {
+      const token = req.headers.authorization?.split(' ')[1];
+      if (token) {
+        await authService.logout(token);
+      }
+      res.json({ message: "Succesvol uitgelogd" });
+    } catch (error) {
+      console.error("Logout error:", error);
+      res.status(500).json({ message: "Fout bij uitloggen" });
+    }
+  });
+
+  app.get("/api/auth/me", authenticateToken, async (req, res) => {
+    try {
+      const user = await authService.getUserById(req.user!.id);
+      if (!user) {
+        return res.status(404).json({ message: "Gebruiker niet gevonden" });
+      }
+      
+      // Remove sensitive data
+      const { passwordHash, verificationToken, resetToken, ...safeUser } = user;
+      res.json(safeUser);
+    } catch (error) {
+      console.error("Get user error:", error);
+      res.status(500).json({ message: "Fout bij ophalen gebruiker" });
+    }
+  });
+
   // Regions
   app.get("/api/regions", async (req, res) => {
     try {
@@ -68,10 +139,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Create a new user route
-  app.post("/api/routes", async (req, res) => {
+  // Create a new user route (protected)
+  app.post("/api/routes", authenticateToken, async (req, res) => {
     try {
-      const validated = insertRouteSchema.parse(req.body);
+      const validated = insertRouteSchema.parse({
+        ...req.body,
+        createdBy: req.user!.id,
+        isUserCreated: true,
+      });
       const route = await storage.createRoute(validated);
       res.status(201).json(route);
     } catch (error) {
@@ -80,10 +155,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Update an existing route
-  app.put("/api/routes/:id", async (req, res) => {
+  // Update an existing route (protected - only route owner)
+  app.put("/api/routes/:id", authenticateToken, async (req, res) => {
     try {
       const { id } = req.params;
+      
+      // Check if route exists and user owns it
+      const existingRoute = await storage.getRouteById(id);
+      if (!existingRoute) {
+        return res.status(404).json({ message: "Route niet gevonden" });
+      }
+      
+      if (existingRoute.createdBy !== req.user!.id) {
+        return res.status(403).json({ message: "Geen toegang tot deze route" });
+      }
+      
       const validated = insertRouteSchema.partial().parse(req.body);
       const route = await storage.updateRoute(id, validated);
       res.json(route);
@@ -93,10 +179,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Delete a route
-  app.delete("/api/routes/:id", async (req, res) => {
+  // Delete a route (protected - only route owner)
+  app.delete("/api/routes/:id", authenticateToken, async (req, res) => {
     try {
       const { id } = req.params;
+      
+      // Check if route exists and user owns it
+      const existingRoute = await storage.getRouteById(id);
+      if (!existingRoute) {
+        return res.status(404).json({ message: "Route niet gevonden" });
+      }
+      
+      if (existingRoute.createdBy !== req.user!.id) {
+        return res.status(403).json({ message: "Geen toegang tot deze route" });
+      }
+      
       await storage.deleteRoute(id);
       res.status(204).send();
     } catch (error) {

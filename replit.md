@@ -6,6 +6,15 @@ This is a full-stack web application for exploring historical routes throughout 
 
 ## Recent Changes
 
+### Complete Authentication System (August 2025)
+- **User registration & login**: Email-based authentication with password hashing (bcryptjs)
+- **Session management**: JWT tokens with 7-day expiration and secure session storage
+- **Social login ready**: Google, Facebook, Instagram login placeholders (easily extensible)
+- **Protected routes**: Route management now requires authentication with ownership validation
+- **User-specific data**: Routes are linked to users, only creators can edit/delete their routes
+- **Modern auth UI**: Beautiful login/register forms with validation and error handling
+- **Security features**: Password validation, secure token storage, authorization middleware
+
 ### Complete Automotive Transformation (August 2025)
 - **Full automotive focus**: Transformed from cycling/walking to car driving experience
 - **Summer color scheme**: Added fresh, inviting colors (summer orange, sky blue, vibrant purple, sunset pink)
@@ -56,14 +65,18 @@ User repeatedly asks about navigation integration despite it being implemented: 
 
 ### Database Schema
 - **ORM**: Drizzle ORM configured for PostgreSQL with type-safe schema definitions
-- **Tables**: 
+- **Authentication Tables**:
+  - `users` - User profiles with email, password, names, and verification status
+  - `userSocialAccounts` - Social login connections (Google, Facebook, Instagram)
+  - `sessions` - Secure session management with token expiration
+- **Core Tables**: 
   - `regions` - Geographic areas with route counts and descriptions
-  - `routes` - Individual historical routes with metadata and ratings
+  - `routes` - Individual historical routes with user ownership and metadata
   - `routeStops` - Waypoints along routes with coordinates and descriptions  
   - `audioTracks` - Audio guide content linked to routes and stops
   - `navigationRoutes` - Navigation data cache for external routing providers
 - **Validation**: Zod schemas for runtime type validation and API request/response validation
-- **Navigation Types**: Support for route preferences, coordinates, and multi-provider navigation
+- **User Relations**: Routes linked to users with proper foreign key constraints
 
 ### Component Architecture
 - **Layout Components**: Navigation, footer, and responsive mobile-friendly design

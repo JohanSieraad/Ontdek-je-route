@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -8,12 +8,15 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Trash2, Edit, Plus, Car, MapPin } from "lucide-react";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Trash2, Edit, Plus, Car, MapPin, Lock } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
+import { useAuth } from "@/components/auth/auth-provider";
 import type { Route, Region, InsertRoute } from "@shared/schema";
 
 export default function ManageRoutes() {
+  const { user, isAuthenticated, isLoading: authLoading } = useAuth();
   const [selectedRoute, setSelectedRoute] = useState<Route | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [formData, setFormData] = useState<Partial<InsertRoute>>({
@@ -30,6 +33,13 @@ export default function ManageRoutes() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
+  // Redirect to home if not authenticated
+  useEffect(() => {
+    if (!authLoading && !isAuthenticated) {
+      window.location.href = "/";
+    }
+  }, [authLoading, isAuthenticated]);
+
   // Fetch all routes and regions
   const { data: routes = [], isLoading: routesLoading } = useQuery<Route[]>({
     queryKey: ["/api/routes"],
@@ -42,7 +52,22 @@ export default function ManageRoutes() {
   // Create route mutation
   const createMutation = useMutation({
     mutationFn: async (data: InsertRoute) => {
-      return await apiRequest("/api/routes", "POST", data);
+      const token = localStorage.getItem("auth_token");
+      const response = await fetch("/api/routes", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || "Failed to create route");
+      }
+
+      return response.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/routes"] });
@@ -65,7 +90,22 @@ export default function ManageRoutes() {
   // Update route mutation
   const updateMutation = useMutation({
     mutationFn: async ({ id, data }: { id: string; data: Partial<InsertRoute> }) => {
-      return await apiRequest(`/api/routes/${id}`, "PUT", data);
+      const token = localStorage.getItem("auth_token");
+      const response = await fetch(`/api/routes/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || "Failed to update route");
+      }
+
+      return response.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/routes"] });
@@ -89,7 +129,18 @@ export default function ManageRoutes() {
   // Delete route mutation
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {
-      return await apiRequest(`/api/routes/${id}`, "DELETE");
+      const token = localStorage.getItem("auth_token");
+      const response = await fetch(`/api/routes/${id}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || "Failed to delete route");
+      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/routes"] });
@@ -152,14 +203,30 @@ export default function ManageRoutes() {
     }
   };
 
-  const userCreatedRoutes = routes.filter(route => route.isUserCreated);
+  const userCreatedRoutes = routes.filter(route => route.isUserCreated && route.createdBy === user?.id);
 
-  if (routesLoading) {
+  if (authLoading || routesLoading) {
     return (
       <div className="container mx-auto p-6">
         <div className="flex items-center justify-center h-32">
-          <div className="text-gray-500">Routes laden...</div>
+          <div className="text-gray-500">Laden...</div>
         </div>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return (
+      <div className="container mx-auto p-6">
+        <Alert>
+          <Lock className="h-4 w-4" />
+          <AlertDescription>
+            Je moet ingelogd zijn om je routes te beheren. 
+            <a href="/" className="ml-1 text-orange-600 hover:text-orange-700 underline">
+              Ga terug naar de homepage
+            </a>
+          </AlertDescription>
+        </Alert>
       </div>
     );
   }
