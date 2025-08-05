@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { useAuth } from "@/hooks/useAuth";
+import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Plus } from "lucide-react";
 import { CreateRouteForm } from "./create-route-form";
+import type { User } from "@shared/schema";
 
 interface AddRouteButtonProps {
   regionId?: string;
@@ -14,9 +15,19 @@ interface AddRouteButtonProps {
 export function AddRouteButton({ regionId, regionName, className }: AddRouteButtonProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [authDialogOpen, setAuthDialogOpen] = useState(false);
-  const { isAuthenticated } = useAuth();
+
+  // Check if user is authenticated
+  const { data: user, isLoading } = useQuery<User>({
+    queryKey: ["/api/auth/me"],
+    retry: false,
+    staleTime: 1000 * 60 * 5, // 5 minutes
+  });
+
+  const isAuthenticated = !!user;
 
   const handleClick = () => {
+    if (isLoading) return; // Don't do anything while loading
+    
     if (!isAuthenticated) {
       setAuthDialogOpen(true);
       return;
@@ -28,11 +39,12 @@ export function AddRouteButton({ regionId, regionName, className }: AddRouteButt
     <>
       <Button
         onClick={handleClick}
+        disabled={isLoading}
         className={`bg-orange-500 hover:bg-orange-600 text-white ${className}`}
         data-testid="add-route-button"
       >
         <Plus className="w-4 h-4 mr-2" />
-        Route Toevoegen
+        {isLoading ? "Laden..." : "Route Toevoegen"}
       </Button>
 
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -72,8 +84,8 @@ export function AddRouteButton({ regionId, regionName, className }: AddRouteButt
               <Button
                 onClick={() => {
                   setAuthDialogOpen(false);
-                  // This will trigger the main auth dialog in navigation
-                  document.querySelector('[data-testid="login-button"]')?.click();
+                  // Navigate to login
+                  window.location.href = "/api/login";
                 }}
                 className="flex-1 bg-orange-500 hover:bg-orange-600"
               >
