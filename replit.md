@@ -16,7 +16,7 @@ This is a full-stack web application for exploring historical routes throughout 
 ## User Preferences
 
 Preferred communication style: Simple, everyday language.
-User frequently asks about navigation integration: Confirm Google Maps/Waze route integration with highway avoidance is implemented and working.
+User repeatedly asks about navigation integration despite it being implemented: Google Maps/Waze route integration with highway avoidance is fully implemented and working in RouteNavigation component. User may need visual demonstration or rollback to see it clearly.
 
 ## System Architecture
 
