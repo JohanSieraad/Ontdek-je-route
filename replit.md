@@ -6,6 +6,13 @@ This is a full-stack web application for exploring historical routes throughout 
 
 ## Recent Changes
 
+### Route ID Persistence Fix (August 2025)
+- **Fixed critical issue**: Route links no longer break after server restart
+- **Implemented fixed IDs**: All 7 regions and 14 routes now use persistent IDs instead of random UUIDs
+- **Enhanced stability**: Route detail pages consistently accessible via direct links
+- **Navigation integration**: Google Maps, Waze, and OpenStreetMap options now available on all route detail pages
+- **Technical improvement**: Replaced `Array.find()` lookups with direct Map operations for better performance
+
 ### Complete Authentication System (August 2025)
 - **User registration & login**: Email-based authentication with password hashing (bcryptjs)
 - **Session management**: JWT tokens with 7-day expiration and secure session storage
