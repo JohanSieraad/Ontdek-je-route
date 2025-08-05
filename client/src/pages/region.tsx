@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useParams, Link } from "wouter";
 import { Navigation } from "@/components/navigation";
 import { RouteCard } from "@/components/route-card";
@@ -10,6 +11,11 @@ import { Button } from "@/components/ui/button";
 
 export default function RegionPage() {
   const { regionId } = useParams();
+
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const { data: region, isLoading: regionLoading } = useQuery<Region>({
     queryKey: ["/api/regions", regionId],

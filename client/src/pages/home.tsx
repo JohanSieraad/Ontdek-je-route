@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Navigation } from "@/components/navigation";
 import { HeroBanner } from "@/components/hero-banner";
 import { RegionCard } from "@/components/region-card";
@@ -8,6 +9,10 @@ import { useQuery } from "@tanstack/react-query";
 import { Region, Route } from "@shared/schema";
 
 export default function Home() {
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   const { data: regions, isLoading: regionsLoading } = useQuery<Region[]>({
     queryKey: ["/api/regions"],
   });

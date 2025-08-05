@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useParams, Link } from "wouter";
 import { Navigation } from "@/components/navigation";
 import { AudioPlayer } from "@/components/audio-player";
@@ -13,6 +14,11 @@ import { Badge } from "@/components/ui/badge";
 
 export default function RouteDetailPage() {
   const { routeId } = useParams();
+
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const { data: route, isLoading: routeLoading } = useQuery<Route>({
     queryKey: ["/api/routes", routeId],
