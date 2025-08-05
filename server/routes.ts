@@ -212,6 +212,41 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Castle landmarks routes
+  app.get("/api/castles", async (req, res) => {
+    try {
+      const castles = await storage.getAllCastleLandmarks();
+      res.json(castles);
+    } catch (error) {
+      console.error("Error fetching castle landmarks:", error);
+      res.status(500).json({ message: "Failed to fetch castle landmarks" });
+    }
+  });
+
+  app.get("/api/castles/:id", async (req, res) => {
+    try {
+      const castle = await storage.getCastleLandmarkById(req.params.id);
+      if (!castle) {
+        res.status(404).json({ message: "Castle landmark not found" });
+        return;
+      }
+      res.json(castle);
+    } catch (error) {
+      console.error("Error fetching castle landmark:", error);
+      res.status(500).json({ message: "Failed to fetch castle landmark" });
+    }
+  });
+
+  app.get("/api/routes/:routeId/castles", async (req, res) => {
+    try {
+      const castles = await storage.getCastleLandmarksByRoute(req.params.routeId);
+      res.json(castles);
+    } catch (error) {
+      console.error("Error fetching route castles:", error);
+      res.status(500).json({ message: "Failed to fetch route castles" });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

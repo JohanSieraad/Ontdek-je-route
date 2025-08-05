@@ -116,6 +116,11 @@ export const insertPhotoSchema = createInsertSchema(photos).omit({
   uploadedAt: true,
 });
 
+export const insertNavigationRouteSchema = createInsertSchema(navigationRoutes).omit({
+  id: true,
+  createdAt: true,
+});
+
 
 
 export type InsertRegion = z.infer<typeof insertRegionSchema>;
@@ -138,6 +143,33 @@ export type Review = typeof reviews.$inferSelect;
 
 export type InsertPhoto = z.infer<typeof insertPhotoSchema>;
 export type Photo = typeof photos.$inferSelect;
+
+// Castle landmarks table for interactive pop-ups
+export const castleLandmarks = pgTable("castle_landmarks", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  name: text("name").notNull(),
+  location: text("location").notNull(),
+  description: text("description").notNull(),
+  imageUrl: text("image_url").notNull(),
+  historicalPeriod: text("historical_period").notNull(),
+  builtYear: integer("built_year").notNull(),
+  architecturalStyle: text("architectural_style").notNull(),
+  visitDuration: text("visit_duration").notNull(),
+  entryFee: text("entry_fee").notNull(),
+  highlights: jsonb("highlights"), // string[]
+  funFacts: jsonb("fun_facts"), // string[]
+  parkingInfo: text("parking_info").notNull(),
+  instagramSpots: jsonb("instagram_spots"), // string[]
+  coordinates: jsonb("coordinates"), // {lat: number, lng: number}
+  routeIds: jsonb("route_ids"), // string[] - which routes include this castle
+});
+
+export const insertCastleLandmarkSchema = createInsertSchema(castleLandmarks).omit({
+  id: true,
+});
+
+export type InsertCastleLandmark = z.infer<typeof insertCastleLandmarkSchema>;
+export type CastleLandmark = typeof castleLandmarks.$inferSelect;
 
 // Navigation types for future implementation
 export interface RoutePreferences {

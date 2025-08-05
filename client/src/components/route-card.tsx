@@ -1,14 +1,21 @@
 import { Link } from "wouter";
 import { Route } from "@shared/schema";
-import { Clock, MapPin, Star } from "lucide-react";
+import { Clock, MapPin, Star, Crown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { CastleLandmarkTrigger } from "./castle-landmark-popup";
+import { useQuery } from "@tanstack/react-query";
 
 interface RouteCardProps {
   route: Route;
 }
 
 export function RouteCard({ route }: RouteCardProps) {
+  // Fetch castle landmarks for this route
+  const { data: castles = [] } = useQuery({
+    queryKey: ['/api/routes', route.id, 'castles'],
+    queryFn: () => fetch(`/api/routes/${route.id}/castles`).then(res => res.json())
+  });
   const getCategoryColor = (category: string) => {
     switch (category.toLowerCase()) {
       case 'kastelen & eten':
@@ -67,6 +74,29 @@ export function RouteCard({ route }: RouteCardProps) {
           <p className="text-gray-600 mb-4" data-testid={`text-description-${route.id}`}>
             {route.description}
           </p>
+          {/* Castle landmarks badges */}
+          {castles.length > 0 && (
+            <div className="flex flex-wrap gap-2 mb-4">
+              {castles.slice(0, 2).map((castle: any) => (
+                <CastleLandmarkTrigger key={castle.id} castle={castle}>
+                  <Badge 
+                    variant="outline" 
+                    className="bg-yellow-50 border-yellow-300 text-yellow-800 hover:bg-yellow-100 cursor-pointer transition-colors duration-200 flex items-center gap-1 interactive-hover"
+                    data-testid={`badge-castle-${castle.id}`}
+                  >
+                    <Crown className="h-3 w-3" />
+                    {castle.name.replace('Kasteel ', '')}
+                  </Badge>
+                </CastleLandmarkTrigger>
+              ))}
+              {castles.length > 2 && (
+                <Badge variant="outline" className="bg-gray-50 border-gray-300 text-gray-600">
+                  +{castles.length - 2} meer
+                </Badge>
+              )}
+            </div>
+          )}
+
           <div className="flex items-center justify-between">
             <div className="flex items-center text-gray-500 text-sm">
               <Clock className="mr-1 h-4 w-4" />

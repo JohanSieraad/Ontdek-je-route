@@ -1,4 +1,4 @@
-import { type Region, type InsertRegion, type Route, type InsertRoute, type RouteStop, type InsertRouteStop, type AudioTrack, type InsertAudioTrack, type Review, type InsertReview, type Photo, type InsertPhoto } from "@shared/schema";
+import { type Region, type InsertRegion, type Route, type InsertRoute, type RouteStop, type InsertRouteStop, type AudioTrack, type InsertAudioTrack, type Review, type InsertReview, type Photo, type InsertPhoto, type CastleLandmark, type InsertCastleLandmark } from "@shared/schema";
 import { randomUUID } from "crypto";
 
 export interface IStorage {
@@ -33,6 +33,12 @@ export interface IStorage {
   getPhotosByStop(stopId: string): Promise<Photo[]>;
   createPhoto(photo: InsertPhoto): Promise<Photo>;
   getPhotoById(id: string): Promise<Photo | undefined>;
+
+  // Castle Landmarks
+  getAllCastleLandmarks(): Promise<CastleLandmark[]>;
+  getCastleLandmarkById(id: string): Promise<CastleLandmark | undefined>;
+  getCastleLandmarksByRoute(routeId: string): Promise<CastleLandmark[]>;
+  createCastleLandmark(castle: InsertCastleLandmark): Promise<CastleLandmark>;
 }
 
 export class MemStorage implements IStorage {
@@ -42,6 +48,7 @@ export class MemStorage implements IStorage {
   private audioTracks: Map<string, AudioTrack>;
   private reviews: Map<string, Review>;
   private photos: Map<string, Photo>;
+  private castleLandmarks: Map<string, CastleLandmark>;
 
   constructor() {
     this.regions = new Map();
@@ -50,7 +57,9 @@ export class MemStorage implements IStorage {
     this.audioTracks = new Map();
     this.reviews = new Map();
     this.photos = new Map();
+    this.castleLandmarks = new Map();
     this.initializeData();
+    this.initializeCastleLandmarks(); // Move after routes are created
     this.initializeReviewsAndPhotos();
   }
 
@@ -732,6 +741,147 @@ export class MemStorage implements IStorage {
         isApproved: 1
       });
     }
+  }
+
+  // Castle Landmarks methods
+  async getAllCastleLandmarks(): Promise<CastleLandmark[]> {
+    return Array.from(this.castleLandmarks.values());
+  }
+
+  async getCastleLandmarkById(id: string): Promise<CastleLandmark | undefined> {
+    return this.castleLandmarks.get(id);
+  }
+
+  async getCastleLandmarksByRoute(routeId: string): Promise<CastleLandmark[]> {
+    return Array.from(this.castleLandmarks.values()).filter(castle => 
+      Array.isArray(castle.routeIds) && castle.routeIds.includes(routeId)
+    );
+  }
+
+  async createCastleLandmark(castleData: InsertCastleLandmark): Promise<CastleLandmark> {
+    const castle: CastleLandmark = {
+      id: randomUUID(),
+      ...castleData,
+    };
+    this.castleLandmarks.set(castle.id, castle);
+    return castle;
+  }
+
+  private initializeCastleLandmarks() {
+    // Get route IDs for linking castles to routes
+    const kastelenRoutes = Array.from(this.routes.values()).filter(r => 
+      r.title.toLowerCase().includes('kasteel') || r.category.toLowerCase().includes('kastelen')
+    );
+    const noordHollandRoute = kastelenRoutes.find(r => r.title.includes('Noord-Holland'));
+    const utrechtRoute = kastelenRoutes.find(r => r.title.includes('Utrecht'));
+    const ardennenRoute = kastelenRoutes.find(r => r.title.includes('Ardennen'));
+
+    const castleData: InsertCastleLandmark[] = [
+      {
+        name: "Kasteel Muiderslot",
+        location: "Muiden, Noord-Holland", 
+        description: "Een van de best bewaarde middeleeuwse kastelen van Nederland, gebouwd in 1285 door Graaf Floris V. Het kasteel ligt strategisch aan de monding van de Vecht en biedt een prachtige combinatie van geschiedenis en architectuur.",
+        imageUrl: "https://images.unsplash.com/photo-1549813069-f95e44d7f498?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
+        historicalPeriod: "13e eeuw",
+        builtYear: 1285,
+        architecturalStyle: "Middeleeuwse vesting",
+        visitDuration: "1,5-2 uur",
+        entryFee: "€16,50 volwassenen",
+        highlights: [
+          "Authentiek interieur uit de Gouden Eeuw",
+          "Wapenmuseum met middeleeuwse uitrusting", 
+          "Prachtige tuinen met historische planten",
+          "Panoramisch uitzicht vanaf de torens"
+        ],
+        funFacts: [
+          "Graaf Floris V werd hier gevangen gehouden voordat hij werd vermoord",
+          "Het kasteel diende als inspiratie voor vele sprookjes",
+          "P.C. Hooft organiseerde hier literaire bijeenkomsten in de 17e eeuw",
+          "De slotgracht is nog steeds gevuld met water uit de Vecht"
+        ],
+        parkingInfo: "Gratis parkeren op 200 meter van het kasteel. Druk tijdens weekenden, vroeg komen aanbevolen.",
+        instagramSpots: [
+          "Hoofdingang met ophaalbrug",
+          "Binnenplaats met oude waterput", 
+          "Uitzicht vanaf de ridderzaal",
+          "Kasteel weerspiegeling in de gracht"
+        ],
+        coordinates: { lat: 52.3353, lng: 5.0702 },
+        routeIds: noordHollandRoute ? [noordHollandRoute.id] : []
+      },
+      {
+        name: "Kasteel de Haar",
+        location: "Haarzuilens, Utrecht",
+        description: "Het grootste en meest luxueuze kasteel van Nederland, herbouwd in neo-gotische stijl aan het einde van de 19e eeuw. Met zijn sprookjesachtige torens en prachtige parken is het een absolute must-see.",
+        imageUrl: "https://images.unsplash.com/photo-1549813069-f95e44d7f498?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
+        historicalPeriod: "19e eeuw (herbouw)",
+        builtYear: 1892,
+        architecturalStyle: "Neo-gotiek",
+        visitDuration: "2-3 uur",
+        entryFee: "€17,50 volwassenen",
+        highlights: [
+          "Luxueuze kamers met originele meubels",
+          "Grote bibliotheek met duizenden boeken",
+          "Japanse tuin en rozen labyrint",
+          "Imposante ridderzaal met gewelven"
+        ],
+        funFacts: [
+          "Heeft meer kamers dan Buckingham Palace",
+          "Het hele dorp Haarzuilens werd verplaatst voor de herbouw",
+          "Elk jaar wordt het kasteel helemaal leeggehaald voor de winter",
+          "De familie Van Zuylen woont er nog steeds een deel van het jaar"
+        ],
+        parkingInfo: "Ruime parkeerplaats direct bij het kasteel, €5 per dag. Shuttle service naar ingang beschikbaar.",
+        instagramSpots: [
+          "Hoofdfaçade met alle torens",
+          "Ophaalbrug ingang",
+          "Bibliotheek met houten boekenkasten",
+          "Kasteel vanaf de vijver"
+        ],
+        coordinates: { lat: 52.1201, lng: 5.1319 },
+        routeIds: utrechtRoute ? [utrechtRoute.id] : []
+      },
+      {
+        name: "Kasteel van Bouillon",
+        location: "Bouillon, Belgische Ardennen",
+        description: "Een van de oudste kastelen van Europa, gebouwd op een rotsblok boven de Semois rivier. Het kasteel van Godfried van Bouillon, leider van de Eerste Kruistocht, ademt eeuwenoude geschiedenis uit.",
+        imageUrl: "https://images.unsplash.com/photo-1549813069-f95e44d7f498?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
+        historicalPeriod: "11e eeuw",
+        builtYear: 1060,
+        architecturalStyle: "Romaanse burchtarchitectuur",
+        visitDuration: "1,5-2 uur",
+        entryFee: "€9,50 volwassenen",
+        highlights: [
+          "Spectaculair uitzicht over de Semois vallei",
+          "Middeleeuwse martelkamer",
+          "Authentieke gewelven en torens",
+          "Kruistocht geschiedenis museum"
+        ],
+        funFacts: [
+          "Godfried van Bouillon verkocht het kasteel om de Eerste Kruistocht te financieren",
+          "Het kasteel werd nooit volledig ingenomen tijdens belegeringen",
+          "Er zijn geheime gangen die naar de rivier leiden",
+          "Napoleon bezocht het kasteel tijdens zijn veldtochten"
+        ],
+        parkingInfo: "Parkeren in het centrum van Bouillon, 5 minuten lopen naar kasteel ingang.",
+        instagramSpots: [
+          "Kasteel vanaf de Semois brug",
+          "Panorama vanaf de hoofdtoren",
+          "Middeleeuwse binnenplaats",
+          "Uitzicht over de rivier bocht"
+        ],
+        coordinates: { lat: 49.7930, lng: 5.0661 },
+        routeIds: ardennenRoute ? [ardennenRoute.id] : []
+      }
+    ];
+
+    castleData.forEach(castle => {
+      const newCastle: CastleLandmark = {
+        id: randomUUID(),
+        ...castle,
+      };
+      this.castleLandmarks.set(newCastle.id, newCastle);
+    });
   }
 }
 
