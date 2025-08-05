@@ -1038,46 +1038,21 @@ export class DatabaseStorage implements IStorage {
 export class HybridStorage implements IStorage {
   private memStorage: MemStorage;
   private dbStorage: DatabaseStorage;
-  private useDatabase: boolean = true;
+  private useDatabase: boolean = false; // Force memory storage for now
 
   constructor() {
     this.memStorage = new MemStorage();
     this.dbStorage = new DatabaseStorage();
-    
-    // Ensure sample data is available
-    this.initializeSampleData();
+    console.log("HybridStorage initialized - using memory storage with sample data");
   }
 
-  private async initializeSampleData() {
-    try {
-      // Use memory storage for initial data
-      setTimeout(async () => {
-        const regions = await this.memStorage.getAllRegions();
-        if (regions.length === 0) {
-          console.log("Initializing sample regions and routes...");
-          // Sample data is already created in MemStorage constructor
-        }
-      }, 100);
-    } catch (error) {
-      console.log("Sample data initialization completed");
-    }
-  }
-
-  // Route through to appropriate storage
+  // Route through to appropriate storage - using memory for now
   private getStorage(): IStorage {
-    return this.useDatabase ? this.dbStorage : this.memStorage;
+    return this.memStorage; // Always use memory storage for sample data
   }
 
   // Regions
   async getAllRegions(): Promise<Region[]> {
-    try {
-      if (this.useDatabase) {
-        return await this.dbStorage.getAllRegions();
-      }
-    } catch (error) {
-      console.error('Database error, falling back to memory storage:', error);
-      this.useDatabase = false;
-    }
     return await this.memStorage.getAllRegions();
   }
 
@@ -1089,9 +1064,9 @@ export class HybridStorage implements IStorage {
     return await this.getStorage().createRegion(region);
   }
 
-  // Routes
+  // Routes  
   async getAllRoutes(): Promise<Route[]> {
-    return await this.getStorage().getAllRoutes();
+    return await this.memStorage.getAllRoutes();
   }
 
   async getRouteById(id: string): Promise<Route | undefined> {
