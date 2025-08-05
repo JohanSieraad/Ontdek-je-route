@@ -12,6 +12,7 @@ This is a full-stack web application for exploring historical routes throughout 
 - **Enhanced stability**: Route detail pages consistently accessible via direct links
 - **Navigation integration**: Google Maps, Waze, and OpenStreetMap options now available on all route detail pages
 - **Technical improvement**: Replaced `Array.find()` lookups with direct Map operations for better performance
+- **Foundation ready**: Stable architecture prepared for multi-day routes and affiliate integration expansion
 
 ### Complete Authentication System (August 2025)
 - **User registration & login**: Email-based authentication with password hashing (bcryptjs)
@@ -52,6 +53,22 @@ This is a full-stack web application for exploring historical routes throughout 
 
 Preferred communication style: Simple, everyday language.
 User repeatedly asks about navigation integration despite it being implemented: Google Maps/Waze route integration with highway avoidance is fully implemented and working in RouteNavigation component. User may need visual demonstration or rollback to see it clearly.
+
+## Development Roadmap
+
+### Planned Features (Next Phase)
+- **Multi-day routes**: Extended routes spanning 2-7 days with overnight stays
+- **Accommodation integration**: Airbnb and Booking.com affiliate partnerships for revenue
+- **Extended itineraries**: Day-by-day planning with restaurant, attraction and hotel recommendations
+- **Monetization strategy**: Affiliate commissions from accommodation bookings
+- **Enhanced content**: Detailed multi-day route descriptions with authentic Dutch/Belgian locations
+
+### App Store Publication Pipeline
+1. **Technical preparation**: Database migration, PWA setup, performance optimization
+2. **Content expansion**: Multi-day routes, affiliate integration, enhanced descriptions  
+3. **Legal compliance**: Privacy policy, terms of service, GDPR compliance
+4. **App store setup**: Google Play Store and iOS App Store preparation
+5. **Marketing materials**: Screenshots, descriptions, ASO optimization
 
 ## System Architecture
 
