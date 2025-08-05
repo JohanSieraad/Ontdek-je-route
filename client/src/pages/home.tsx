@@ -55,7 +55,7 @@ export default function Home() {
           ) : regions && regions.length > 0 ? (
             <>
               {/* Nederlandse Regio's */}
-              <div className="mb-16">
+              <div className="mb-16" id="dutch-regions">
                 <div className="flex items-center mb-8">
                   <div className="w-10 h-7 mr-4 border border-gray-300 rounded-sm overflow-hidden">
                     <svg viewBox="0 0 9 6" className="w-full h-full">
@@ -74,7 +74,7 @@ export default function Home() {
               </div>
 
               {/* Belgische Regio's */}
-              <div className="mb-8">
+              <div className="mb-8" id="belgian-regions">
                 <div className="flex items-center mb-8">
                   <div className="w-10 h-7 mr-4 border border-gray-300 rounded-sm overflow-hidden">
                     <svg viewBox="0 0 15 13" className="w-full h-full">
