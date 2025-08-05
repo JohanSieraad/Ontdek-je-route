@@ -12,6 +12,9 @@ This is a full-stack web application for exploring historical routes throughout 
 - Added authentic Belgian castle stops: Bouillon, La Roche-en-Ardenne, Reinhardstein
 - Implemented nature route with Hoge Venen National Park and Ourthe River
 - Extended navigation system to support cross-border routing
+- Corrected route distances (Kastelen Route: 125 km, Natuur Route: 85 km)
+- Reorganized UI with country-based navigation (Netherlands/Belgium flags and sections)
+- Moved download buttons after navigation controls for better user flow
 
 ### Navigation Integration (January 2025)
 - Added comprehensive navigation system architecture for future Google Maps/Waze integration

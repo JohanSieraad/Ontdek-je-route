@@ -27,14 +27,14 @@ export default function Home() {
       
       <HeroSection />
 
-      {/* Region Selection */}
+      {/* Country and Region Selection */}
       <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h3 className="text-3xl font-bold text-gray-900 mb-4">Kies Uw Regio</h3>
+            <h3 className="text-3xl font-bold text-gray-900 mb-4">Kies Uw Bestemming</h3>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Nederland is verdeeld in 12 provincies, elk met zijn eigen unieke geschiedenis en cultuur. 
-              Selecteer een regio om de beschikbare historische routes te ontdekken.
+              Ontdek historische routes in Nederland en België. Elk land biedt unieke culturele ervaringen 
+              en adembenemende landschappen om te verkennen.
             </p>
           </div>
 
@@ -53,11 +53,37 @@ export default function Home() {
               ))}
             </div>
           ) : regions && regions.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {regions.map((region) => (
-                <RegionCard key={region.id} region={region} />
-              ))}
-            </div>
+            <>
+              {/* Nederlandse Regio's */}
+              <div className="mb-16">
+                <div className="flex items-center mb-8">
+                  <div className="w-8 h-6 bg-red-500 mr-3"></div>
+                  <div className="w-8 h-6 bg-white border border-gray-300 mr-3"></div>
+                  <div className="w-8 h-6 bg-blue-500 mr-4"></div>
+                  <h4 className="text-2xl font-bold text-gray-900">Nederland</h4>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {regions.filter(region => !region.name.includes("Belgische")).map((region) => (
+                    <RegionCard key={region.id} region={region} />
+                  ))}
+                </div>
+              </div>
+
+              {/* Belgische Regio's */}
+              <div className="mb-8">
+                <div className="flex items-center mb-8">
+                  <div className="w-8 h-6 bg-black mr-3"></div>
+                  <div className="w-8 h-6 bg-yellow-400 mr-3"></div>
+                  <div className="w-8 h-6 bg-red-500 mr-4"></div>
+                  <h4 className="text-2xl font-bold text-gray-900">België</h4>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {regions.filter(region => region.name.includes("Belgische")).map((region) => (
+                    <RegionCard key={region.id} region={region} />
+                  ))}
+                </div>
+              </div>
+            </>
           ) : (
             <div className="text-center py-12">
               <p className="text-gray-500">Geen regio's gevonden.</p>

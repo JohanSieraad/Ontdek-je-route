@@ -150,7 +150,7 @@ export class MemStorage implements IStorage {
         category: "Geschiedenis & Kastelen",
         rating: 4.6,
         duration: "5 uur",
-        distance: "8.2 km",
+        distance: "125 km",
         imageUrl: "https://images.unsplash.com/photo-1520637836862-4d197d17c93a?ixlib=rb-4.0.3",
         difficulty: "gemiddeld",
         isPopular: 1
@@ -162,7 +162,7 @@ export class MemStorage implements IStorage {
         category: "Natuur & Wildlife",
         rating: 4.8,
         duration: "4.5 uur",
-        distance: "7.8 km",
+        distance: "85 km",
         imageUrl: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?ixlib=rb-4.0.3",
         difficulty: "uitdagend",
         isPopular: 1

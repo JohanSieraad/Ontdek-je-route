@@ -188,8 +188,18 @@ export default function RouteDetailPage() {
             )}
           </div>
 
-          {/* Action Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 mb-8">
+        </div>
+
+        {/* Navigation Section */}
+        {stops && stops.length > 0 && (
+          <div className="mb-8">
+            <RouteNavigation route={route} stops={stops} />
+          </div>
+        )}
+
+        {/* Action Buttons - Moved after navigation */}
+        <div className="bg-white rounded-xl shadow-lg p-6 mb-8">
+          <div className="flex flex-col sm:flex-row gap-4">
             <Button variant="outline" className="flex-1 border-dutch-orange text-dutch-orange hover:bg-dutch-orange hover:text-white" data-testid="button-download-route">
               <Download className="mr-2 h-4 w-4" />
               Route Downloaden
@@ -200,13 +210,6 @@ export default function RouteDetailPage() {
             </Button>
           </div>
         </div>
-
-        {/* Navigation Section */}
-        {stops && stops.length > 0 && (
-          <div className="mb-8">
-            <RouteNavigation route={route} stops={stops} />
-          </div>
-        )}
       </div>
 
       <Footer />
