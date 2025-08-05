@@ -133,6 +133,53 @@ export class MemStorage implements IStorage {
       this.createRoute(route);
     });
 
+    // Add route stops for the Kinderdijk route
+    const kinderdjikRoute = Array.from(this.routes.values()).find(r => r.title === "Kinderdijk Molens Route");
+    if (kinderdjikRoute) {
+      const kinderdjikStops: InsertRouteStop[] = [
+        {
+          routeId: kinderdjikRoute.id,
+          number: 1,
+          title: "Bezoekerscentrum Kinderdijk",
+          description: "Start je bezoek bij het informatiecentrum met introductie over de molens en waterbeheersing.",
+          duration: "30 min",
+          hasAudio: 1,
+          coordinates: { lat: 51.8845, lng: 4.6407 }
+        },
+        {
+          routeId: kinderdjikRoute.id,
+          number: 2,
+          title: "Overwaard Molens 1-8",
+          description: "Wandel langs de eerste acht molens van de Overwaard met prachtige fotomogelijkheden.",
+          duration: "45 min",
+          hasAudio: 1,
+          coordinates: { lat: 51.8822, lng: 4.6389 }
+        },
+        {
+          routeId: kinderdjikRoute.id,
+          number: 3,
+          title: "Nederwaard Molens 1-8",
+          description: "Verken de Nederwaard molens aan de andere kant van het kanaal.",
+          duration: "40 min",
+          hasAudio: 1,
+          coordinates: { lat: 51.8801, lng: 4.6342 }
+        },
+        {
+          routeId: kinderdjikRoute.id,
+          number: 4,
+          title: "Museum Molen Blokweer",
+          description: "Bezoek het museum in een authentieke molen en leer over het leven van de molenaars.",
+          duration: "35 min",
+          hasAudio: 1,
+          coordinates: { lat: 51.8833, lng: 4.6378 }
+        }
+      ];
+
+      kinderdjikStops.forEach(stop => {
+        this.createRouteStop(stop);
+      });
+    }
+
     // Add route stops for the castle route
     const castleRoute = Array.from(this.routes.values()).find(r => r.title === "Kastelen Route Utrecht");
     if (castleRoute) {
