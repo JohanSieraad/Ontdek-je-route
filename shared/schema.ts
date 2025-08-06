@@ -242,6 +242,123 @@ export const insertSessionSchema = createInsertSchema(sessions).omit({
 // User auth types
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
+
+// Multi-day routes for extended travel experiences
+export const multiDayRoutes = pgTable("multi_day_routes", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  title: varchar("title", { length: 255 }).notNull(),
+  description: text("description").notNull(),
+  regionId: varchar("region_id").notNull(),
+  duration: varchar("duration").notNull(), // "3 dagen", "5 dagen", etc.
+  totalDistance: varchar("total_distance").notNull(),
+  difficulty: varchar("difficulty").notNull(),
+  priceRange: varchar("price_range").notNull(), // "€150-250 per persoon", etc.
+  imageUrl: varchar("image_url"),
+  category: varchar("category").notNull(),
+  rating: real("rating").default(0),
+  isPopular: integer("is_popular").default(0),
+  affiliateCommission: real("affiliate_commission").default(0), // Expected commission percentage
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// Individual days within multi-day routes
+export const itineraryDays = pgTable("itinerary_days", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  multiDayRouteId: varchar("multi_day_route_id").notNull(),
+  dayNumber: integer("day_number").notNull(),
+  title: varchar("title", { length: 255 }).notNull(),
+  description: text("description").notNull(),
+  startLocation: varchar("start_location").notNull(),
+  endLocation: varchar("end_location").notNull(),
+  drivingDistance: varchar("driving_distance").notNull(),
+  estimatedDrivingTime: varchar("estimated_driving_time").notNull(),
+  accommodationId: varchar("accommodation_id"), // Links to accommodations table
+  highlights: text("highlights").array(), // Array of day highlights
+  restaurants: text("restaurants").array(), // Restaurant recommendations
+  attractions: text("attractions").array(), // Must-see attractions
+  instagramSpots: text("instagram_spots").array(),
+});
+
+// Accommodations with affiliate integration
+export const accommodations = pgTable("accommodations", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  name: varchar("name", { length: 255 }).notNull(),
+  type: varchar("type").notNull(), // "Hotel", "B&B", "Kasteel Hotel", "Boerderij", "Apartment"
+  location: varchar("location").notNull(),
+  description: text("description").notNull(),
+  imageUrl: varchar("image_url"),
+  pricePerNight: varchar("price_per_night").notNull(),
+  rating: real("rating").default(0),
+  amenities: text("amenities").array(),
+  
+  // Affiliate integration
+  airbnbUrl: varchar("airbnb_url"),
+  airbnbAffiliateCode: varchar("airbnb_affiliate_code"),
+  bookingComUrl: varchar("booking_com_url"), 
+  bookingComAffiliateCode: varchar("booking_com_affiliate_code"),
+  
+  // Location data
+  coordinates: varchar("coordinates"), // JSON string with lat/lng
+  address: varchar("address"),
+  
+  // Additional metadata
+  isAuthentic: integer("is_authentic").default(1), // Dutch/Belgian authentic properties
+  specialFeatures: text("special_features").array(), // "Historic castle", "Waterfront", etc.
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+// Booking tracking for affiliate revenue
+export const bookingTracking = pgTable("booking_tracking", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id"),
+  accommodationId: varchar("accommodation_id").notNull(),
+  multiDayRouteId: varchar("multi_day_route_id"),
+  platform: varchar("platform").notNull(), // "airbnb", "booking.com"
+  bookingReference: varchar("booking_reference"),
+  checkInDate: timestamp("check_in_date"),
+  checkOutDate: timestamp("check_out_date"),
+  totalAmount: real("total_amount"),
+  commissionAmount: real("commission_amount"),
+  commissionRate: real("commission_rate"),
+  bookingStatus: varchar("booking_status").default("pending"), // "pending", "confirmed", "cancelled"
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export type MultiDayRoute = typeof multiDayRoutes.$inferSelect;
+export type InsertMultiDayRoute = typeof multiDayRoutes.$inferInsert;
+
+export type ItineraryDay = typeof itineraryDays.$inferSelect;
+export type InsertItineraryDay = typeof itineraryDays.$inferInsert;
+
+export type Accommodation = typeof accommodations.$inferSelect;
+export type InsertAccommodation = typeof accommodations.$inferInsert;
+
+export type BookingTracking = typeof bookingTracking.$inferSelect;
+export type InsertBookingTracking = typeof bookingTracking.$inferInsert;
+
+// Database relations for multi-day routes
+export const multiDayRouteRelations = relations(multiDayRoutes, ({ many, one }) => ({
+  region: one(regions, { fields: [multiDayRoutes.regionId], references: [regions.id] }),
+  itineraryDays: many(itineraryDays),
+  bookings: many(bookingTracking),
+}));
+
+export const itineraryDayRelations = relations(itineraryDays, ({ one }) => ({
+  multiDayRoute: one(multiDayRoutes, { fields: [itineraryDays.multiDayRouteId], references: [multiDayRoutes.id] }),
+  accommodation: one(accommodations, { fields: [itineraryDays.accommodationId], references: [accommodations.id] }),
+}));
+
+export const accommodationRelations = relations(accommodations, ({ many }) => ({
+  itineraryDays: many(itineraryDays),
+  bookings: many(bookingTracking),
+}));
+
+export const bookingTrackingRelations = relations(bookingTracking, ({ one }) => ({
+  user: one(users, { fields: [bookingTracking.userId], references: [users.id] }),
+  accommodation: one(accommodations, { fields: [bookingTracking.accommodationId], references: [accommodations.id] }),
+  multiDayRoute: one(multiDayRoutes, { fields: [bookingTracking.multiDayRouteId], references: [multiDayRoutes.id] }),
+}));
 export type InsertSocialAccount = z.infer<typeof insertSocialAccountSchema>;
 export type SocialAccount = typeof userSocialAccounts.$inferSelect;
 export type InsertSession = z.infer<typeof insertSessionSchema>;

@@ -13,6 +13,8 @@ import Home from "@/pages/home";
 import Region from "@/pages/region";
 import RouteDetail from "@/pages/route-detail";
 import ManageRoutes from "@/pages/manage-routes";
+import MultiDayRoutes from "@/pages/multi-day-routes";
+import MultiDayRouteDetail from "@/pages/multi-day-route-detail";
 
 function Navigation() {
   const [location] = useLocation();
@@ -57,6 +59,18 @@ function Navigation() {
                 >
                   <HomeIcon className="w-4 h-4 mr-2" />
                   Home
+                </Button>
+              </Link>
+
+              <Link href="/meerdaagse-routes">
+                <Button
+                  variant={location.startsWith("/meerdaagse-routes") ? "default" : "ghost"}
+                  size="sm"
+                  className={location.startsWith("/meerdaagse-routes") ? "bg-orange-500 hover:bg-orange-600" : ""}
+                  data-testid="nav-multiday-routes"
+                >
+                  <Map className="w-4 h-4 mr-2" />
+                  Meerdaagse Routes
                 </Button>
               </Link>
 
@@ -135,6 +149,8 @@ function Router() {
         <Route path="/" component={Home} />
         <Route path="/regio/:regionId" component={Region} />
         <Route path="/route/:routeId" component={RouteDetail} />
+        <Route path="/meerdaagse-routes" component={MultiDayRoutes} />
+        <Route path="/multi-day-routes/:id" component={MultiDayRouteDetail} />
         <Route path="/beheer" component={ManageRoutes} />
         <Route component={NotFound} />
       </Switch>

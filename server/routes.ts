@@ -381,6 +381,124 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Multi-day routes API
+  app.get("/api/multi-day-routes", async (req, res) => {
+    try {
+      const routes = await storage.getAllMultiDayRoutes();
+      res.json(routes);
+    } catch (error) {
+      console.error("Error fetching multi-day routes:", error);
+      res.status(500).json({ message: "Failed to fetch multi-day routes" });
+    }
+  });
+
+  app.get("/api/multi-day-routes/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const route = await storage.getMultiDayRouteById(id);
+      if (!route) {
+        return res.status(404).json({ message: "Multi-day route not found" });
+      }
+      res.json(route);
+    } catch (error) {
+      console.error("Error fetching multi-day route:", error);
+      res.status(500).json({ message: "Failed to fetch multi-day route" });
+    }
+  });
+
+  app.get("/api/regions/:regionId/multi-day-routes", async (req, res) => {
+    try {
+      const { regionId } = req.params;
+      const routes = await storage.getMultiDayRoutesByRegion(regionId);
+      res.json(routes);
+    } catch (error) {
+      console.error("Error fetching multi-day routes for region:", error);
+      res.status(500).json({ message: "Failed to fetch multi-day routes for region" });
+    }
+  });
+
+  // Itinerary days API
+  app.get("/api/multi-day-routes/:routeId/itinerary", async (req, res) => {
+    try {
+      const { routeId } = req.params;
+      const days = await storage.getItineraryDaysByRoute(routeId);
+      res.json(days);
+    } catch (error) {
+      console.error("Error fetching itinerary days:", error);
+      res.status(500).json({ message: "Failed to fetch itinerary days" });
+    }
+  });
+
+  // Accommodations API
+  app.get("/api/accommodations", async (req, res) => {
+    try {
+      const { location } = req.query;
+      let accommodations;
+      if (location) {
+        accommodations = await storage.getAccommodationsByLocation(location as string);
+      } else {
+        accommodations = await storage.getAllAccommodations();
+      }
+      res.json(accommodations);
+    } catch (error) {
+      console.error("Error fetching accommodations:", error);
+      res.status(500).json({ message: "Failed to fetch accommodations" });
+    }
+  });
+
+  app.get("/api/accommodations/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const accommodation = await storage.getAccommodationById(id);
+      if (!accommodation) {
+        return res.status(404).json({ message: "Accommodation not found" });
+      }
+      res.json(accommodation);
+    } catch (error) {
+      console.error("Error fetching accommodation:", error);
+      res.status(500).json({ message: "Failed to fetch accommodation" });
+    }
+  });
+
+  // Booking tracking API (requires authentication for user-specific operations)
+  app.post("/api/bookings", async (req, res) => {
+    try {
+      const bookingData = req.body;
+      const userId = req.user?.id || null; // Optional user ID for tracking
+      const booking = await storage.createBookingTracking({
+        ...bookingData,
+        userId,
+      });
+      res.status(201).json(booking);
+    } catch (error) {
+      console.error("Error creating booking:", error);
+      res.status(500).json({ message: "Failed to create booking" });
+    }
+  });
+
+  app.get("/api/bookings/my", authenticateToken, async (req, res) => {
+    try {
+      const userId = req.user!.id;
+      const bookings = await storage.getBookingsByUser(userId);
+      res.json(bookings);
+    } catch (error) {
+      console.error("Error fetching user bookings:", error);
+      res.status(500).json({ message: "Failed to fetch bookings" });
+    }
+  });
+
+  app.patch("/api/bookings/:id/status", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { status } = req.body;
+      await storage.updateBookingStatus(id, status);
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Error updating booking status:", error);
+      res.status(500).json({ message: "Failed to update booking status" });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }
