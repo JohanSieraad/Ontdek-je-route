@@ -2,8 +2,7 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { insertRouteSchema, insertRegionSchema, insertRouteStopSchema, insertAudioTrackSchema, insertReviewSchema, insertPhotoSchema, registerSchema, loginSchema } from "@shared/schema";
-import { authService } from "./auth";
-import { authenticateToken, optionalAuth } from "./middleware/auth";
+import { authenticateToken, optionalAuth, generateToken } from "./auth";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Authentication routes

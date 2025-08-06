@@ -1,143 +1,71 @@
-import { useState, useEffect, createContext, useContext } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { apiRequest } from "@/lib/queryClient";
-import type { User, RegisterData, LoginData } from "@shared/schema";
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { apiRequest } from '@/lib/queryClient';
+import { User } from '@shared/schema';
 
-interface AuthContextType {
-  user: User | null;
-  isLoading: boolean;
-  isAuthenticated: boolean;
-  login: (data: LoginData) => Promise<void>;
-  register: (data: RegisterData) => Promise<void>;
-  logout: () => Promise<void>;
-  token: string | null;
+interface AuthUser {
+  id: string;
+  email: string;
+  firstName?: string;
+  lastName?: string;
+  displayName?: string;
+  profileImageUrl?: string;
 }
-
-const AuthContext = createContext<AuthContextType | null>(null);
 
 export function useAuth() {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error("useAuth must be used within AuthProvider");
-  }
-  return context;
-}
-
-export function useAuthProvider() {
-  const [token, setToken] = useState<string | null>(() => {
-    if (typeof window !== "undefined") {
-      return localStorage.getItem("auth_token");
-    }
-    return null;
-  });
-
   const queryClient = useQueryClient();
 
-  // Fetch current user
-  const { data: user, isLoading } = useQuery<User>({
-    queryKey: ["/api/auth/me"],
+  const { data: user, isLoading, error } = useQuery<AuthUser | null>({
+    queryKey: ['/api/auth/me'],
     queryFn: async () => {
-      if (!token) throw new Error("No token");
-      
-      const response = await fetch("/api/auth/me", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      
-      if (!response.ok) {
-        throw new Error("Authentication failed");
-      }
-      
-      return response.json();
-    },
-    enabled: !!token,
-    retry: false,
-  });
+      const token = localStorage.getItem('authToken');
+      if (!token) return null;
 
-  // Login mutation
-  const loginMutation = useMutation({
-    mutationFn: async (data: LoginData) => {
-      const response = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || "Login failed");
-      }
-
-      return response.json();
-    },
-    onSuccess: (data) => {
-      setToken(data.token);
-      localStorage.setItem("auth_token", data.token);
-      queryClient.invalidateQueries({ queryKey: ["/api/auth/me"] });
-    },
-  });
-
-  // Register mutation
-  const registerMutation = useMutation({
-    mutationFn: async (data: RegisterData) => {
-      const response = await fetch("/api/auth/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || "Registration failed");
-      }
-
-      return response.json();
-    },
-  });
-
-  // Logout mutation
-  const logoutMutation = useMutation({
-    mutationFn: async () => {
-      if (token) {
-        await fetch("/api/auth/logout", {
-          method: "POST",
+      try {
+        return await apiRequest('/api/auth/me', {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
+      } catch (error: any) {
+        // If unauthorized, clear token
+        if (error.message?.includes('401') || error.message?.includes('403')) {
+          localStorage.removeItem('authToken');
+          return null;
+        }
+        throw error;
       }
     },
-    onSuccess: () => {
-      setToken(null);
-      localStorage.removeItem("auth_token");
-      queryClient.clear();
-    },
+    retry: false,
+    staleTime: 5 * 60 * 1000, // 5 minutes
   });
 
-  const login = async (data: LoginData) => {
-    await loginMutation.mutateAsync(data);
-  };
-
-  const register = async (data: RegisterData) => {
-    await registerMutation.mutateAsync(data);
-  };
-
   const logout = async () => {
-    await logoutMutation.mutateAsync();
+    localStorage.removeItem('authToken');
+    queryClient.setQueryData(['/api/auth/me'], null);
+    queryClient.invalidateQueries({ queryKey: ['/api/auth/me'] });
+    window.location.reload();
   };
+
+  const isAuthenticated = !!user && !error;
 
   return {
-    user: user || null,
-    isLoading: isLoading || loginMutation.isPending || registerMutation.isPending,
-    isAuthenticated: !!user,
-    login,
-    register,
+    user,
+    isLoading,
+    isAuthenticated,
     logout,
-    token,
   };
 }
+
+// Helper hook for authentication token
+export function useAuthToken() {
+  return localStorage.getItem('authToken');
+}
+
+// Helper to get Authorization header
+export function getAuthHeaders() {
+  const token = localStorage.getItem('authToken');
+  return token ? { Authorization: `Bearer ${token}` } : {};
+}
+
+// Export useAuthProvider as alias for compatibility
+export const useAuthProvider = useAuth;

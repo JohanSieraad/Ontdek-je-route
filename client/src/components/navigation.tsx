@@ -2,11 +2,16 @@ import { useState } from "react";
 import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { MapPin, Menu, Search, Home, Globe, Route, Info, Calendar, ChevronDown } from "lucide-react";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { MapPin, Menu, Search, Home, Globe, Route, Info, Calendar, ChevronDown, User, LogIn, LogOut, Settings } from "lucide-react";
+import { AuthDialog } from "@/components/ui/auth-dialog";
+import { useAuth } from "@/hooks/useAuth";
 
 export function Navigation() {
   const [location] = useLocation();
   const [isOpen, setIsOpen] = useState(false);
+  const { user, isAuthenticated, logout, isLoading } = useAuth();
 
   const isActive = (path: string) => location === path;
   
@@ -217,10 +222,65 @@ export function Navigation() {
               </div>
             </div>
 
-            <Button className="bg-gradient-to-r from-dutch-orange to-sunset-pink text-white hover:from-dutch-orange/90 hover:to-sunset-pink/90 shadow-lg px-3 py-2" data-testid="button-search">
-              <Search className="h-4 w-4" />
-              <span className="hidden lg:inline ml-2">Zoek Routes</span>
-            </Button>
+            {/* Authentication */}
+            <div className="flex items-center gap-2">
+              {isAuthenticated ? (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" className="relative h-8 w-8 rounded-full" data-testid="button-user-menu">
+                      <Avatar className="h-8 w-8">
+                        <AvatarImage src={user?.profileImageUrl} alt={user?.displayName || user?.email} />
+                        <AvatarFallback className="bg-dutch-orange text-white">
+                          {user?.firstName?.[0] || user?.email?.[0]?.toUpperCase() || 'U'}
+                        </AvatarFallback>
+                      </Avatar>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="w-56" align="end" forceMount>
+                    <div className="flex items-center justify-start gap-2 p-2">
+                      <div className="flex flex-col space-y-1 leading-none">
+                        {user?.displayName && (
+                          <p className="font-medium" data-testid="text-user-name">{user.displayName}</p>
+                        )}
+                        <p className="w-[200px] truncate text-sm text-muted-foreground" data-testid="text-user-email">
+                          {user?.email}
+                        </p>
+                      </div>
+                    </div>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem data-testid="menu-item-profile">
+                      <User className="mr-2 h-4 w-4" />
+                      <span>Profiel</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem data-testid="menu-item-settings">
+                      <Settings className="mr-2 h-4 w-4" />
+                      <span>Instellingen</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={logout} data-testid="menu-item-logout">
+                      <LogOut className="mr-2 h-4 w-4" />
+                      <span>Uitloggen</span>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              ) : (
+                <AuthDialog>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="text-gray-700 hover:text-dutch-orange"
+                    data-testid="button-login"
+                  >
+                    <LogIn className="h-5 w-5" />
+                  </Button>
+                </AuthDialog>
+              )}
+
+              <Button className="bg-gradient-to-r from-dutch-orange to-sunset-pink text-white hover:from-dutch-orange/90 hover:to-sunset-pink/90 shadow-lg px-3 py-2" data-testid="button-search">
+                <Search className="h-4 w-4" />
+                <span className="hidden lg:inline ml-2">Zoek Routes</span>
+              </Button>
+            </div>
           </div>
 
           {/* Mobile Navigation */}

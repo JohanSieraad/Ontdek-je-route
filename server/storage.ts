@@ -1,8 +1,24 @@
-import { type Region, type InsertRegion, type Route, type InsertRoute, type RouteStop, type InsertRouteStop, type AudioTrack, type InsertAudioTrack, type Review, type InsertReview, type Photo, type InsertPhoto, type CastleLandmark, type InsertCastleLandmark, type MultiDayRoute, type InsertMultiDayRoute, type ItineraryDay, type InsertItineraryDay, type Accommodation, type InsertAccommodation, type BookingTracking, type InsertBookingTracking, type User } from "@shared/schema";
+import { 
+  type Region, type InsertRegion, 
+  type Route, type InsertRoute, 
+  type RouteStop, type InsertRouteStop, 
+  type AudioTrack, type InsertAudioTrack, 
+  type Review, type InsertReview, 
+  type Photo, type InsertPhoto, 
+  type CastleLandmark, type InsertCastleLandmark, 
+  type MultiDayRoute, type InsertMultiDayRoute, 
+  type ItineraryDay, type InsertItineraryDay, 
+  type Accommodation, type InsertAccommodation, 
+  type BookingTracking, type InsertBookingTracking,
+  type User, type InsertUser,
+  type SocialAccount, type InsertSocialAccount,
+  type Session, type InsertSession,
+  routes, regions, routeStops, audioTracks, reviews, photos, castleLandmarks, users, userSocialAccounts, sessions
+} from "@shared/schema";
 import { randomUUID } from "crypto";
 import { db } from "./db";
-import { routes, regions, routeStops, audioTracks, reviews, photos, castleLandmarks } from "@shared/schema";
-import { eq, desc } from "drizzle-orm";
+import { eq, desc, and } from "drizzle-orm";
+import bcrypt from "bcryptjs";
 
 export interface IStorage {
   // Regions
@@ -66,6 +82,24 @@ export interface IStorage {
   createBookingTracking(booking: InsertBookingTracking): Promise<BookingTracking>;
   getBookingsByUser(userId: string): Promise<BookingTracking[]>;
   updateBookingStatus(bookingId: string, status: string): Promise<void>;
+
+  // User Authentication
+  getUserById(id: string): Promise<User | undefined>;
+  getUserByEmail(email: string): Promise<User | undefined>;
+  createUser(user: InsertUser): Promise<User>;
+  updateUser(id: string, user: Partial<InsertUser>): Promise<User>;
+  deleteUser(id: string): Promise<void>;
+
+  // Social Accounts
+  getSocialAccountByProvider(userId: string, provider: string): Promise<SocialAccount | undefined>;
+  createSocialAccount(account: InsertSocialAccount): Promise<SocialAccount>;
+  updateSocialAccount(id: string, account: Partial<InsertSocialAccount>): Promise<SocialAccount>;
+
+  // Sessions
+  createSession(session: InsertSession): Promise<Session>;
+  getSessionByToken(token: string): Promise<Session | undefined>;
+  deleteSession(token: string): Promise<void>;
+  deleteExpiredSessions(): Promise<void>;
 }
 
 export class MemStorage implements IStorage {
@@ -1402,6 +1436,70 @@ export class MemStorage implements IStorage {
     }
   }
 
+  // User Authentication methods (stubbed for MemStorage)
+  async getUserById(id: string): Promise<User | undefined> {
+    // For MemStorage - will be replaced by DatabaseStorage
+    return undefined;
+  }
+
+  async getUserByEmail(email: string): Promise<User | undefined> {
+    // For MemStorage - will be replaced by DatabaseStorage
+    return undefined;
+  }
+
+  async createUser(user: InsertUser): Promise<User> {
+    // For MemStorage - will be replaced by DatabaseStorage
+    const id = randomUUID();
+    const newUser: User = { id, ...user, createdAt: new Date(), updatedAt: new Date() };
+    return newUser;
+  }
+
+  async updateUser(id: string, user: Partial<InsertUser>): Promise<User> {
+    // For MemStorage - will be replaced by DatabaseStorage
+    throw new Error("Not implemented in MemStorage");
+  }
+
+  async deleteUser(id: string): Promise<void> {
+    // For MemStorage - will be replaced by DatabaseStorage
+  }
+
+  async getSocialAccountByProvider(userId: string, provider: string): Promise<SocialAccount | undefined> {
+    // For MemStorage - will be replaced by DatabaseStorage
+    return undefined;
+  }
+
+  async createSocialAccount(account: InsertSocialAccount): Promise<SocialAccount> {
+    // For MemStorage - will be replaced by DatabaseStorage
+    const id = randomUUID();
+    const newAccount: SocialAccount = { id, ...account, createdAt: new Date() };
+    return newAccount;
+  }
+
+  async updateSocialAccount(id: string, account: Partial<InsertSocialAccount>): Promise<SocialAccount> {
+    // For MemStorage - will be replaced by DatabaseStorage
+    throw new Error("Not implemented in MemStorage");
+  }
+
+  async createSession(session: InsertSession): Promise<Session> {
+    // For MemStorage - will be replaced by DatabaseStorage
+    const id = randomUUID();
+    const newSession: Session = { id, ...session, createdAt: new Date() };
+    return newSession;
+  }
+
+  async getSessionByToken(token: string): Promise<Session | undefined> {
+    // For MemStorage - will be replaced by DatabaseStorage
+    return undefined;
+  }
+
+  async deleteSession(token: string): Promise<void> {
+    // For MemStorage - will be replaced by DatabaseStorage
+  }
+
+  async deleteExpiredSessions(): Promise<void> {
+    // For MemStorage - will be replaced by DatabaseStorage
+  }
+
   // Initialize authentic Dutch accommodations with affiliate links
   private initializeAccommodations() {
     const authenticAccommodations: InsertAccommodation[] = [
@@ -2303,6 +2401,84 @@ export class HybridStorage implements IStorage {
 
   async updateBookingStatus(bookingId: string, status: string, revenue?: number): Promise<BookingTracking> {
     return await this.memStorage.updateBookingStatus(bookingId, status, revenue);
+  }
+
+  // User Authentication methods for HybridStorage
+  async getUserById(id: string): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.id, id));
+    return user;
+  }
+
+  async getUserByEmail(email: string): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.email, email));
+    return user;
+  }
+
+  async createUser(user: InsertUser): Promise<User> {
+    const [newUser] = await db.insert(users).values({
+      ...user,
+      emailVerified: false,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    }).returning();
+    return newUser;
+  }
+
+  async updateUser(id: string, userData: Partial<InsertUser>): Promise<User> {
+    const [updatedUser] = await db
+      .update(users)
+      .set({ ...userData, updatedAt: new Date() })
+      .where(eq(users.id, id))
+      .returning();
+    return updatedUser;
+  }
+
+  async deleteUser(id: string): Promise<void> {
+    await db.delete(users).where(eq(users.id, id));
+  }
+
+  async getSocialAccountByProvider(userId: string, provider: string): Promise<SocialAccount | undefined> {
+    const [account] = await db.select().from(userSocialAccounts)
+      .where(and(eq(userSocialAccounts.userId, userId), eq(userSocialAccounts.provider, provider)));
+    return account;
+  }
+
+  async createSocialAccount(account: InsertSocialAccount): Promise<SocialAccount> {
+    const [newAccount] = await db.insert(userSocialAccounts).values({
+      ...account,
+      createdAt: new Date(),
+    }).returning();
+    return newAccount;
+  }
+
+  async updateSocialAccount(id: string, account: Partial<InsertSocialAccount>): Promise<SocialAccount> {
+    const [updatedAccount] = await db
+      .update(userSocialAccounts)
+      .set(account)
+      .where(eq(userSocialAccounts.id, id))
+      .returning();
+    return updatedAccount;
+  }
+
+  async createSession(session: InsertSession): Promise<Session> {
+    const [newSession] = await db.insert(sessions).values({
+      ...session,
+      createdAt: new Date(),
+    }).returning();
+    return newSession;
+  }
+
+  async getSessionByToken(token: string): Promise<Session | undefined> {
+    const [session] = await db.select().from(sessions).where(eq(sessions.token, token));
+    return session;
+  }
+
+  async deleteSession(token: string): Promise<void> {
+    await db.delete(sessions).where(eq(sessions.token, token));
+  }
+
+  async deleteExpiredSessions(): Promise<void> {
+    await db.delete(sessions).where(eq(sessions.expiresAt, new Date()));
   }
 }
 

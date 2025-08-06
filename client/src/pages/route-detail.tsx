@@ -7,6 +7,8 @@ import { NavigationOptions } from "@/components/navigation-options";
 import { ReviewsSection } from "@/components/reviews-section";
 import { PhotosSection } from "@/components/photos-section";
 import { Footer } from "@/components/footer";
+import { HeaderAd, SidebarAd, ContentAd } from "@/components/ui/google-ads";
+import { SocialShare } from "@/components/ui/social-share";
 import { useQuery } from "@tanstack/react-query";
 import { Route, RouteStop, AudioTrack } from "@shared/schema";
 import { ArrowLeft, Clock, MapPin, Star, Play, Download, Share } from "lucide-react";
@@ -38,6 +40,7 @@ export default function RouteDetailPage() {
   if (routeLoading) {
     return (
       <div className="min-h-screen bg-gray-50">
+        <HeaderAd />
         <Navigation />
         <div className="animate-pulse">
           <div className="h-64 bg-gray-300"></div>
@@ -79,6 +82,7 @@ export default function RouteDetailPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <HeaderAd />
       <Navigation />
 
       {/* Route Header */}
@@ -133,6 +137,16 @@ export default function RouteDetailPage() {
           <p className="text-gray-600 mb-6" data-testid="text-route-description">
             {route.description}
           </p>
+
+          {/* Social Share Section */}
+          <div className="mb-6 p-4 bg-gray-50 rounded-lg">
+            <SocialShare 
+              url={`/route/${routeId}`}
+              title={route.title}
+              description={route.description}
+              variant="compact"
+            />
+          </div>
 
           {/* Audio Player Section */}
           {mainAudioTrack && (
@@ -219,6 +233,13 @@ export default function RouteDetailPage() {
             </Button>
           </div>
         </div>
+
+        {/* Content Advertisement */}
+        <ContentAd />
+
+        {/* Reviews and Photos Sections */}
+        <ReviewsSection routeId={routeId || ''} />
+        <PhotosSection routeId={routeId || ''} />
       </div>
 
       <Footer />

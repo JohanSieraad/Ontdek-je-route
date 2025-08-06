@@ -4,6 +4,8 @@ import { RegionCard } from "@/components/region-card";
 import { RouteCard } from "@/components/route-card";
 import { InteractiveMap } from "@/components/interactive-map";
 import { Footer } from "@/components/footer";
+import { HeaderAd, SidebarAd, ContentAd } from "@/components/ui/google-ads";
+import { SocialShare } from "@/components/ui/social-share";
 import { useQuery } from "@tanstack/react-query";
 import { Region, Route } from "@shared/schema";
 import { Globe } from "lucide-react";
@@ -28,7 +30,8 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-
+      {/* Header Advertisement */}
+      <HeaderAd />
       
       <HeroBanner />
 
@@ -41,6 +44,16 @@ export default function Home() {
               Rijd langs kastelen, pittoreske dorpjes en toprestaurants in Nederland en België. 
               Compleet met parkeerplekken, culinaire stops en Instagram-waardige fotomomenten.
             </p>
+            
+            {/* Social Share for homepage */}
+            <div className="mt-8 flex justify-center">
+              <SocialShare 
+                url="/" 
+                title="AutoRoutes Nederland - Ontdek de mooiste autoroutes" 
+                description="Rijd langs kastelen, pittoreske dorpjes en toprestaurants in Nederland en België"
+                variant="compact"
+              />
+            </div>
           </div>
 
           {regionsLoading ? (
@@ -81,46 +94,59 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Content Advertisement between sections */}
+      <ContentAd />
+
       {/* Featured Routes Section */}
       <section id="routes" className="py-16 bg-gradient-to-br from-blue-50 to-green-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h3 className="text-3xl font-bold text-gray-900 mb-4">🏰 Populaire Autoroutes</h3>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Ontdek onze meest gewilde autoroutes langs kastelen, mooie dorpjes en toprestaurants. 
-              Perfect voor een dagje uit met de auto!
-            </p>
-          </div>
+          <div className="flex flex-col lg:flex-row gap-8">
+            {/* Main content */}
+            <div className="lg:w-3/4">
+              <div className="text-center mb-12">
+                <h3 className="text-3xl font-bold text-gray-900 mb-4">🏰 Populaire Autoroutes</h3>
+                <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+                  Ontdek onze meest gewilde autoroutes langs kastelen, mooie dorpjes en toprestaurants. 
+                  Perfect voor een dagje uit met de auto!
+                </p>
+              </div>
 
-          {routesLoading ? (
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              {Array.from({ length: 2 }).map((_, i) => (
-                <div key={i} className="bg-white rounded-xl shadow-lg overflow-hidden animate-pulse">
-                  <div className="md:flex">
-                    <div className="md:w-1/2 h-48 md:h-full bg-gray-300"></div>
-                    <div className="md:w-1/2 p-6">
-                      <div className="h-6 bg-gray-300 rounded mb-3"></div>
-                      <div className="h-4 bg-gray-300 rounded mb-2"></div>
-                      <div className="h-4 bg-gray-300 rounded mb-4"></div>
-                      <div className="h-8 bg-gray-300 rounded"></div>
+              {routesLoading ? (
+                <div className="grid grid-cols-1 gap-8">
+                  {Array.from({ length: 2 }).map((_, i) => (
+                    <div key={i} className="bg-white rounded-xl shadow-lg overflow-hidden animate-pulse">
+                      <div className="md:flex">
+                        <div className="md:w-1/2 h-48 md:h-full bg-gray-300"></div>
+                        <div className="md:w-1/2 p-6">
+                          <div className="h-6 bg-gray-300 rounded mb-3"></div>
+                          <div className="h-4 bg-gray-300 rounded mb-2"></div>
+                          <div className="h-4 bg-gray-300 rounded mb-4"></div>
+                          <div className="h-8 bg-gray-300 rounded"></div>
+                        </div>
+                      </div>
                     </div>
-                  </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-          ) : popularRoutes && popularRoutes.length > 0 ? (
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              {popularRoutes.map((route, index) => (
-                <div key={route.id} className={`animate-discovery-reveal animate-discovery-delay-${Math.min(index + 1, 4)}`}>
-                  <RouteCard route={route} />
+              ) : popularRoutes && popularRoutes.length > 0 ? (
+                <div className="grid grid-cols-1 gap-8">
+                  {popularRoutes.map((route, index) => (
+                    <div key={route.id} className={`animate-discovery-reveal animate-discovery-delay-${Math.min(index + 1, 4)}`}>
+                      <RouteCard route={route} />
+                    </div>
+                  ))}
                 </div>
-              ))}
+              ) : (
+                <div className="text-center py-12">
+                  <p className="text-gray-500">Geen populaire routes gevonden.</p>
+                </div>
+              )}
             </div>
-          ) : (
-            <div className="text-center py-12">
-              <p className="text-gray-500">Geen populaire routes gevonden.</p>
+            
+            {/* Sidebar with advertisements */}
+            <div className="lg:w-1/4">
+              <SidebarAd />
             </div>
-          )}
+          </div>
         </div>
       </section>
 

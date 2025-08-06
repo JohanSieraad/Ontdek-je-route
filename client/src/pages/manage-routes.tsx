@@ -12,7 +12,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Trash2, Edit, Plus, Car, MapPin, Lock } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
-import { useAuth } from "@/components/auth/auth-provider";
+import { useAuth } from "@/hooks/useAuth";
 import type { Route, Region, InsertRoute } from "@shared/schema";
 
 export default function ManageRoutes() {

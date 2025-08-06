@@ -1,6 +1,8 @@
 import { useEffect } from "react";
 import { RegionCard } from "@/components/region-card";
 import { Footer } from "@/components/footer";
+import { HeaderAd, SidebarAd, ContentAd } from "@/components/ui/google-ads";
+import { SocialShare } from "@/components/ui/social-share";
 import { useQuery } from "@tanstack/react-query";
 import { Region } from "@shared/schema";
 
@@ -16,6 +18,9 @@ export default function Regions() {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      {/* Header Advertisement */}
+      <HeaderAd />
+      
       {/* Hero Section */}
       <section className="py-16 bg-gradient-to-br from-orange-50 via-white to-pink-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -25,16 +30,32 @@ export default function Regions() {
               Ontdek alle beschikbare regio's voor uw auto avontuur. Van Nederlandse kastelen tot Belgische Ardennen - 
               elk gebied biedt unieke routes met historische bezienswaardigheden en culinaire ontdekkingen.
             </p>
+            
+            {/* Social Share for regions page */}
+            <div className="mt-8 flex justify-center">
+              <SocialShare 
+                url="/regios" 
+                title="Alle Regio's - AutoRoutes Nederland" 
+                description="Ontdek alle beschikbare regio's voor uw auto avontuur"
+                variant="compact"
+              />
+            </div>
           </div>
         </div>
       </section>
+      
+      {/* Content Advertisement */}
+      <ContentAd />
 
       {/* Regions Section */}
       <section className="py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {regionsLoading ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {Array.from({ length: 6 }).map((_, i) => (
+          <div className="flex flex-col lg:flex-row gap-8">
+            {/* Main content */}
+            <div className="lg:w-3/4">
+              {regionsLoading ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {Array.from({ length: 6 }).map((_, i) => (
                 <div key={i} className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden animate-pulse">
                   <div className="w-full h-48 bg-gray-300"></div>
                   <div className="p-6">
@@ -43,10 +64,10 @@ export default function Regions() {
                     <div className="h-4 bg-gray-300 rounded mb-4"></div>
                     <div className="h-4 bg-gray-300 rounded w-1/2"></div>
                   </div>
+                  </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-          ) : regions && regions.length > 0 ? (
+              ) : regions && regions.length > 0 ? (
             <>
               {/* Nederlandse Regio's */}
               <div className="mb-16">
@@ -118,6 +139,13 @@ export default function Regions() {
               <p className="text-gray-500">Geen regio's gevonden.</p>
             </div>
           )}
+            </div>
+            
+            {/* Sidebar with advertisements */}
+            <div className="lg:w-1/4">
+              <SidebarAd />
+            </div>
+          </div>
         </div>
       </section>
 

@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Loader2, Mail, Lock, User, ArrowRight, CheckCircle } from "lucide-react";
-import { useAuth } from "./auth-provider";
+import { useAuth } from "@/hooks/useAuth";
 import { registerSchema, type RegisterData } from "@shared/schema";
 
 interface RegisterFormProps {

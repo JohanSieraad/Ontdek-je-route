@@ -1,5 +1,5 @@
 import { createContext, useContext } from "react";
-import { useAuthProvider } from "@/hooks/useAuth";
+import { useAuth } from "@/hooks/useAuth";
 import type { User, RegisterData, LoginData } from "@shared/schema";
 
 interface AuthContextType {
@@ -14,19 +14,19 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
-export function useAuth() {
+export function useAuthContext() {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error("useAuth must be used within AuthProvider");
+    throw new Error("useAuthContext must be used within AuthProvider");
   }
   return context;
 }
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const auth = useAuthProvider();
+  const authData = useAuth();
 
   return (
-    <AuthContext.Provider value={auth}>
+    <AuthContext.Provider value={authData}>
       {children}
     </AuthContext.Provider>
   );
