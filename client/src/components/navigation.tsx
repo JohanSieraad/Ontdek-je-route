@@ -26,7 +26,7 @@ export function Navigation() {
 
   const navLinks = [
     { href: "/", label: "Home", icon: Home },
-    { href: "#regions", label: "Regio's", icon: Globe },
+    { href: "#dutch-regions", label: "Regio's", icon: Globe },
   ];
 
   const bottomNavLinks = [
