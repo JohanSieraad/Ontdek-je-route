@@ -6,6 +6,16 @@ This is a full-stack web application for exploring historical routes throughout 
 
 ## Recent Changes
 
+### Navigation Restructure & Compact Menu (August 2025)
+- **Complete navigation overhaul**: Replaced horizontal navigation with single compact dropdown menu
+- **Separate regions page**: Created dedicated `/regios` page with all regions organized by country
+- **Home page optimization**: Reduced to compact preview of 4 regions with "Alle Regio's Bekijken" button
+- **Fixed navigation links**: All dropdown links now work correctly using wouter Link components
+- **Smart anchor handling**: Proper scroll behavior for anchor links within same page
+- **Country organization**: Regions properly grouped by Netherlands, Belgium, Germany & Luxembourg flags
+- **Mobile responsive**: Consistent navigation experience across desktop and mobile devices
+- **User feedback confirmed**: "ja nu werkt het hier goed" - navigation fully functional
+
 ### Route ID Persistence Fix (August 2025)
 - **Fixed critical issue**: Route links no longer break after server restart
 - **Implemented fixed IDs**: All 7 regions and 14 routes now use persistent IDs instead of random UUIDs
@@ -52,7 +62,8 @@ This is a full-stack web application for exploring historical routes throughout 
 ## User Preferences
 
 Preferred communication style: Simple, everyday language.
-User repeatedly asks about navigation integration despite it being implemented: Google Maps/Waze route integration with highway avoidance is fully implemented and working in RouteNavigation component. User may need visual demonstration or rollback to see it clearly.
+Navigation preference: Extremely compact navigation with single dropdown menu (successfully implemented).
+User confirmed satisfaction with navigation restructure: "ja nu werkt het hier goed".
 
 ## Development Roadmap
 
