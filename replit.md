@@ -24,6 +24,15 @@ This is a full-stack web application for exploring historical routes throughout 
 - **Technical improvement**: Replaced `Array.find()` lookups with direct Map operations for better performance
 - **Foundation ready**: Stable architecture prepared for multi-day routes and affiliate integration expansion
 
+### Personalized Route Recommendation Engine (August 2025)
+- **Machine learning system**: Collaborative filtering and content-based recommendation scoring
+- **Extended database schema**: 4 new tables for user preferences, activity, interactions, and recommendations
+- **Activity tracking**: Automatic monitoring of user behavior (route views, searches, category interests)
+- **Preference management**: Comprehensive form for users to customize their route recommendations
+- **Smart recommendations**: Personalized route suggestions based on user history and preferences
+- **Real-time adaptation**: System learns and improves recommendations as users interact with routes
+- **Integration**: Recommendation panel and preferences form integrated into homepage sidebar
+
 ### Complete Authentication System (August 2025)
 - **User registration & login**: Email-based authentication with password hashing (bcryptjs)
 - **Session management**: JWT tokens with 7-day expiration and secure session storage
@@ -32,6 +41,7 @@ This is a full-stack web application for exploring historical routes throughout 
 - **User-specific data**: Routes are linked to users, only creators can edit/delete their routes
 - **Modern auth UI**: Beautiful login/register forms with validation and error handling
 - **Security features**: Password validation, secure token storage, authorization middleware
+- **UI improvement**: Login icon changed to user avatar icon for better user experience
 
 ### Complete Automotive Transformation (August 2025)
 - **Full automotive focus**: Transformed from cycling/walking to car driving experience
