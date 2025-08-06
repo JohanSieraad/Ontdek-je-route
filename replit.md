@@ -42,6 +42,7 @@ This is a full-stack web application for exploring historical routes throughout 
 - **Modern auth UI**: Beautiful login/register forms with validation and error handling
 - **Security features**: Password validation, secure token storage, authorization middleware
 - **UI improvement**: Login icon changed to user avatar icon for better user experience
+- **Registration fix**: Fixed registration and login functionality with proper bcrypt password hashing and JWT tokens
 
 ### Complete Automotive Transformation (August 2025)
 - **Full automotive focus**: Transformed from cycling/walking to car driving experience

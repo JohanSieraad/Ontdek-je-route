@@ -1480,21 +1480,40 @@ export class MemStorage implements IStorage {
 
   // User Authentication methods (stubbed for MemStorage)
   async getUserById(id: string): Promise<User | undefined> {
-    // For MemStorage - will be replaced by DatabaseStorage
-    return undefined;
+    return this.users.get(id);
   }
 
   async getUserByEmail(email: string): Promise<User | undefined> {
-    // For MemStorage - will be replaced by DatabaseStorage
+    for (const user of this.users.values()) {
+      if (user.email === email) {
+        return user;
+      }
+    }
     return undefined;
   }
 
-  async createUser(user: InsertUser): Promise<User> {
-    // For MemStorage - will be replaced by DatabaseStorage
-    const id = randomUUID();
-    const newUser: User = { id, ...user, createdAt: new Date(), updatedAt: new Date() };
-    return newUser;
+  async createUser(userData: InsertUser): Promise<User> {
+    const id = `user-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    const now = new Date();
+    const user: User = {
+      id,
+      email: userData.email,
+      displayName: userData.displayName,
+      firstName: userData.firstName,
+      lastName: userData.lastName,
+      passwordHash: userData.passwordHash,
+      isVerified: userData.isVerified || false,
+      verificationToken: userData.verificationToken,
+      resetToken: userData.resetToken,
+      resetTokenExpiry: userData.resetTokenExpiry,
+      createdAt: now,
+      updatedAt: now,
+    };
+    this.users.set(id, user);
+    return user;
   }
+
+
 
   async updateUser(id: string, user: Partial<InsertUser>): Promise<User> {
     // For MemStorage - will be replaced by DatabaseStorage

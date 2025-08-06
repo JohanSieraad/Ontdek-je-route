@@ -4,20 +4,47 @@ import { storage } from "./storage";
 import { registerRecommendationRoutes } from "./routes/recommendations";
 import { insertRouteSchema, insertRegionSchema, insertRouteStopSchema, insertAudioTrackSchema, insertReviewSchema, insertPhotoSchema, registerSchema, loginSchema } from "@shared/schema";
 import { authenticateToken, optionalAuth, generateToken } from "./auth";
+import bcrypt from "bcryptjs";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Authentication routes
   app.post("/api/auth/register", async (req, res) => {
     try {
       const validated = registerSchema.parse(req.body);
-      const user = await authService.register(validated);
+      
+      // Check if user already exists
+      const existingUser = await storage.getUserByEmail(validated.email);
+      if (existingUser) {
+        return res.status(400).json({ message: "Email adres is al in gebruik" });
+      }
+      
+      // Hash password
+      const passwordHash = await bcrypt.hash(validated.password, 12);
+      
+      // Create user
+      const user = await storage.createUser({
+        email: validated.email,
+        displayName: validated.displayName,
+        firstName: validated.firstName,
+        lastName: validated.lastName,
+        passwordHash,
+        isVerified: true, // Auto-verify for now
+      });
+      
+      // Generate token
+      const token = generateToken({
+        id: user.id,
+        email: user.email!,
+        displayName: user.displayName || undefined
+      });
       
       // Remove sensitive data
-      const { passwordHash, verificationToken, resetToken, ...safeUser } = user;
+      const { passwordHash: _, verificationToken, resetToken, ...safeUser } = user;
       
       res.status(201).json({
         message: "Account succesvol aangemaakt",
         user: safeUser,
+        token,
       });
     } catch (error) {
       console.error("Registration error:", error);
@@ -29,7 +56,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/auth/login", async (req, res) => {
     try {
       const validated = loginSchema.parse(req.body);
-      const { user, token } = await authService.login(validated.email, validated.password);
+      
+      // Find user by email
+      const user = await storage.getUserByEmail(validated.email);
+      if (!user || !user.passwordHash) {
+        return res.status(401).json({ message: "Ongeldige inloggegevens" });
+      }
+      
+      // Check password
+      const isValidPassword = await bcrypt.compare(validated.password, user.passwordHash);
+      if (!isValidPassword) {
+        return res.status(401).json({ message: "Ongeldige inloggegevens" });
+      }
+      
+      // Generate token
+      const token = generateToken({
+        id: user.id,
+        email: user.email!,
+        displayName: user.displayName || undefined
+      });
       
       // Remove sensitive data
       const { passwordHash, verificationToken, resetToken, ...safeUser } = user;
@@ -48,10 +93,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post("/api/auth/logout", authenticateToken, async (req, res) => {
     try {
-      const token = req.headers.authorization?.split(' ')[1];
-      if (token) {
-        await authService.logout(token);
-      }
+      // For JWT, logout is handled client-side by removing the token
+      // In a more complex setup, you could blacklist tokens here
       res.json({ message: "Succesvol uitgelogd" });
     } catch (error) {
       console.error("Logout error:", error);
