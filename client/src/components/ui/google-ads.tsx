@@ -90,15 +90,9 @@ export function GoogleAd({ position, className = "" }: GoogleAdProps) {
   );
 }
 
-// Header banner ad component
+// Header banner ad component - removed per user request (was disruptive)
 export function HeaderAd() {
-  return (
-    <div className="w-full bg-gradient-to-r from-orange-100 to-blue-100 border-b" data-testid="header-ad-banner">
-      <div className="container mx-auto px-4 py-2">
-        <GoogleAd position="header" className="border-none bg-transparent p-2" />
-      </div>
-    </div>
-  );
+  return null;
 }
 
 // Sidebar ad component
