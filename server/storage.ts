@@ -155,6 +155,42 @@ export class MemStorage implements IStorage {
         routeCount: 4,
         estimatedDuration: "6-8 uur rijden", 
         imageUrl: "https://images.unsplash.com/photo-1551632811-561732d1e306?ixlib=rb-4.0.3"
+      },
+      {
+        name: "Belgische Kust",
+        description: "Prachtige kustroutes van Knokke tot De Panne met strandhotels, zeevruchten restaurants en historische badplaatsen.",
+        routeCount: 3,
+        estimatedDuration: "4-6 uur rijden",
+        imageUrl: "https://images.unsplash.com/photo-1559827260-dc66d52bef19?ixlib=rb-4.0.3"
+      }
+    ];
+
+    // Initialize German regions
+    const germanRegions: InsertRegion[] = [
+      {
+        name: "Zwarte Woud",
+        description: "Spektakulaire autoroutes door het Zwarte Woud met wellness hotels, thermale baden en koekoeksklokken workshops.",
+        routeCount: 5,
+        estimatedDuration: "6-9 uur rijden",
+        imageUrl: "https://images.unsplash.com/photo-1561911186-c0dce4b2c4a6?ixlib=rb-4.0.3"
+      },
+      {
+        name: "Eifel",
+        description: "Vulkanische meren en kloosters in de Eifel streek met overnachtingen rond Laacher Meer en Maria Laach klooster.",
+        routeCount: 4,
+        estimatedDuration: "5-7 uur rijden",
+        imageUrl: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3"
+      }
+    ];
+
+    // Initialize Luxembourg regions
+    const luxembourgRegions: InsertRegion[] = [
+      {
+        name: "Luxemburg",
+        description: "Compacte maar luxe routes door Luxemburg-Stad UNESCO erfgoed met kastelen, wijndegustaties en Moezel dal.",
+        routeCount: 2,
+        estimatedDuration: "3-5 uur rijden",
+        imageUrl: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3"
       }
     ];
 
@@ -166,10 +202,14 @@ export class MemStorage implements IStorage {
       "Zeeland": "region-zeeland",
       "Gelderland": "region-gelderland",
       "Overijssel": "region-overijssel",
-      "Belgische Ardennen": "region-belgische-ardennen"
+      "Belgische Ardennen": "region-belgische-ardennen",
+      "Belgische Kust": "region-belgische-kust",
+      "Zwarte Woud": "region-zwarte-woud",
+      "Eifel": "region-eifel",
+      "Luxemburg": "region-luxemburg"
     };
 
-    [...dutchRegions, ...belgianRegions].forEach(region => {
+    [...dutchRegions, ...belgianRegions, ...germanRegions, ...luxembourgRegions].forEach(region => {
       const id = regionIds[region.name] || randomUUID();
       const newRegion: Region = { id, ...region };
       this.regions.set(id, newRegion);
@@ -1413,9 +1453,10 @@ export class MemStorage implements IStorage {
     });
   }
 
-  // Initialize multi-day routes with authentic itineraries
+  // Initialize multi-day routes with authentic itineraries for Nederland, België, Duitsland & Luxemburg
   private initializeMultiDayRoutes() {
     const multiDayRouteData: InsertMultiDayRoute[] = [
+      // Nederlandse Routes
       {
         title: "3-Daagse Nederlandse Kastelen & Culinaire Route",
         description: "Spectaculaire 3-daagse autoroute langs de mooiste Nederlandse kastelen met overnachtingen in authentieke kasteel hotels. Van Muiderslot tot Kasteel De Haar, inclusief Michelin ster diners en lokale specialiteiten.",
@@ -1431,39 +1472,125 @@ export class MemStorage implements IStorage {
         affiliateCommission: 8.5 // 8.5% expected commission
       },
       {
-        title: "5-Daagse Hollandse Dorpjes & Fotografie Route",
-        description: "Uitgebreide 5-daagse route langs de meest Instagram-waardige Nederlandse dorpjes. Van Giethoorn tot Volendam, met overnachtingen in authentieke boerderij B&B's en lokale restaurants.",
-        regionId: "region-overijssel", 
-        duration: "5 dagen / 4 nachten",
-        totalDistance: "520 km",
+        title: "4-Daagse Molens & Zaanstreek Experience",
+        description: "Authentieke molentour door Noord-Holland met overnachtingen nabij Zaanse Schans. Bezoek historische windmolens, kaasmakerijen en traditionele ambachten. Inclusief overnachting in molenaars huisje.",
+        regionId: "region-noord-holland",
+        duration: "4 dagen / 3 nachten",
+        totalDistance: "220 km",
         difficulty: "gemakkelijk",
-        priceRange: "€280-420 per persoon",
-        imageUrl: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3",
-        category: "Dorpjes & Fotografie",
-        rating: 4.7,
+        priceRange: "€345-525 per persoon",
+        imageUrl: "https://images.unsplash.com/photo-1544427920-c49ccfb85579?ixlib=rb-4.0.3",
+        category: "Molens & Tradities",
+        rating: 4.6,
         isPopular: 1,
-        affiliateCommission: 7.5
+        affiliateCommission: 7.8
       },
       {
-        title: "7-Daagse Nederlandse & Belgische Grand Tour",
-        description: "Complete week-lange autoroute door Nederland en België. Kastelen, dorpjes, Belgische brouwerijen en Nederlandse kust. Luxe accommodaties en culinaire hoogtepunten.",
+        title: "5-Daagse Veluwe Natuur Retreat",
+        description: "Verblijf in een natuurhuisje op de Veluwe met wandelingen door Nationaal Park Hoge Veluwe, wildspotten en bezoek aan Kröller-Müller Museum. Authentieke natuur accommodatie via Natuurhuisjes.nl.",
+        regionId: "region-gelderland",
+        duration: "5 dagen / 4 nachten",
+        totalDistance: "165 km",
+        difficulty: "matig",
+        priceRange: "€425-685 per persoon",
+        imageUrl: "https://images.unsplash.com/photo-1629462131018-abc19b10f099?ixlib=rb-4.0.3",
+        category: "Natuur & Wandelen",
+        rating: 4.7,
+        isPopular: 1,
+        affiliateCommission: 8.2
+      },
+      
+      // Belgische Routes
+      {
+        title: "4-Daagse Belgische Kust & Strand Route",
+        description: "Ontdek de Belgische Noordzee kust van Knokke tot De Panne. Overnachtingen in strandhotels, verse zeevruchten restaurants en bezoek aan historische badplaatsen. Perfecte combinatie van strand en cultuur.",
+        regionId: "region-belgische-kust",
+        duration: "4 dagen / 3 nachten",
+        totalDistance: "185 km",
+        difficulty: "gemakkelijk",
+        priceRange: "€385-575 per persoon",
+        imageUrl: "https://images.unsplash.com/photo-1559827260-dc66d52bef19?ixlib=rb-4.0.3",
+        category: "Kust & Strand",
+        rating: 4.5,
+        isPopular: 1,
+        affiliateCommission: 7.9
+      },
+      {
+        title: "5-Daagse Belgische Ardennen Kastelen",
+        description: "Luxe kastelen route door de Belgische Ardennen met overnachtingen via Ardenne Etappe. Van kasteel Bouillon tot La Roche-en-Ardenne, inclusief Michelin restaurants en natuurwandelingen.",
         regionId: "region-belgische-ardennen",
-        duration: "7 dagen / 6 nachten", 
-        totalDistance: "850 km",
+        duration: "5 dagen / 4 nachten",
+        totalDistance: "295 km",
         difficulty: "gemiddeld",
-        priceRange: "€650-950 per persoon",
+        priceRange: "€485-745 per persoon",
         imageUrl: "https://images.unsplash.com/photo-1551632811-561732d1e306?ixlib=rb-4.0.3",
-        category: "Grand Tour",
+        category: "Kastelen & Ardennen",
+        rating: 4.8,
+        isPopular: 1,
+        affiliateCommission: 8.7
+      },
+      
+      // Duitse Routes
+      {
+        title: "6-Daagse Zwarte Woud & Wellness Route",
+        description: "Spectaculaire autoroute door het Zwarte Woud met overnachtingen in authentieke wellness hotels. Van Baden-Baden tot Freiburg, inclusief koekoeksklokken workshops, thermale baden en bosrestaurants.",
+        regionId: "region-zwarte-woud",
+        duration: "6 dagen / 5 nachten",
+        totalDistance: "420 km",
+        difficulty: "gemiddeld",
+        priceRange: "€525-795 per persoon",
+        imageUrl: "https://images.unsplash.com/photo-1561911186-c0dce4b2c4a6?ixlib=rb-4.0.3",
+        category: "Natuur & Wellness",
         rating: 4.9,
         isPopular: 1,
-        affiliateCommission: 9.0
+        affiliateCommission: 9.1
+      },
+      {
+        title: "5-Daagse Eifel Meren & Natuur Route",
+        description: "Verken de Eifel streek met haar vulkanische meren en kastelen. Overnachtingen rond het Laacher Meer en Nürburgring gebied. Inclusief bezoek aan Maria Laach klooster en lokale Eifel specialiteiten.",
+        regionId: "region-eifel",
+        duration: "5 dagen / 4 nachten", 
+        totalDistance: "320 km",
+        difficulty: "matig",
+        priceRange: "€445-665 per persoon",
+        imageUrl: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3",
+        category: "Meren & Kloosters",
+        rating: 4.6,
+        isPopular: 1,
+        affiliateCommission: 8.4
+      },
+      
+      // Luxemburg Route
+      {
+        title: "3-Daagse Luxemburg Kastelen & Wijn Route", 
+        description: "Compacte maar luxe route door Luxemburg met kasteel bezoeken, wijndegustaties langs de Moezel en overnachting in het historische Luxemburg-Stad. Perfecte introductie tot dit kleine maar rijke land.",
+        regionId: "region-luxemburg",
+        duration: "3 dagen / 2 nachten",
+        totalDistance: "180 km", 
+        difficulty: "gemakkelijk",
+        priceRange: "€395-585 per persoon",
+        imageUrl: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3",
+        category: "Kastelen & Wijn",
+        rating: 4.7,
+        isPopular: 1,
+        affiliateCommission: 8.6
       }
     ];
 
     const routeIds = [
+      // Nederlandse Routes
       "multi-day-kastelen-3dag",
+      "multi-day-molens-4dag",
+      "multi-day-veluwe-5dag",
       "multi-day-dorpjes-5dag", 
-      "multi-day-grand-tour-7dag"
+      // Belgische Routes
+      "multi-day-belgische-kust-4dag",
+      "multi-day-ardennen-kastelen-5dag",
+      // Duitse Routes  
+      "multi-day-zwarte-woud-6dag",
+      "multi-day-eifel-meren-5dag",
+      // Luxemburg Route
+      "multi-day-luxemburg-3dag"
     ];
 
     multiDayRouteData.forEach((routeData, index) => {
@@ -1476,16 +1603,35 @@ export class MemStorage implements IStorage {
       };
       this.multiDayRoutes.set(id, route);
 
-      // Add itinerary days for each route
-      if (index === 0) {
-        // 3-day castle route itinerary
-        this.create3DayCastleItinerary(id);
-      } else if (index === 1) {
-        // 5-day village route itinerary  
-        this.create5DayVillageItinerary(id);
-      } else if (index === 2) {
-        // 7-day grand tour itinerary
-        this.create7DayGrandTourItinerary(id);
+      // Add detailed itinerary days for each route
+      switch(index) {
+        case 0: // 3-day kastelen route
+          this.create3DayCastleItinerary(id);
+          break;
+        case 1: // 4-day molens route  
+          this.create4DayMolensItinerary(id);
+          break;
+        case 2: // 5-day veluwe route
+          this.create5DayVeluweItinerary(id);
+          break;
+        case 3: // 5-day dorpjes route
+          this.create5DayVillageItinerary(id);
+          break;
+        case 4: // 4-day belgische kust
+          this.create4DayBelgischeKustItinerary(id);
+          break;
+        case 5: // 5-day ardennen kastelen
+          this.create5DayArdennenItinerary(id);
+          break;
+        case 6: // 6-day zwarte woud
+          this.create6DayZwarteWoudItinerary(id);
+          break;
+        case 7: // 5-day eifel meren
+          this.create5DayEifelItinerary(id);
+          break;
+        case 8: // 3-day luxemburg
+          this.create3DayLuxemburgItinerary(id);
+          break;
       }
     });
   }
@@ -1607,6 +1753,189 @@ export class MemStorage implements IStorage {
       const dayId = randomUUID();
       const newDay: ItineraryDay = { id: dayId, ...day };
       this.itineraryDays.set(dayId, newDay);
+    });
+  }
+
+  // New itinerary creation functions for all additional routes
+  private create4DayMolensItinerary(routeId: string) {
+    const itineraryData: InsertItineraryDay[] = [
+      {
+        multiDayRouteId: routeId,
+        dayNumber: 1,
+        title: "Amsterdam - Zaanse Schans Molens",
+        description: "Start in Amsterdam en rijd naar Zaanse Schans voor authentieke molenbezoeken. Overnachting in traditioneel molenaars huisje nabij de Schans.",
+        startLocation: "Amsterdam Centrum",
+        endLocation: "Zaanse Schans - Molenaars Huisje",
+        drivingDistance: "25 km",
+        estimatedDrivingTime: "45 minuten",
+        accommodationId: "zaanstreek-accommodation-001",
+        highlights: ["Windmolen De Kat", "Kaasmakerij Catharina Hoeve", "Klompenmakerij"],
+        restaurants: ["De Hoop op d'Swarte Walvis", "Restaurant De Kraai"],
+        attractions: ["Zaanse Schans molens", "Verkade Experience", "Weaver's House"],
+        instagramSpots: ["Windmolens sunrise", "Traditionele klompen workshop", "Kaas maken proces"]
+      }
+    ];
+
+    itineraryData.forEach(dayData => {
+      const dayId = randomUUID();
+      const day: ItineraryDay = { id: dayId, ...dayData };
+      this.itineraryDays.set(dayId, day);
+    });
+  }
+
+  private create5DayVeluweItinerary(routeId: string) {
+    const itineraryData: InsertItineraryDay[] = [
+      {
+        multiDayRouteId: routeId,
+        dayNumber: 1,
+        title: "Aankomst Natuurhuisje Veluwe",
+        description: "Check-in in authentiek natuurhuisje op de Veluwe. Introductie wandeling door Hoge Veluwe National Park en wildspotten.",
+        startLocation: "Utrecht Centraal",
+        endLocation: "Natuurhuisje Hoenderloo",
+        drivingDistance: "65 km",
+        estimatedDrivingTime: "1 uur",
+        accommodationId: "veluwe-natuurhuisje-001",
+        highlights: ["Natuurhuisje check-in", "Eerste wildspotting", "Hoge Veluwe kennismaking"],
+        restaurants: ["Restaurant De Echoput", "Bosrestaurant Deelen"],
+        attractions: ["Hoge Veluwe ingang", "Bezoekerscentrum", "White sand dunes"],
+        instagramSpots: ["Natuurhuisje in het bos", "Wilde dieren spotting", "Veluwe zonsondergang"]
+      }
+    ];
+
+    itineraryData.forEach(dayData => {
+      const dayId = randomUUID();
+      const day: ItineraryDay = { id: dayId, ...dayData };
+      this.itineraryDays.set(dayId, day);
+    });
+  }
+
+  private create4DayBelgischeKustItinerary(routeId: string) {
+    const itineraryData: InsertItineraryDay[] = [
+      {
+        multiDayRouteId: routeId,
+        dayNumber: 1,
+        title: "Knokke-Heist - Luxe Kuststart",
+        description: "Aankomst in Knokke-Heist, check-in strandhotel, verkenning van de luxe boulevard en verse zeevruchten dinner.",
+        startLocation: "Antwerpen",
+        endLocation: "Knokke-Heist Strandhotel",
+        drivingDistance: "95 km",
+        estimatedDrivingTime: "1,5 uur",
+        accommodationId: "knokke-beach-hotel-001",
+        highlights: ["Knokke Casino", "Zwin Natuur Park", "Luxe boulevard"],
+        restaurants: ["Sel Gris", "La Réserve", "Strandpaviljoen Het Zoute"],
+        attractions: ["Zwin Natuur Park", "Knokke Casino", "For Freedom Museum"],
+        instagramSpots: ["Knokke pier zonsondergang", "Zwin vogels spotting", "Luxe strand cabines"]
+      }
+    ];
+
+    itineraryData.forEach(dayData => {
+      const dayId = randomUUID();
+      const day: ItineraryDay = { id: dayId, ...dayData };
+      this.itineraryDays.set(dayId, day);
+    });
+  }
+
+  private create5DayArdennenItinerary(routeId: string) {
+    const itineraryData: InsertItineraryDay[] = [
+      {
+        multiDayRouteId: routeId,
+        dayNumber: 1,
+        title: "Kasteel Bouillon & Ardennen Aankomst",
+        description: "Aankomst in Bouillon, check-in kasteel hotel via Ardenne Etappe, bezoek historisch Kasteel van Bouillon en Michelin diner.",
+        startLocation: "Brussel",
+        endLocation: "Bouillon - Château Hotel",
+        drivingDistance: "130 km",
+        estimatedDrivingTime: "2 uur",
+        accommodationId: "ardennen-chateau-001",
+        highlights: ["Kasteel van Bouillon", "Semois rivier uitzicht", "Michelin restaurant"],
+        restaurants: ["Auberge du Moulin Hideux", "La Table de Maxime"],
+        attractions: ["Kasteel van Bouillon", "Archeoparc", "Semois kajak"],
+        instagramSpots: ["Kasteel vanaf Semois", "Ardennen sunset", "Michelin gerecht"]
+      }
+    ];
+
+    itineraryData.forEach(dayData => {
+      const dayId = randomUUID();
+      const day: ItineraryDay = { id: dayId, ...dayData };
+      this.itineraryDays.set(dayId, day);
+    });
+  }
+
+  private create6DayZwarteWoudItinerary(routeId: string) {
+    const itineraryData: InsertItineraryDay[] = [
+      {
+        multiDayRouteId: routeId,
+        dayNumber: 1,
+        title: "Baden-Baden - Wellness & Casino",
+        description: "Aankomst in Baden-Baden, check-in wellness hotel, bezoek thermale baden en wereldberoemd casino. Dinner in sterrenrestaurant.",
+        startLocation: "Stuttgart",
+        endLocation: "Baden-Baden Wellness Hotel",
+        drivingDistance: "85 km",
+        estimatedDrivingTime: "1,5 uur",
+        accommodationId: "baden-baden-spa-001",
+        highlights: ["Thermale baden", "Casino Baden-Baden", "Lichtentaler Allee"],
+        restaurants: ["Brenners Park Restaurant", "Le Jardin de France"],
+        attractions: ["Caracalla Therme", "Casino Baden-Baden", "Kurhaus"],
+        instagramSpots: ["Casino glamour", "Thermale spa", "Zwarte Woud panorama"]
+      }
+    ];
+
+    itineraryData.forEach(dayData => {
+      const dayId = randomUUID();
+      const day: ItineraryDay = { id: dayId, ...dayData };
+      this.itineraryDays.set(dayId, day);
+    });
+  }
+
+  private create5DayEifelItinerary(routeId: string) {
+    const itineraryData: InsertItineraryDay[] = [
+      {
+        multiDayRouteId: routeId,
+        dayNumber: 1,
+        title: "Maria Laach & Laacher See",
+        description: "Aankomst bij Laacher Meer, check-in meer hotel, bezoek aan Maria Laach klooster en first vulkanische meer wandeling.",
+        startLocation: "Keulen",
+        endLocation: "Laacher See Hotel",
+        drivingDistance: "70 km",
+        estimatedDrivingTime: "1,25 uur",
+        accommodationId: "laacher-see-hotel-001",
+        highlights: ["Maria Laach klooster", "Laacher See wandeling", "Vulkan museum"],
+        restaurants: ["Kloster Maria Laach restaurant", "Seehotel Restaurant"],
+        attractions: ["Maria Laach klooster", "Laacher See", "Vulkanpark"],
+        instagramSpots: ["Klooster reflectie in meer", "Eifel sunset", "Vulkanische rotsen"]
+      }
+    ];
+
+    itineraryData.forEach(dayData => {
+      const dayId = randomUUID();
+      const day: ItineraryDay = { id: dayId, ...dayData };
+      this.itineraryDays.set(dayId, day);
+    });
+  }
+
+  private create3DayLuxemburgItinerary(routeId: string) {
+    const itineraryData: InsertItineraryDay[] = [
+      {
+        multiDayRouteId: routeId,
+        dayNumber: 1,
+        title: "Luxemburg-Stad Kastelen & Wijn",
+        description: "Aankomst Luxemburg-Stad, check-in boutique hotel, verkenning oude stad UNESCO erfgoed en wijndegustatie langs de Moezel.",
+        startLocation: "Metz",
+        endLocation: "Luxemburg-Stad Boutique Hotel",
+        drivingDistance: "65 km",
+        estimatedDrivingTime: "1 uur",
+        accommodationId: "luxembourg-boutique-001",
+        highlights: ["Grand Ducal Palace", "Chemin de la Corniche", "Moezel wijndegustatie"],
+        restaurants: ["Am Tiirmschen", "Clairefontaine", "Um Plateau"],
+        attractions: ["Grand Ducal Palace", "Bock Casemates", "Notre-Dame Cathedral"],
+        instagramSpots: ["Corniche uitzicht", "Palace guards", "Wijngaarden Moezel"]
+      }
+    ];
+
+    itineraryData.forEach(dayData => {
+      const dayId = randomUUID();
+      const day: ItineraryDay = { id: dayId, ...dayData };
+      this.itineraryDays.set(dayId, day);
     });
   }
 }
@@ -1881,6 +2210,62 @@ export class HybridStorage implements IStorage {
 
   async createCastleLandmark(castle: InsertCastleLandmark): Promise<CastleLandmark> {
     return await this.getStorage().createCastleLandmark(castle);
+  }
+
+  // Multi-day Routes
+  async getAllMultiDayRoutes(): Promise<MultiDayRoute[]> {
+    return await this.memStorage.getAllMultiDayRoutes();
+  }
+
+  async getMultiDayRouteById(id: string): Promise<MultiDayRoute | undefined> {
+    return await this.memStorage.getMultiDayRouteById(id);
+  }
+
+  async getMultiDayRoutesByRegion(regionId: string): Promise<MultiDayRoute[]> {
+    return await this.memStorage.getMultiDayRoutesByRegion(regionId);
+  }
+
+  async createMultiDayRoute(route: InsertMultiDayRoute): Promise<MultiDayRoute> {
+    return await this.memStorage.createMultiDayRoute(route);
+  }
+
+  // Itinerary Days
+  async getItineraryDaysByRoute(multiDayRouteId: string): Promise<ItineraryDay[]> {
+    return await this.memStorage.getItineraryDaysByRoute(multiDayRouteId);
+  }
+
+  async createItineraryDay(day: InsertItineraryDay): Promise<ItineraryDay> {
+    return await this.memStorage.createItineraryDay(day);
+  }
+
+  // Accommodations
+  async getAllAccommodations(): Promise<Accommodation[]> {
+    return await this.memStorage.getAllAccommodations();
+  }
+
+  async getAccommodationById(id: string): Promise<Accommodation | undefined> {
+    return await this.memStorage.getAccommodationById(id);
+  }
+
+  async getAccommodationsByLocation(location: string): Promise<Accommodation[]> {
+    return await this.memStorage.getAccommodationsByLocation(location);
+  }
+
+  async createAccommodation(accommodation: InsertAccommodation): Promise<Accommodation> {
+    return await this.memStorage.createAccommodation(accommodation);
+  }
+
+  // Booking Tracking
+  async createBookingTracking(booking: InsertBookingTracking): Promise<BookingTracking> {
+    return await this.memStorage.createBookingTracking(booking);
+  }
+
+  async getBookingsByUser(userId: string): Promise<BookingTracking[]> {
+    return await this.memStorage.getBookingsByUser(userId);
+  }
+
+  async updateBookingStatus(bookingId: string, status: string, revenue?: number): Promise<BookingTracking> {
+    return await this.memStorage.updateBookingStatus(bookingId, status, revenue);
   }
 }
 
