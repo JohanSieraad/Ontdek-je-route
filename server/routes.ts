@@ -1,6 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
+import { registerRecommendationRoutes } from "./routes/recommendations";
 import { insertRouteSchema, insertRegionSchema, insertRouteStopSchema, insertAudioTrackSchema, insertReviewSchema, insertPhotoSchema, registerSchema, loginSchema } from "@shared/schema";
 import { authenticateToken, optionalAuth, generateToken } from "./auth";
 
@@ -489,6 +490,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ message: "Failed to update booking status" });
     }
   });
+
+  // Register recommendation routes
+  registerRecommendationRoutes(app);
 
   const httpServer = createServer(app);
   return httpServer;

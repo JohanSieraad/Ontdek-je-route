@@ -22,6 +22,77 @@ export const users = pgTable("users", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
+// User preferences for personalized recommendations
+export const userPreferences = pgTable("user_preferences", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  preferredCategories: jsonb("preferred_categories").$type<string[]>().default([]),
+  preferredDifficulty: varchar("preferred_difficulty").default("gemakkelijk"), // gemakkelijk, matig, moeilijk
+  preferredDuration: varchar("preferred_duration").default("2-4 uur"), // tijd voorkeur
+  preferredDistance: varchar("preferred_distance").default("50-100 km"), // afstand voorkeur  
+  preferredRegions: jsonb("preferred_regions").$type<string[]>().default([]),
+  interests: jsonb("interests").$type<string[]>().default([]), // kastelen, natuur, cultuur, eten, fotografie
+  travelStyle: varchar("travel_style").default("relaxed"), // relaxed, adventure, cultural, family
+  groupSize: integer("group_size").default(2),
+  hasChildren: boolean("has_children").default(false),
+  budgetRange: varchar("budget_range").default("middel"), // laag, middel, hoog
+  accessibilityNeeds: jsonb("accessibility_needs").$type<string[]>().default([]),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// User activity tracking for recommendation algorithm
+export const userActivity = pgTable("user_activity", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  actionType: varchar("action_type").notNull(), // view, like, bookmark, complete, share, search
+  entityType: varchar("entity_type").notNull(), // route, region, castle, category
+  entityId: varchar("entity_id").notNull(),
+  metadata: jsonb("metadata").default({}), // additional context like search terms, time spent, etc.
+  sessionId: varchar("session_id"),
+  ipAddress: varchar("ip_address"),
+  userAgent: text("user_agent"),
+  createdAt: timestamp("created_at").defaultNow(),
+}, (table) => [
+  index("user_activity_user_idx").on(table.userId),
+  index("user_activity_action_idx").on(table.actionType),
+  index("user_activity_entity_idx").on(table.entityType, table.entityId),
+  index("user_activity_created_idx").on(table.createdAt),
+]);
+
+// Route bookmarks/favorites
+export const userBookmarks = pgTable("user_bookmarks", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  routeId: varchar("route_id").notNull().references(() => routes.id, { onDelete: "cascade" }),
+  isCompleted: boolean("is_completed").default(false),
+  completedAt: timestamp("completed_at"),
+  rating: real("rating"), // user's personal rating
+  notes: text("notes"), // personal notes about the route
+  createdAt: timestamp("created_at").defaultNow(),
+}, (table) => [
+  index("user_bookmarks_user_idx").on(table.userId),
+  index("user_bookmarks_route_idx").on(table.routeId),
+]);
+
+// Route recommendations cache
+export const routeRecommendations = pgTable("route_recommendations", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  routeId: varchar("route_id").notNull().references(() => routes.id, { onDelete: "cascade" }),
+  score: real("score").notNull(), // recommendation confidence score (0-1)
+  reason: text("reason"), // explanation why this route is recommended
+  algorithmVersion: varchar("algorithm_version").default("v1.0"),
+  isShown: boolean("is_shown").default(false),
+  isClicked: boolean("is_clicked").default(false),
+  createdAt: timestamp("created_at").defaultNow(),
+  expiresAt: timestamp("expires_at").notNull(), // recommendations expire after some time
+}, (table) => [
+  index("route_recommendations_user_idx").on(table.userId),
+  index("route_recommendations_score_idx").on(table.score),
+  index("route_recommendations_expires_idx").on(table.expiresAt),
+]);
+
 export const userSocialAccounts = pgTable("user_social_accounts", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
@@ -383,6 +454,40 @@ export type Accommodation = typeof accommodations.$inferSelect;
 export type InsertAccommodation = z.infer<typeof insertAccommodationSchema>;
 export type BookingTracking = typeof bookingTracking.$inferSelect;
 export type InsertBookingTracking = z.infer<typeof insertBookingTrackingSchema>;
+
+// Recommendation system types
+export const insertUserPreferencesSchema = createInsertSchema(userPreferences).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export const insertUserActivitySchema = createInsertSchema(userActivity).omit({
+  id: true,
+  createdAt: true,
+});
+
+export const insertUserBookmarkSchema = createInsertSchema(userBookmarks).omit({
+  id: true,
+  createdAt: true,
+});
+
+export const insertRouteRecommendationSchema = createInsertSchema(routeRecommendations).omit({
+  id: true,
+  createdAt: true,
+});
+
+export type InsertUserPreferences = z.infer<typeof insertUserPreferencesSchema>;
+export type UserPreferences = typeof userPreferences.$inferSelect;
+
+export type InsertUserActivity = z.infer<typeof insertUserActivitySchema>;
+export type UserActivity = typeof userActivity.$inferSelect;
+
+export type InsertUserBookmark = z.infer<typeof insertUserBookmarkSchema>;
+export type UserBookmark = typeof userBookmarks.$inferSelect;
+
+export type InsertRouteRecommendation = z.infer<typeof insertRouteRecommendationSchema>;
+export type RouteRecommendation = typeof routeRecommendations.$inferSelect;
 
 // Login/Register schemas for API
 export const registerSchema = z.object({

@@ -6,6 +6,8 @@ import { InteractiveMap } from "@/components/interactive-map";
 import { Footer } from "@/components/footer";
 import { HeaderAd, SidebarAd, ContentAd } from "@/components/ui/google-ads";
 import { SocialShare } from "@/components/ui/social-share";
+import { RecommendationPanel } from "@/components/recommendation-panel";
+import { PreferencesForm } from "@/components/preferences-form";
 import { useQuery } from "@tanstack/react-query";
 import { Region, Route } from "@shared/schema";
 import { Globe } from "lucide-react";
@@ -142,9 +144,13 @@ export default function Home() {
               )}
             </div>
             
-            {/* Sidebar with advertisements */}
+            {/* Sidebar with recommendations and advertisements */}
             <div className="lg:w-1/4">
-              <SidebarAd />
+              <div className="space-y-6">
+                <RecommendationPanel />
+                <PreferencesForm />
+                <SidebarAd />
+              </div>
             </div>
           </div>
         </div>

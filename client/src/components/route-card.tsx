@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { CastleLandmarkTrigger } from "./castle-landmark-popup";
 import { useQuery } from "@tanstack/react-query";
+import { useActivityTracking } from "@/hooks/useActivityTracking";
+import { useEffect } from "react";
 
 interface RouteCardProps {
   route: Route;
@@ -12,11 +14,23 @@ interface RouteCardProps {
 }
 
 export function RouteCard({ route, showButton = true }: RouteCardProps) {
+  const { trackRouteView, trackCategoryInterest } = useActivityTracking();
+
   // Fetch castle landmarks for this route
   const { data: castles = [] } = useQuery({
     queryKey: ['/api/routes', route.id, 'castles'],
     queryFn: () => fetch(`/api/routes/${route.id}/castles`).then(res => res.json())
   });
+
+  // Track route view when component mounts or when route changes
+  useEffect(() => {
+    trackRouteView(route.id, { 
+      category: route.category, 
+      region: route.regionId,
+      source: 'route_card'
+    });
+    trackCategoryInterest(route.category);
+  }, [route.id, route.category, route.regionId, trackRouteView, trackCategoryInterest]);
   const getCategoryColor = (category: string) => {
     switch (category.toLowerCase()) {
       case 'kastelen & eten':

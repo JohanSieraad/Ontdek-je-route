@@ -13,7 +13,12 @@ import {
   type User, type InsertUser,
   type SocialAccount, type InsertSocialAccount,
   type Session, type InsertSession,
-  routes, regions, routeStops, audioTracks, reviews, photos, castleLandmarks, users, userSocialAccounts, sessions
+  type UserPreferences, type InsertUserPreferences,
+  type UserActivity, type InsertUserActivity,
+  type UserBookmark, type InsertUserBookmark,
+  type RouteRecommendation, type InsertRouteRecommendation,
+  routes, regions, routeStops, audioTracks, reviews, photos, castleLandmarks, users, userSocialAccounts, sessions,
+  userPreferences, userActivity, userBookmarks, routeRecommendations
 } from "@shared/schema";
 import { randomUUID } from "crypto";
 import { db } from "./db";
@@ -100,6 +105,29 @@ export interface IStorage {
   getSessionByToken(token: string): Promise<Session | undefined>;
   deleteSession(token: string): Promise<void>;
   deleteExpiredSessions(): Promise<void>;
+  
+  // User preferences for recommendations
+  getUserPreferences(userId: string): Promise<UserPreferences | undefined>;
+  createUserPreferences(preferences: InsertUserPreferences): Promise<UserPreferences>;
+  updateUserPreferences(userId: string, preferences: Partial<InsertUserPreferences>): Promise<UserPreferences>;
+  
+  // User activity tracking
+  trackUserActivity(activity: InsertUserActivity): Promise<UserActivity>;
+  getUserActivity(userId: string, limit?: number): Promise<UserActivity[]>;
+  getUserActivityByType(userId: string, actionType: string, limit?: number): Promise<UserActivity[]>;
+  
+  // User bookmarks/favorites
+  createBookmark(bookmark: InsertUserBookmark): Promise<UserBookmark>;
+  getUserBookmarks(userId: string): Promise<UserBookmark[]>;
+  removeBookmark(userId: string, routeId: string): Promise<void>;
+  isRouteBookmarked(userId: string, routeId: string): Promise<boolean>;
+  
+  // Route recommendations
+  createRecommendations(recommendations: InsertRouteRecommendation[]): Promise<RouteRecommendation[]>;
+  getUserRecommendations(userId: string, limit?: number): Promise<RouteRecommendation[]>;
+  markRecommendationShown(userId: string, routeId: string): Promise<void>;
+  markRecommendationClicked(userId: string, routeId: string): Promise<void>;
+  cleanupExpiredRecommendations(): Promise<void>;
 }
 
 export class MemStorage implements IStorage {
@@ -114,6 +142,13 @@ export class MemStorage implements IStorage {
   private itineraryDays: Map<string, ItineraryDay>;
   private accommodations: Map<string, Accommodation>;
   private bookingTracking: Map<string, BookingTracking>;
+  private users: Map<string, User>;
+  private socialAccounts: Map<string, SocialAccount>;
+  private sessions: Map<string, Session>;
+  private userPreferences: Map<string, UserPreferences>;
+  private userActivity: Map<string, UserActivity>;
+  private userBookmarks: Map<string, UserBookmark>;
+  private routeRecommendations: Map<string, RouteRecommendation>;
 
   constructor() {
     this.regions = new Map();
@@ -127,6 +162,13 @@ export class MemStorage implements IStorage {
     this.itineraryDays = new Map();
     this.accommodations = new Map();
     this.bookingTracking = new Map();
+    this.users = new Map();
+    this.socialAccounts = new Map();
+    this.sessions = new Map();
+    this.userPreferences = new Map();
+    this.userActivity = new Map();
+    this.userBookmarks = new Map();
+    this.routeRecommendations = new Map();
     this.initializeData();
     this.initializeCastleLandmarks(); // Move after routes are created
     this.initializeReviewsAndPhotos();
@@ -2479,6 +2521,112 @@ export class HybridStorage implements IStorage {
 
   async deleteExpiredSessions(): Promise<void> {
     await db.delete(sessions).where(eq(sessions.expiresAt, new Date()));
+  }
+
+  // User preferences for recommendations
+  async getUserPreferences(userId: string): Promise<UserPreferences | undefined> {
+    const [preferences] = await db.select().from(userPreferences).where(eq(userPreferences.userId, userId));
+    return preferences;
+  }
+
+  async createUserPreferences(preferences: InsertUserPreferences): Promise<UserPreferences> {
+    const [newPreferences] = await db.insert(userPreferences).values({
+      ...preferences,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    }).returning();
+    return newPreferences;
+  }
+
+  async updateUserPreferences(userId: string, updates: Partial<InsertUserPreferences>): Promise<UserPreferences> {
+    const [updatedPreferences] = await db
+      .update(userPreferences)
+      .set({ ...updates, updatedAt: new Date() })
+      .where(eq(userPreferences.userId, userId))
+      .returning();
+    return updatedPreferences;
+  }
+
+  // User activity tracking
+  async trackUserActivity(activity: InsertUserActivity): Promise<UserActivity> {
+    const [newActivity] = await db.insert(userActivity).values({
+      ...activity,
+      createdAt: new Date(),
+    }).returning();
+    return newActivity;
+  }
+
+  async getUserActivity(userId: string, limit: number = 50): Promise<UserActivity[]> {
+    return await db.select().from(userActivity)
+      .where(eq(userActivity.userId, userId))
+      .orderBy(desc(userActivity.createdAt))
+      .limit(limit);
+  }
+
+  async getUserActivityByType(userId: string, actionType: string, limit: number = 20): Promise<UserActivity[]> {
+    return await db.select().from(userActivity)
+      .where(and(eq(userActivity.userId, userId), eq(userActivity.actionType, actionType)))
+      .orderBy(desc(userActivity.createdAt))
+      .limit(limit);
+  }
+
+  // User bookmarks/favorites
+  async createBookmark(bookmark: InsertUserBookmark): Promise<UserBookmark> {
+    const [newBookmark] = await db.insert(userBookmarks).values({
+      ...bookmark,
+      createdAt: new Date(),
+    }).returning();
+    return newBookmark;
+  }
+
+  async getUserBookmarks(userId: string): Promise<UserBookmark[]> {
+    return await db.select().from(userBookmarks).where(eq(userBookmarks.userId, userId));
+  }
+
+  async removeBookmark(userId: string, routeId: string): Promise<void> {
+    await db.delete(userBookmarks)
+      .where(and(eq(userBookmarks.userId, userId), eq(userBookmarks.routeId, routeId)));
+  }
+
+  async isRouteBookmarked(userId: string, routeId: string): Promise<boolean> {
+    const [bookmark] = await db.select().from(userBookmarks)
+      .where(and(eq(userBookmarks.userId, userId), eq(userBookmarks.routeId, routeId)));
+    return !!bookmark;
+  }
+
+  // Route recommendations
+  async createRecommendations(recommendations: InsertRouteRecommendation[]): Promise<RouteRecommendation[]> {
+    return await db.insert(routeRecommendations).values(
+      recommendations.map(rec => ({
+        ...rec,
+        createdAt: new Date(),
+      }))
+    ).returning();
+  }
+
+  async getUserRecommendations(userId: string, limit: number = 10): Promise<RouteRecommendation[]> {
+    return await db.select().from(routeRecommendations)
+      .where(and(eq(routeRecommendations.userId, userId), eq(routeRecommendations.expiresAt, new Date())))
+      .orderBy(desc(routeRecommendations.score))
+      .limit(limit);
+  }
+
+  async markRecommendationShown(userId: string, routeId: string): Promise<void> {
+    await db
+      .update(routeRecommendations)
+      .set({ isShown: true })
+      .where(and(eq(routeRecommendations.userId, userId), eq(routeRecommendations.routeId, routeId)));
+  }
+
+  async markRecommendationClicked(userId: string, routeId: string): Promise<void> {
+    await db
+      .update(routeRecommendations)
+      .set({ isClicked: true })
+      .where(and(eq(routeRecommendations.userId, userId), eq(routeRecommendations.routeId, routeId)));
+  }
+
+  async cleanupExpiredRecommendations(): Promise<void> {
+    await db.delete(routeRecommendations).where(eq(routeRecommendations.expiresAt, new Date()));
   }
 }
 
