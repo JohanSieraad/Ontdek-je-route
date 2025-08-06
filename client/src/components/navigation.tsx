@@ -20,11 +20,8 @@ export function Navigation() {
       return;
     }
     
-    // Use client-side navigation for regular routes
-    if (path.startsWith('/')) {
-      window.history.pushState({}, '', path);
-      window.dispatchEvent(new PopStateEvent('popstate'));
-    }
+    // Use window.location for route changes
+    window.location.pathname = path;
   };
 
   const navLinks = [
