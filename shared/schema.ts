@@ -325,17 +325,7 @@ export const bookingTracking = pgTable("booking_tracking", {
   createdAt: timestamp("created_at").defaultNow(),
 });
 
-export type MultiDayRoute = typeof multiDayRoutes.$inferSelect;
-export type InsertMultiDayRoute = typeof multiDayRoutes.$inferInsert;
 
-export type ItineraryDay = typeof itineraryDays.$inferSelect;
-export type InsertItineraryDay = typeof itineraryDays.$inferInsert;
-
-export type Accommodation = typeof accommodations.$inferSelect;
-export type InsertAccommodation = typeof accommodations.$inferInsert;
-
-export type BookingTracking = typeof bookingTracking.$inferSelect;
-export type InsertBookingTracking = typeof bookingTracking.$inferInsert;
 
 // Database relations for multi-day routes
 export const multiDayRouteRelations = relations(multiDayRoutes, ({ many, one }) => ({
@@ -359,10 +349,40 @@ export const bookingTrackingRelations = relations(bookingTracking, ({ one }) => 
   accommodation: one(accommodations, { fields: [bookingTracking.accommodationId], references: [accommodations.id] }),
   multiDayRoute: one(multiDayRoutes, { fields: [bookingTracking.multiDayRouteId], references: [multiDayRoutes.id] }),
 }));
+
+// Multi-day route schema exports
+export const insertMultiDayRouteSchema = createInsertSchema(multiDayRoutes).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export const insertItineraryDaySchema = createInsertSchema(itineraryDays).omit({
+  id: true,
+});
+
+export const insertAccommodationSchema = createInsertSchema(accommodations).omit({
+  id: true,
+});
+
+export const insertBookingTrackingSchema = createInsertSchema(bookingTracking).omit({
+  id: true,
+  createdAt: true,
+});
+
+// Type exports
 export type InsertSocialAccount = z.infer<typeof insertSocialAccountSchema>;
 export type SocialAccount = typeof userSocialAccounts.$inferSelect;
 export type InsertSession = z.infer<typeof insertSessionSchema>;
 export type Session = typeof sessions.$inferSelect;
+export type MultiDayRoute = typeof multiDayRoutes.$inferSelect;
+export type InsertMultiDayRoute = z.infer<typeof insertMultiDayRouteSchema>;
+export type ItineraryDay = typeof itineraryDays.$inferSelect;
+export type InsertItineraryDay = z.infer<typeof insertItineraryDaySchema>;
+export type Accommodation = typeof accommodations.$inferSelect;
+export type InsertAccommodation = z.infer<typeof insertAccommodationSchema>;
+export type BookingTracking = typeof bookingTracking.$inferSelect;
+export type InsertBookingTracking = z.infer<typeof insertBookingTrackingSchema>;
 
 // Login/Register schemas for API
 export const registerSchema = z.object({

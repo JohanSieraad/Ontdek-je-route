@@ -1,4 +1,4 @@
-import { type Region, type InsertRegion, type Route, type InsertRoute, type RouteStop, type InsertRouteStop, type AudioTrack, type InsertAudioTrack, type Review, type InsertReview, type Photo, type InsertPhoto, type CastleLandmark, type InsertCastleLandmark } from "@shared/schema";
+import { type Region, type InsertRegion, type Route, type InsertRoute, type RouteStop, type InsertRouteStop, type AudioTrack, type InsertAudioTrack, type Review, type InsertReview, type Photo, type InsertPhoto, type CastleLandmark, type InsertCastleLandmark, type MultiDayRoute, type InsertMultiDayRoute, type ItineraryDay, type InsertItineraryDay, type Accommodation, type InsertAccommodation, type BookingTracking, type InsertBookingTracking, type User } from "@shared/schema";
 import { randomUUID } from "crypto";
 import { db } from "./db";
 import { routes, regions, routeStops, audioTracks, reviews, photos, castleLandmarks } from "@shared/schema";
@@ -210,8 +210,12 @@ export class MemStorage implements IStorage {
     };
 
     [...dutchRegions, ...belgianRegions, ...germanRegions, ...luxembourgRegions].forEach(region => {
-      const id = regionIds[region.name] || randomUUID();
-      const newRegion: Region = { id, ...region };
+      const id = regionIds[region.name as keyof typeof regionIds] || randomUUID();
+      const newRegion: Region = { 
+        id, 
+        ...region,
+        routeCount: region.routeCount ?? 0
+      };
       this.regions.set(id, newRegion);
     });
 
@@ -941,10 +945,35 @@ export class MemStorage implements IStorage {
       id,
       rating: insertRoute.rating ?? 0,
       difficulty: insertRoute.difficulty ?? "gemakkelijk",
-      isPopular: insertRoute.isPopular ?? 0
+      isPopular: insertRoute.isPopular ?? 0,
+      isUserCreated: insertRoute.isUserCreated ?? false,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      createdBy: insertRoute.createdBy ?? null
     };
     this.routes.set(id, route);
     return route;
+  }
+
+  async updateRoute(id: string, updateData: Partial<InsertRoute>): Promise<Route> {
+    const existingRoute = this.routes.get(id);
+    if (!existingRoute) {
+      throw new Error("Route not found");
+    }
+    
+    const updatedRoute: Route = {
+      ...existingRoute,
+      ...updateData,
+      id,
+      updatedAt: new Date()
+    };
+    
+    this.routes.set(id, updatedRoute);
+    return updatedRoute;
+  }
+
+  async deleteRoute(id: string): Promise<void> {
+    this.routes.delete(id);
   }
 
   async getRouteStops(routeId: string): Promise<RouteStop[]> {
@@ -1001,7 +1030,7 @@ export class MemStorage implements IStorage {
       id,
       userEmail: insertReview.userEmail ?? null,
       visitDate: insertReview.visitDate ?? null,
-      createdAt: new Date().toISOString(),
+      createdAt: new Date(),
       isVerified: insertReview.isVerified ?? 0
     };
     this.reviews.set(id, review);
@@ -1016,13 +1045,21 @@ export class MemStorage implements IStorage {
   async getPhotosByRoute(routeId: string): Promise<Photo[]> {
     return Array.from(this.photos.values())
       .filter(photo => photo.routeId === routeId)
-      .sort((a, b) => new Date(b.uploadedAt).getTime() - new Date(a.uploadedAt).getTime());
+      .sort((a, b) => {
+        const dateA = a.uploadedAt ? new Date(a.uploadedAt).getTime() : 0;
+        const dateB = b.uploadedAt ? new Date(b.uploadedAt).getTime() : 0;
+        return dateB - dateA;
+      });
   }
 
   async getPhotosByStop(stopId: string): Promise<Photo[]> {
     return Array.from(this.photos.values())
       .filter(photo => photo.stopId === stopId)
-      .sort((a, b) => new Date(b.uploadedAt).getTime() - new Date(a.uploadedAt).getTime());
+      .sort((a, b) => {
+        const dateA = a.uploadedAt ? new Date(a.uploadedAt).getTime() : 0;
+        const dateB = b.uploadedAt ? new Date(b.uploadedAt).getTime() : 0;
+        return dateB - dateA;
+      });
   }
 
   async createPhoto(insertPhoto: InsertPhoto): Promise<Photo> {
@@ -1033,7 +1070,7 @@ export class MemStorage implements IStorage {
       stopId: insertPhoto.stopId ?? null,
       reviewId: insertPhoto.reviewId ?? null,
       caption: insertPhoto.caption ?? null,
-      uploadedAt: new Date().toISOString(),
+      uploadedAt: new Date(),
       isApproved: insertPhoto.isApproved ?? 0
     };
     this.photos.set(id, photo);

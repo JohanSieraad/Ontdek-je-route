@@ -202,15 +202,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/routes", async (req, res) => {
-    try {
-      const validated = insertRouteSchema.parse(req.body);
-      const route = await storage.createRoute(validated);
-      res.status(201).json(route);
-    } catch (error) {
-      res.status(400).json({ message: "Ongeldige route gegevens" });
-    }
-  });
+
 
   // Route Stops
   app.get("/api/routes/:routeId/stops", async (req, res) => {
