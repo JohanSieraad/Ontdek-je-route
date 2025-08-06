@@ -11,6 +11,7 @@ import { PreferencesForm } from "@/components/preferences-form";
 import { useQuery } from "@tanstack/react-query";
 import { Region, Route } from "@shared/schema";
 import { Globe } from "lucide-react";
+import { Link } from "wouter";
 
 export default function Home() {
   // Scroll to top when component mounts
@@ -73,7 +74,12 @@ export default function Home() {
           ) : regions && regions.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {regions.slice(0, 4).map((region, index) => (
-                <div key={region.id} className={`animate-discovery-reveal animate-discovery-delay-${Math.min(index + 1, 4)} bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden hover:shadow-xl transition-shadow`}>
+                <div 
+                  key={region.id} 
+                  className={`animate-discovery-reveal animate-discovery-delay-${Math.min(index + 1, 4)} bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden hover:shadow-xl transition-all duration-200 cursor-pointer hover:scale-105`}
+                  onClick={() => window.location.href = `/regios#${region.id}`}
+                  data-testid={`region-card-${region.id}`}
+                >
                   <div className="w-full h-32 bg-cover bg-center" style={{ backgroundImage: `url(${region.imageUrl})` }}></div>
                   <div className="p-4">
                     <h4 className="font-semibold text-gray-900 mb-1">{region.name}</h4>
