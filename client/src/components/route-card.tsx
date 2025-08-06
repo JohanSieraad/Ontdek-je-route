@@ -8,9 +8,10 @@ import { useQuery } from "@tanstack/react-query";
 
 interface RouteCardProps {
   route: Route;
+  showButton?: boolean;
 }
 
-export function RouteCard({ route }: RouteCardProps) {
+export function RouteCard({ route, showButton = true }: RouteCardProps) {
   // Fetch castle landmarks for this route
   const { data: castles = [] } = useQuery({
     queryKey: ['/api/routes', route.id, 'castles'],

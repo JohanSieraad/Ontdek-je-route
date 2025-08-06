@@ -129,7 +129,7 @@ export default function Home() {
                 </div>
               ) : popularRoutes && popularRoutes.length > 0 ? (
                 <div className="grid grid-cols-1 gap-8">
-                  {popularRoutes.map((route, index) => (
+                  {popularRoutes.slice(0, 4).map((route, index) => (
                     <div key={route.id} className={`animate-discovery-reveal animate-discovery-delay-${Math.min(index + 1, 4)}`}>
                       <RouteCard route={route} />
                     </div>
