@@ -26,7 +26,7 @@ export function Navigation() {
 
   const navLinks = [
     { href: "/", label: "Home", icon: Home },
-    { href: "#regio", label: "Regio's", icon: Globe },
+    { href: "#regions", label: "Regio's", icon: Globe },
   ];
 
   const bottomNavLinks = [
@@ -40,7 +40,7 @@ export function Navigation() {
 
   const countryNavLinks = [
     { 
-      href: "/region/nederland", 
+      href: "/regio/region-noord-holland", 
       label: "Nederland",
       flag: (
         <svg viewBox="0 0 9 6" className="w-full h-full">
@@ -51,7 +51,7 @@ export function Navigation() {
       )
     },
     { 
-      href: "/region/belgie", 
+      href: "/regio/region-belgische-ardennen", 
       label: "België",
       flag: (
         <svg viewBox="0 0 15 10" className="w-full h-full">
