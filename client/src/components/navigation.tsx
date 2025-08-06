@@ -271,7 +271,7 @@ export function Navigation() {
                     className="text-gray-700 hover:text-dutch-orange"
                     data-testid="button-login"
                   >
-                    <LogIn className="h-5 w-5" />
+                    <User className="h-5 w-5" />
                   </Button>
                 </AuthDialog>
               )}
