@@ -13,6 +13,12 @@ export function Navigation() {
   const navigate = (path: string) => {
     // Handle anchor links by scrolling to element
     if (path.startsWith('#')) {
+      // If not on home page, navigate to home first then scroll
+      if (window.location.pathname !== '/') {
+        window.location.href = '/' + path;
+        return;
+      }
+      
       const element = document.getElementById(path.substring(1));
       if (element) {
         element.scrollIntoView({ behavior: 'smooth' });
@@ -115,6 +121,12 @@ export function Navigation() {
                           <button
                             key={routeLink.href}
                             onClick={() => {
+                              // If not on home page, navigate to home first then scroll
+                              if (window.location.pathname !== '/') {
+                                window.location.href = '/' + routeLink.href;
+                                return;
+                              }
+                              
                               const element = document.getElementById(routeLink.href.substring(1));
                               if (element) {
                                 element.scrollIntoView({ behavior: 'smooth' });
@@ -172,6 +184,12 @@ export function Navigation() {
                           <button
                             key={link.href}
                             onClick={() => {
+                              // If not on home page, navigate to home first then scroll
+                              if (window.location.pathname !== '/') {
+                                window.location.href = '/' + link.href;
+                                return;
+                              }
+                              
                               const element = document.getElementById(link.href.substring(1));
                               if (element) {
                                 element.scrollIntoView({ behavior: 'smooth' });
@@ -250,6 +268,12 @@ export function Navigation() {
                         <button
                           key={routeLink.href}
                           onClick={() => {
+                            // If not on home page, navigate to home first then scroll
+                            if (window.location.pathname !== '/') {
+                              window.location.href = '/' + routeLink.href;
+                              return;
+                            }
+                            
                             const element = document.getElementById(routeLink.href.substring(1));
                             if (element) {
                               element.scrollIntoView({ behavior: 'smooth' });
