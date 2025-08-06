@@ -37,7 +37,7 @@ export function HeroBanner() {
             </div>
           </div>
 
-          <Link href="/meerdaagse-routes">
+          <Link href="#routes">
             <Button
               size="lg"
               className="bg-orange-500 hover:bg-orange-600 text-white font-semibold px-8 py-4 text-lg shadow-lg"
