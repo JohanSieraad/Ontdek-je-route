@@ -58,82 +58,81 @@ export function Navigation() {
           </Link>
           
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-4">
-            {navLinks.map((link) => {
-              const IconComponent = link.icon;
-              return (
-                <Link key={link.href} href={link.href}>
-                  <a 
-                    className={`text-gray-700 hover:text-dutch-orange transition-all duration-200 font-medium transform hover:scale-105 flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-50 ${
-                      isActive(link.href) ? 'text-dutch-orange bg-orange-50' : ''
-                    }`}
-                    data-testid={`link-${link.label.toLowerCase().replace(' ', '-')}`}
-                  >
-                    <IconComponent className="h-4 w-4" />
-                    <span className="hidden lg:inline">{link.label}</span>
-                  </a>
-                </Link>
-              );
-            })}
-            
-            {/* Routes Dropdown */}
+          <div className="hidden md:flex items-center space-x-3">
+            {/* Main Menu Dropdown */}
             <div className="relative group">
-              <button className="text-gray-700 hover:text-dutch-orange transition-colors font-medium flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-50" data-testid="button-routes">
-                <Route className="h-4 w-4" />
-                <span className="hidden lg:inline">Routes</span>
+              <button className="text-gray-700 hover:text-dutch-orange transition-colors font-medium flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-50" data-testid="button-main-menu">
+                <Menu className="h-4 w-4" />
+                <span className="text-sm">Menu</span>
                 <ChevronDown className="w-3 h-3 transition-transform group-hover:rotate-180" />
               </button>
-              <div className="absolute top-full left-0 mt-2 w-48 bg-white rounded-md shadow-lg border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+              <div className="absolute top-full right-0 mt-2 w-56 bg-white rounded-md shadow-lg border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
                 <div className="py-2">
-                  {routeDropdownLinks.map((routeLink) => {
-                    const IconComponent = routeLink.icon;
+                  {/* Navigation Links */}
+                  {navLinks.map((link) => {
+                    const IconComponent = link.icon;
                     return (
-                      <Link key={routeLink.href} href={routeLink.href}>
+                      <Link key={link.href} href={link.href}>
                         <a 
-                          className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-50 hover:text-dutch-orange transition-colors"
-                          data-testid={`link-${routeLink.label.toLowerCase().replace(' ', '-')}`}
+                          className={`flex items-center px-4 py-2 text-gray-700 hover:bg-gray-50 hover:text-dutch-orange transition-colors ${
+                            isActive(link.href) ? 'text-dutch-orange bg-orange-50' : ''
+                          }`}
+                          data-testid={`link-${link.label.toLowerCase().replace(' ', '-')}`}
                         >
                           <IconComponent className="h-4 w-4 mr-3" />
-                          {routeLink.label}
+                          {link.label}
                         </a>
                       </Link>
                     );
                   })}
+                  
+                  {/* Routes Section */}
+                  <div className="border-t mt-2 pt-2">
+                    <div className="px-4 py-1 text-xs font-medium text-gray-500 uppercase tracking-wider">Routes</div>
+                    {routeDropdownLinks.map((routeLink) => {
+                      const IconComponent = routeLink.icon;
+                      return (
+                        <Link key={routeLink.href} href={routeLink.href}>
+                          <a 
+                            className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-50 hover:text-dutch-orange transition-colors"
+                            data-testid={`link-${routeLink.label.toLowerCase().replace(' ', '-')}`}
+                          >
+                            <IconComponent className="h-4 w-4 mr-3" />
+                            {routeLink.label}
+                          </a>
+                        </Link>
+                      );
+                    })}
+                  </div>
+                  
+                  {/* Countries Section */}
+                  <div className="border-t mt-2 pt-2">
+                    <div className="px-4 py-1 text-xs font-medium text-gray-500 uppercase tracking-wider">Landen</div>
+                    {countryNavLinks.map((country) => (
+                      <Link key={country.href} href={country.href}>
+                        <a 
+                          className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-50 hover:text-dutch-orange transition-colors"
+                          data-testid={`link-${country.label.toLowerCase()}`}
+                        >
+                          <div className="w-6 h-4 mr-3 border border-gray-300 rounded-sm overflow-hidden">
+                            {country.flag}
+                          </div>
+                          {country.label}
+                        </a>
+                      </Link>
+                    ))}
+                  </div>
+                  
+
                 </div>
               </div>
             </div>
-            
-            {/* Country Dropdown */}
-            <div className="relative group">
-              <button className="text-gray-700 hover:text-dutch-orange transition-colors font-medium flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-50" data-testid="button-landen">
-                <Globe className="h-4 w-4" />
-                <span className="hidden lg:inline">Landen</span>
-                <ChevronDown className="w-3 h-3 transition-transform group-hover:rotate-180" />
-              </button>
-              <div className="absolute top-full left-0 mt-2 w-48 bg-white rounded-md shadow-lg border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
-                <div className="py-2">
-                  {countryNavLinks.map((country) => (
-                    <Link key={country.href} href={country.href}>
-                      <a 
-                        className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-50 hover:text-dutch-orange transition-colors"
-                        data-testid={`link-${country.label.toLowerCase()}`}
-                      >
-                        <div className="w-6 h-4 mr-3 border border-gray-300 rounded-sm overflow-hidden">
-                          {country.flag}
-                        </div>
-                        {country.label}
-                      </a>
-                    </Link>
-                  ))}
-                </div>
-              </div>
-            </div>
-            
+
             <Button className="bg-gradient-to-r from-dutch-orange to-sunset-pink text-white hover:from-dutch-orange/90 hover:to-sunset-pink/90 shadow-lg px-3 py-2" data-testid="button-search">
               <Search className="h-4 w-4" />
               <span className="hidden lg:inline ml-2">Zoek Routes</span>
             </Button>
-          </nav>
+          </div>
 
           {/* Mobile Navigation */}
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
@@ -210,6 +209,8 @@ export function Navigation() {
           </Sheet>
         </div>
       </div>
+      
+
     </header>
   );
 }
