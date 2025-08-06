@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useLocation } from "wouter";
+import { Link, useLocation, useRouter } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { MapPin, Menu, Search, Home, Globe, Route, Info, Calendar, ChevronDown } from "lucide-react";
@@ -7,8 +7,13 @@ import { MapPin, Menu, Search, Home, Globe, Route, Info, Calendar, ChevronDown }
 export function Navigation() {
   const [location] = useLocation();
   const [isOpen, setIsOpen] = useState(false);
+  const router = useRouter();
 
   const isActive = (path: string) => location === path;
+  
+  const navigate = (path: string) => {
+    router.push(path);
+  };
 
   const navLinks = [
     { href: "/", label: "Home", icon: Home },
@@ -50,12 +55,10 @@ export function Navigation() {
     <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          <Link href="/">
-            <div className="flex items-center space-x-2 cursor-pointer group" data-testid="link-home">
-              <MapPin className="h-8 w-8 text-dutch-orange group-hover:animate-wiggle transition-all duration-200" />
-              <h1 className="text-xl font-bold text-gray-900 group-hover:text-dutch-orange transition-colors duration-200">AutoRoutes Nederland</h1>
-            </div>
-          </Link>
+          <button onClick={() => navigate("/")} className="flex items-center space-x-2 cursor-pointer group" data-testid="link-home">
+            <MapPin className="h-8 w-8 text-dutch-orange group-hover:animate-wiggle transition-all duration-200" />
+            <h1 className="text-xl font-bold text-gray-900 group-hover:text-dutch-orange transition-colors duration-200">AutoRoutes Nederland</h1>
+          </button>
           
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-3">
@@ -72,17 +75,17 @@ export function Navigation() {
                   {navLinks.map((link) => {
                     const IconComponent = link.icon;
                     return (
-                      <Link key={link.href} href={link.href}>
-                        <a 
-                          className={`flex items-center px-4 py-2 text-gray-700 hover:bg-gray-50 hover:text-dutch-orange transition-colors ${
-                            isActive(link.href) ? 'text-dutch-orange bg-orange-50' : ''
-                          }`}
-                          data-testid={`link-${link.label.toLowerCase().replace(' ', '-')}`}
-                        >
-                          <IconComponent className="h-4 w-4 mr-3" />
-                          {link.label}
-                        </a>
-                      </Link>
+                      <button
+                        key={link.href}
+                        onClick={() => navigate(link.href)}
+                        className={`flex items-center w-full px-4 py-2 text-gray-700 hover:bg-gray-50 hover:text-dutch-orange transition-colors text-left ${
+                          isActive(link.href) ? 'text-dutch-orange bg-orange-50' : ''
+                        }`}
+                        data-testid={`link-${link.label.toLowerCase().replace(' ', '-')}`}
+                      >
+                        <IconComponent className="h-4 w-4 mr-3" />
+                        {link.label}
+                      </button>
                     );
                   })}
                   
@@ -92,15 +95,15 @@ export function Navigation() {
                     {routeDropdownLinks.map((routeLink) => {
                       const IconComponent = routeLink.icon;
                       return (
-                        <Link key={routeLink.href} href={routeLink.href}>
-                          <a 
-                            className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-50 hover:text-dutch-orange transition-colors"
-                            data-testid={`link-${routeLink.label.toLowerCase().replace(' ', '-')}`}
-                          >
-                            <IconComponent className="h-4 w-4 mr-3" />
-                            {routeLink.label}
-                          </a>
-                        </Link>
+                        <button
+                          key={routeLink.href}
+                          onClick={() => navigate(routeLink.href)}
+                          className="flex items-center w-full px-4 py-2 text-gray-700 hover:bg-gray-50 hover:text-dutch-orange transition-colors text-left"
+                          data-testid={`link-${routeLink.label.toLowerCase().replace(' ', '-')}`}
+                        >
+                          <IconComponent className="h-4 w-4 mr-3" />
+                          {routeLink.label}
+                        </button>
                       );
                     })}
                   </div>
@@ -109,17 +112,17 @@ export function Navigation() {
                   <div className="border-t mt-2 pt-2">
                     <div className="px-4 py-1 text-xs font-medium text-gray-500 uppercase tracking-wider">Landen</div>
                     {countryNavLinks.map((country) => (
-                      <Link key={country.href} href={country.href}>
-                        <a 
-                          className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-50 hover:text-dutch-orange transition-colors"
-                          data-testid={`link-${country.label.toLowerCase()}`}
-                        >
-                          <div className="w-6 h-4 mr-3 border border-gray-300 rounded-sm overflow-hidden">
-                            {country.flag}
-                          </div>
-                          {country.label}
-                        </a>
-                      </Link>
+                      <button
+                        key={country.href}
+                        onClick={() => navigate(country.href)}
+                        className="flex items-center w-full px-4 py-2 text-gray-700 hover:bg-gray-50 hover:text-dutch-orange transition-colors text-left"
+                        data-testid={`link-${country.label.toLowerCase()}`}
+                      >
+                        <div className="w-6 h-4 mr-3 border border-gray-300 rounded-sm overflow-hidden">
+                          {country.flag}
+                        </div>
+                        {country.label}
+                      </button>
                     ))}
                   </div>
                   
@@ -146,18 +149,20 @@ export function Navigation() {
                 {navLinks.map((link) => {
                   const IconComponent = link.icon;
                   return (
-                    <Link key={link.href} href={link.href}>
-                      <a 
-                        className={`text-gray-700 hover:text-dutch-orange transition-colors font-medium flex items-center gap-3 py-3 px-2 rounded-lg hover:bg-gray-50 ${
-                          isActive(link.href) ? 'text-dutch-orange bg-orange-50' : ''
-                        }`}
-                        onClick={() => setIsOpen(false)}
-                        data-testid={`mobile-link-${link.label.toLowerCase().replace(' ', '-')}`}
-                      >
-                        <IconComponent className="h-5 w-5" />
-                        {link.label}
-                      </a>
-                    </Link>
+                    <button
+                      key={link.href}
+                      onClick={() => {
+                        navigate(link.href);
+                        setIsOpen(false);
+                      }}
+                      className={`text-gray-700 hover:text-dutch-orange transition-colors font-medium flex items-center gap-3 py-3 px-2 rounded-lg hover:bg-gray-50 w-full text-left ${
+                        isActive(link.href) ? 'text-dutch-orange bg-orange-50' : ''
+                      }`}
+                      data-testid={`mobile-link-${link.label.toLowerCase().replace(' ', '-')}`}
+                    >
+                      <IconComponent className="h-5 w-5" />
+                      {link.label}
+                    </button>
                   );
                 })}
                 
@@ -167,16 +172,18 @@ export function Navigation() {
                   {routeDropdownLinks.map((routeLink) => {
                     const IconComponent = routeLink.icon;
                     return (
-                      <Link key={routeLink.href} href={routeLink.href}>
-                        <a 
-                          className="text-gray-700 hover:text-dutch-orange transition-colors font-medium flex items-center gap-3 py-3 px-2 rounded-lg hover:bg-gray-50"
-                          onClick={() => setIsOpen(false)}
-                          data-testid={`mobile-link-${routeLink.label.toLowerCase().replace(' ', '-')}`}
-                        >
-                          <IconComponent className="h-5 w-5" />
-                          {routeLink.label}
-                        </a>
-                      </Link>
+                      <button
+                        key={routeLink.href}
+                        onClick={() => {
+                          navigate(routeLink.href);
+                          setIsOpen(false);
+                        }}
+                        className="text-gray-700 hover:text-dutch-orange transition-colors font-medium flex items-center gap-3 py-3 px-2 rounded-lg hover:bg-gray-50 w-full text-left"
+                        data-testid={`mobile-link-${routeLink.label.toLowerCase().replace(' ', '-')}`}
+                      >
+                        <IconComponent className="h-5 w-5" />
+                        {routeLink.label}
+                      </button>
                     );
                   })}
                 </div>
@@ -185,18 +192,20 @@ export function Navigation() {
                 <div className="border-t pt-4 mt-4">
                   <h3 className="text-gray-600 font-medium text-sm px-2 mb-2">Landen</h3>
                   {countryNavLinks.map((country) => (
-                    <Link key={country.href} href={country.href}>
-                      <a 
-                        className="text-gray-700 hover:text-dutch-orange transition-colors font-medium flex items-center gap-3 py-3 px-2 rounded-lg hover:bg-gray-50"
-                        onClick={() => setIsOpen(false)}
-                        data-testid={`mobile-link-${country.label.toLowerCase()}`}
-                      >
-                        <div className="w-6 h-4 border border-gray-300 rounded-sm overflow-hidden">
-                          {country.flag}
-                        </div>
-                        {country.label}
-                      </a>
-                    </Link>
+                    <button
+                      key={country.href}
+                      onClick={() => {
+                        navigate(country.href);
+                        setIsOpen(false);
+                      }}
+                      className="text-gray-700 hover:text-dutch-orange transition-colors font-medium flex items-center gap-3 py-3 px-2 rounded-lg hover:bg-gray-50 w-full text-left"
+                      data-testid={`mobile-link-${country.label.toLowerCase()}`}
+                    >
+                      <div className="w-6 h-4 border border-gray-300 rounded-sm overflow-hidden">
+                        {country.flag}
+                      </div>
+                      {country.label}
+                    </button>
                   ))}
                 </div>
                 
