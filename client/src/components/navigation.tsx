@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useLocation, useRouter } from "wouter";
+import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { MapPin, Menu, Search, Home, Globe, Route, Info, Calendar, ChevronDown } from "lucide-react";
@@ -7,17 +7,32 @@ import { MapPin, Menu, Search, Home, Globe, Route, Info, Calendar, ChevronDown }
 export function Navigation() {
   const [location] = useLocation();
   const [isOpen, setIsOpen] = useState(false);
-  const router = useRouter();
 
   const isActive = (path: string) => location === path;
   
   const navigate = (path: string) => {
-    router.push(path);
+    // Handle anchor links by scrolling to element
+    if (path.startsWith('#')) {
+      const element = document.getElementById(path.substring(1));
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+      return;
+    }
+    
+    // Use client-side navigation for regular routes
+    if (path.startsWith('/')) {
+      window.history.pushState({}, '', path);
+      window.dispatchEvent(new PopStateEvent('popstate'));
+    }
   };
 
   const navLinks = [
     { href: "/", label: "Home", icon: Home },
     { href: "#regio", label: "Regio's", icon: Globe },
+  ];
+
+  const bottomNavLinks = [
     { href: "#about", label: "Over Ons", icon: Info },
   ];
 
@@ -124,6 +139,24 @@ export function Navigation() {
                         {country.label}
                       </button>
                     ))}
+                  </div>
+
+                  {/* Bottom Navigation Section */}
+                  <div className="border-t mt-2 pt-2">
+                    {bottomNavLinks.map((link) => {
+                      const IconComponent = link.icon;
+                      return (
+                        <button
+                          key={link.href}
+                          onClick={() => navigate(link.href)}
+                          className="flex items-center w-full px-4 py-2 text-gray-700 hover:bg-gray-50 hover:text-dutch-orange transition-colors text-left"
+                          data-testid={`link-${link.label.toLowerCase().replace(' ', '-')}`}
+                        >
+                          <IconComponent className="h-4 w-4 mr-3" />
+                          {link.label}
+                        </button>
+                      );
+                    })}
                   </div>
                   
 
