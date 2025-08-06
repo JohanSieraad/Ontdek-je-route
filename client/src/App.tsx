@@ -7,6 +7,7 @@ import { AuthProvider } from "@/components/auth/auth-provider";
 import { Navigation } from "@/components/navigation";
 import NotFound from "@/pages/not-found";
 import Home from "@/pages/home";
+import Regions from "@/pages/regions";
 import Region from "@/pages/region";
 import RouteDetail from "@/pages/route-detail";
 import ManageRoutes from "@/pages/manage-routes";
@@ -21,6 +22,7 @@ function Router() {
       <Navigation />
       <Switch>
         <Route path="/" component={Home} />
+        <Route path="/regios" component={Regions} />
         <Route path="/regio/:regionId" component={Region} />
         <Route path="/route/:routeId" component={RouteDetail} />
         <Route path="/meerdaagse-routes" component={MultiDayRoutes} />

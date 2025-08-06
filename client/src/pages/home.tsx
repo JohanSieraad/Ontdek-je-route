@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import { Navigation } from "@/components/navigation";
 import { HeroBanner } from "@/components/hero-banner";
 import { RegionCard } from "@/components/region-card";
 import { RouteCard } from "@/components/route-card";
@@ -7,6 +6,7 @@ import { InteractiveMap } from "@/components/interactive-map";
 import { Footer } from "@/components/footer";
 import { useQuery } from "@tanstack/react-query";
 import { Region, Route } from "@shared/schema";
+import { Globe } from "lucide-react";
 
 export default function Home() {
   // Scroll to top when component mounts
@@ -32,7 +32,7 @@ export default function Home() {
       
       <HeroBanner />
 
-      {/* Country and Region Selection */}
+      {/* Quick Region Preview */}
       <section className="py-16 bg-gradient-to-br from-orange-50 via-white to-pink-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
@@ -44,68 +44,40 @@ export default function Home() {
           </div>
 
           {regionsLoading ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {Array.from({ length: 6 }).map((_, i) => (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {Array.from({ length: 4 }).map((_, i) => (
                 <div key={i} className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden animate-pulse">
-                  <div className="w-full h-48 bg-gray-300"></div>
-                  <div className="p-6">
-                    <div className="h-6 bg-gray-300 rounded mb-3"></div>
-                    <div className="h-4 bg-gray-300 rounded mb-2"></div>
-                    <div className="h-4 bg-gray-300 rounded mb-4"></div>
-                    <div className="h-4 bg-gray-300 rounded w-1/2"></div>
+                  <div className="w-full h-32 bg-gray-300"></div>
+                  <div className="p-4">
+                    <div className="h-5 bg-gray-300 rounded mb-2"></div>
+                    <div className="h-3 bg-gray-300 rounded"></div>
                   </div>
                 </div>
               ))}
             </div>
           ) : regions && regions.length > 0 ? (
-            <>
-              {/* Nederlandse Regio's */}
-              <div className="mb-16" id="dutch-regions">
-                <div className="flex items-center mb-8">
-                  <div className="w-10 h-7 mr-4 border border-gray-300 rounded-sm overflow-hidden">
-                    <svg viewBox="0 0 9 6" className="w-full h-full">
-                      <rect width="9" height="2" fill="#AE1C28"/>
-                      <rect width="9" height="2" y="2" fill="#FFFFFF"/>
-                      <rect width="9" height="2" y="4" fill="#21468B"/>
-                    </svg>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {regions.slice(0, 4).map((region, index) => (
+                <div key={region.id} className={`animate-discovery-reveal animate-discovery-delay-${Math.min(index + 1, 4)} bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden hover:shadow-xl transition-shadow`}>
+                  <div className="w-full h-32 bg-cover bg-center" style={{ backgroundImage: `url(${region.imageUrl})` }}></div>
+                  <div className="p-4">
+                    <h4 className="font-semibold text-gray-900 mb-1">{region.name}</h4>
+                    <p className="text-sm text-gray-600">{region.routeCount} routes</p>
                   </div>
-                  <h4 className="text-2xl font-bold text-gray-900">Nederland</h4>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {regions.filter(region => !region.name.includes("Belgische")).map((region, index) => (
-                    <div key={region.id} className={`animate-discovery-reveal animate-discovery-delay-${Math.min(index + 1, 4)}`}>
-                      <RegionCard region={region} />
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Belgische Regio's */}
-              <div className="mb-8" id="belgian-regions">
-                <div className="flex items-center mb-8">
-                  <div className="w-10 h-7 mr-4 border border-gray-300 rounded-sm overflow-hidden">
-                    <svg viewBox="0 0 15 13" className="w-full h-full">
-                      <rect width="5" height="13" fill="#000000"/>
-                      <rect width="5" height="13" x="5" fill="#FFD700"/>
-                      <rect width="5" height="13" x="10" fill="#FF0000"/>
-                    </svg>
-                  </div>
-                  <h4 className="text-2xl font-bold text-gray-900">België</h4>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {regions.filter(region => region.name.includes("Belgische")).map((region, index) => (
-                    <div key={region.id} className={`animate-discovery-reveal animate-discovery-delay-${Math.min(index + 1, 4)}`}>
-                      <RegionCard region={region} />
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </>
-          ) : (
-            <div className="text-center py-12">
-              <p className="text-gray-500">Geen regio's gevonden.</p>
+              ))}
             </div>
-          )}
+          ) : null}
+          
+          <div className="text-center mt-8">
+            <a 
+              href="/regios" 
+              className="inline-flex items-center px-6 py-3 bg-dutch-orange text-white font-medium rounded-lg hover:bg-dutch-orange/90 transition-colors"
+            >
+              <Globe className="h-5 w-5 mr-2" />
+              Alle Regio's Bekijken
+            </a>
+          </div>
         </div>
       </section>
 

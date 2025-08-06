@@ -13,12 +13,6 @@ export function Navigation() {
   const navigate = (path: string) => {
     // Handle anchor links by scrolling to element
     if (path.startsWith('#')) {
-      // If not on home page, navigate to home first then scroll
-      if (window.location.pathname !== '/') {
-        window.location.href = '/' + path;
-        return;
-      }
-      
       const element = document.getElementById(path.substring(1));
       if (element) {
         element.scrollIntoView({ behavior: 'smooth' });
@@ -32,7 +26,7 @@ export function Navigation() {
 
   const navLinks = [
     { href: "/", label: "Home", icon: Home },
-    { href: "#dutch-regions", label: "Regio's", icon: Globe },
+    { href: "/regios", label: "Regio's", icon: Globe },
   ];
 
   const bottomNavLinks = [
