@@ -134,33 +134,14 @@ export interface IStorage {
   markRecommendationClicked(userId: string, routeId: string): Promise<void>;
   cleanupExpiredRecommendations(): Promise<void>;
 
-  // User Profile Data
-  getUserProfile(userId: string): Promise<{
-    completedRoutes: UserCompletedRoute[];
-    favoriteLocations: UserFavoriteLocation[];
-    bookmarkedRoutes: UserBookmark[];
-    vehiclePreferences: UserVehiclePreferences | null;
-    stats: {
-      totalRoutes: number;
-      totalDistance: number;
-      favoriteCategory: string;
-    };
-  }>;
-  
-  // User Vehicle Preferences
-  getUserVehiclePreferences(userId: string): Promise<UserVehiclePreferences | null>;
-  upsertUserVehiclePreferences(preferences: InsertUserVehiclePreferences): Promise<UserVehiclePreferences>;
-  
-  // User Favorite Locations
-  getUserFavoriteLocations(userId: string): Promise<UserFavoriteLocation[]>;
-  createUserFavoriteLocation(location: InsertUserFavoriteLocation): Promise<UserFavoriteLocation>;
-  updateUserFavoriteLocation(id: string, location: Partial<InsertUserFavoriteLocation>): Promise<UserFavoriteLocation>;
-  deleteUserFavoriteLocation(id: string): Promise<void>;
-  
-  // User Completed Routes
-  getUserCompletedRoutes(userId: string): Promise<UserCompletedRoute[]>;
-  markRouteCompleted(completion: InsertUserCompletedRoute): Promise<UserCompletedRoute>;
-  updateCompletedRoute(userId: string, routeId: string, updates: Partial<InsertUserCompletedRoute>): Promise<UserCompletedRoute>;
+  // User Profile Functions
+  getUserProfile(userId: string): Promise<any>;
+  getUserVehiclePreferences(userId: string): Promise<any>;
+  upsertUserVehiclePreferences(data: any): Promise<any>;
+  getUserFavoriteLocations(userId: string): Promise<any[]>;
+  addUserFavoriteLocation(data: any): Promise<any>;
+  getUserCompletedRoutes(userId: string): Promise<any[]>;
+  addUserCompletedRoute(data: any): Promise<any>;
   
   // Points of Interest
   getAllPointsOfInterest(): Promise<PointOfInterest[]>;
@@ -2337,6 +2318,79 @@ export class MemStorage implements IStorage {
     this.pointsOfInterest.set(id, pointOfInterest);
     return pointOfInterest;
   }
+
+  // User Profile Functions - Add missing implementations
+  async getUserProfile(userId: string): Promise<any> {
+    const user = this.users.get(userId);
+    if (!user) return null;
+
+    // Get user's completed routes
+    const completedRoutes = await this.getUserCompletedRoutes(userId);
+    
+    // Get user's favorite locations
+    const favoriteLocations = await this.getUserFavoriteLocations(userId);
+    
+    // Get user's vehicle preferences
+    const vehiclePreferences = await this.getUserVehiclePreferences(userId);
+    
+    // Get user's bookmarked routes
+    const bookmarkedRoutes = await this.getUserBookmarks(userId);
+
+    // Calculate stats
+    const stats = {
+      totalRoutes: completedRoutes.length,
+      totalDistance: completedRoutes.reduce((sum, cr) => sum + (cr.distanceKm || 0), 0),
+      favoriteCategory: this.calculateFavoriteCategory(completedRoutes)
+    };
+
+    return {
+      user,
+      completedRoutes,
+      favoriteLocations,
+      vehiclePreferences,
+      bookmarkedRoutes,
+      stats
+    };
+  }
+
+  private calculateFavoriteCategory(completedRoutes: any[]): string {
+    if (completedRoutes.length === 0) return "Geen voorkeur";
+    
+    const categories = completedRoutes.map(cr => cr.category).filter(Boolean);
+    const categoryCounts = categories.reduce((acc, cat) => {
+      acc[cat] = (acc[cat] || 0) + 1;
+      return acc;
+    }, {} as Record<string, number>);
+    
+    const mostCommon = Object.entries(categoryCounts).sort(([,a], [,b]) => b - a)[0];
+    return mostCommon ? mostCommon[0] : "Geen voorkeur";
+  }
+
+  async getUserVehiclePreferences(userId: string): Promise<any> {
+    return Array.from(this.userVehiclePreferences.values()).find(vp => vp.userId === userId) || null;
+  }
+
+  async upsertUserVehiclePreferences(data: any): Promise<any> {
+    const existingPreference = Array.from(this.userVehiclePreferences.values()).find(vp => vp.userId === data.userId);
+    
+    const preference = {
+      id: existingPreference?.id || randomUUID(),
+      ...data,
+      createdAt: existingPreference?.createdAt || new Date(),
+      updatedAt: new Date()
+    };
+
+    this.userVehiclePreferences.set(preference.id, preference);
+    return preference;
+  }
+
+  async addUserFavoriteLocation(data: any): Promise<any> {
+    return await this.createUserFavoriteLocation(data);
+  }
+
+  async addUserCompletedRoute(data: any): Promise<any> {
+    return await this.markRouteCompleted(data);
+  }
 }
 
 // Database Storage Implementation
@@ -2849,6 +2903,128 @@ export class HybridStorage implements IStorage {
 
   async cleanupExpiredRecommendations(): Promise<void> {
     await db.delete(routeRecommendations).where(eq(routeRecommendations.expiresAt, new Date()));
+  }
+
+  // User Profile Functions
+  async getUserProfile(userId: string): Promise<any> {
+    const user = await this.getUserById(userId);
+    if (!user) return null;
+
+    // Get user's completed routes
+    const completedRoutes = await this.getUserCompletedRoutes(userId);
+    
+    // Get user's favorite locations
+    const favoriteLocations = await this.getUserFavoriteLocations(userId);
+    
+    // Get user's vehicle preferences
+    const vehiclePreferences = await this.getUserVehiclePreferences(userId);
+    
+    // Get user's bookmarked routes
+    const bookmarkedRoutes = await this.getUserBookmarks(userId);
+
+    // Calculate stats
+    const stats = {
+      totalRoutes: completedRoutes.length,
+      totalDistance: completedRoutes.reduce((sum: number, cr: any) => sum + (cr.distanceKm || 0), 0),
+      favoriteCategory: this.calculateFavoriteCategory(completedRoutes)
+    };
+
+    return {
+      user,
+      completedRoutes,
+      favoriteLocations,
+      vehiclePreferences,
+      bookmarkedRoutes,
+      stats
+    };
+  }
+
+  private calculateFavoriteCategory(completedRoutes: any[]): string {
+    if (completedRoutes.length === 0) return "Geen voorkeur";
+    
+    const categories = completedRoutes.map(cr => cr.category).filter(Boolean);
+    const categoryCounts = categories.reduce((acc, cat) => {
+      acc[cat] = (acc[cat] || 0) + 1;
+      return acc;
+    }, {} as Record<string, number>);
+    
+    const mostCommon = Object.entries(categoryCounts).sort(([,a], [,b]) => b - a)[0];
+    return mostCommon ? mostCommon[0] : "Geen voorkeur";
+  }
+
+  async getUserVehiclePreferences(userId: string): Promise<any> {
+    try {
+      const [preferences] = await db.select().from(userVehiclePreferences)
+        .where(eq(userVehiclePreferences.userId, userId));
+      return preferences || null;
+    } catch (error) {
+      return null;
+    }
+  }
+
+  async upsertUserVehiclePreferences(data: any): Promise<any> {
+    try {
+      const [existing] = await db.select().from(userVehiclePreferences)
+        .where(eq(userVehiclePreferences.userId, data.userId));
+
+      if (existing) {
+        const [updated] = await db.update(userVehiclePreferences)
+          .set({ ...data, updatedAt: new Date() })
+          .where(eq(userVehiclePreferences.userId, data.userId))
+          .returning();
+        return updated;
+      } else {
+        const [created] = await db.insert(userVehiclePreferences)
+          .values({ ...data, createdAt: new Date(), updatedAt: new Date() })
+          .returning();
+        return created;
+      }
+    } catch (error) {
+      console.error("Error upserting vehicle preferences:", error);
+      return null;
+    }
+  }
+
+  async getUserFavoriteLocations(userId: string): Promise<any[]> {
+    try {
+      return await db.select().from(userFavoriteLocations)
+        .where(eq(userFavoriteLocations.userId, userId));
+    } catch (error) {
+      return [];
+    }
+  }
+
+  async addUserFavoriteLocation(data: any): Promise<any> {
+    try {
+      const [location] = await db.insert(userFavoriteLocations)
+        .values({ ...data, createdAt: new Date(), updatedAt: new Date() })
+        .returning();
+      return location;
+    } catch (error) {
+      console.error("Error adding favorite location:", error);
+      return null;
+    }
+  }
+
+  async getUserCompletedRoutes(userId: string): Promise<any[]> {
+    try {
+      return await db.select().from(userCompletedRoutes)
+        .where(eq(userCompletedRoutes.userId, userId));
+    } catch (error) {
+      return [];
+    }
+  }
+
+  async addUserCompletedRoute(data: any): Promise<any> {
+    try {
+      const [completedRoute] = await db.insert(userCompletedRoutes)
+        .values({ ...data, createdAt: new Date(), updatedAt: new Date() })
+        .returning();
+      return completedRoute;
+    } catch (error) {
+      console.error("Error adding completed route:", error);
+      return null;
+    }
   }
 }
 
