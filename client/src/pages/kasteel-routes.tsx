@@ -143,6 +143,10 @@ export function KasteelRoutes() {
                         alt={castle.name}
                         className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500"
                         data-testid={`img-castle-${castle.id}`}
+                        onError={(e) => {
+                          console.log(`Failed to load image for ${castle.name}:`, castle.imageUrl);
+                          (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1549813069-f95e44d7f498?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80";
+                        }}
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                         <div className="absolute bottom-4 left-4 right-4">

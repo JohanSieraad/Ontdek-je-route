@@ -1310,7 +1310,7 @@ export class MemStorage implements IStorage {
         name: "Kasteel Muiderslot",
         location: "Muiden, Noord-Holland", 
         description: "Een van de best bewaarde middeleeuwse kastelen van Nederland, gebouwd in 1285 door Graaf Floris V. Het kasteel ligt strategisch aan de monding van de Vecht en biedt een prachtige combinatie van geschiedenis en architectuur. Bron foto: Wikipedia.",
-        imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Muiderslot_in_Muiden.JPG/1200px-Muiderslot_in_Muiden.JPG",
+        imageUrl: "https://images.unsplash.com/photo-1594736797933-d0f06ba91115?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
         historicalPeriod: "13e eeuw",
         builtYear: 1285,
         architecturalStyle: "Middeleeuwse vesting",
