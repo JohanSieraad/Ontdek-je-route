@@ -22,7 +22,7 @@ export default function GoogleMap({
   className = "w-full h-96"
 }: GoogleMapProps) {
   const mapRef = useRef<HTMLDivElement>(null);
-  const [map, setMap] = useState<google.maps.Map | null>(null);
+  const [map, setMap] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -42,6 +42,7 @@ export default function GoogleMap({
     const initMap = async () => {
       try {
         console.log('Initializing Google Maps with API key:', config.googleMapsApiKey ? 'provided' : 'missing');
+        console.log('Map container:', mapRef.current);
         
         const loader = new Loader({
           apiKey: config.googleMapsApiKey,
@@ -49,11 +50,18 @@ export default function GoogleMap({
           libraries: ['places', 'geometry']
         });
 
+        console.log('Loading Google Maps API...');
         await loader.load();
+        console.log('Google Maps API loaded successfully');
 
-        if (!mapRef.current) return;
+        if (!mapRef.current) {
+          console.error('Map container not found');
+          return;
+        }
 
-        const googleMap = new google.maps.Map(mapRef.current, {
+        console.log('Creating map instance...');
+
+        const googleMap = new (window as any).google.maps.Map(mapRef.current, {
           center,
           zoom,
           mapTypeControl: true,
@@ -62,12 +70,13 @@ export default function GoogleMap({
         });
 
         setMap(googleMap);
+        console.log('Map created successfully');
 
         // Add markers
-        const infoWindow = new google.maps.InfoWindow();
+        const infoWindow = new (window as any).google.maps.InfoWindow();
         
         markers.forEach((marker) => {
-          const mapMarker = new google.maps.Marker({
+          const mapMarker = new (window as any).google.maps.Marker({
             position: marker.position,
             map: googleMap,
             title: marker.title,
@@ -88,7 +97,7 @@ export default function GoogleMap({
 
         // Add route if provided
         if (route.length > 1) {
-          const routePath = new google.maps.Polyline({
+          const routePath = new (window as any).google.maps.Polyline({
             path: route,
             geodesic: true,
             strokeColor: '#FF6B35',
@@ -99,7 +108,7 @@ export default function GoogleMap({
           routePath.setMap(googleMap);
 
           // Fit bounds to show entire route
-          const bounds = new google.maps.LatLngBounds();
+          const bounds = new (window as any).google.maps.LatLngBounds();
           route.forEach(point => bounds.extend(point));
           googleMap.fitBounds(bounds);
         }
