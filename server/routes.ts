@@ -104,7 +104,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.get("/api/auth/me", authenticateToken, async (req, res) => {
     try {
-      const user = await authService.getUserById(req.user!.id);
+      const user = await storage.getUserById(req.user!.id);
       if (!user) {
         return res.status(404).json({ message: "Gebruiker niet gevonden" });
       }

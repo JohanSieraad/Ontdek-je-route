@@ -1,6 +1,6 @@
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
 import { apiRequest } from '@/lib/queryClient';
-import { User } from '@shared/schema';
+import { User, RegisterData, LoginData } from '@shared/schema';
 
 interface AuthUser {
   id: string;
@@ -39,6 +39,44 @@ export function useAuth() {
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
 
+  const registerMutation = useMutation({
+    mutationFn: async (data: RegisterData) => {
+      const response = await apiRequest('/api/auth/register', {
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      
+      // Store token
+      localStorage.setItem('authToken', response.token);
+      return response;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/auth/me'] });
+    },
+  });
+
+  const loginMutation = useMutation({
+    mutationFn: async (data: LoginData) => {
+      const response = await apiRequest('/api/auth/login', {
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      
+      // Store token
+      localStorage.setItem('authToken', response.token);
+      return response;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/auth/me'] });
+    },
+  });
+
   const logout = async () => {
     localStorage.removeItem('authToken');
     queryClient.setQueryData(['/api/auth/me'], null);
@@ -48,11 +86,15 @@ export function useAuth() {
 
   const isAuthenticated = !!user && !error;
 
+  const isAuthLoading = registerMutation.isPending || loginMutation.isPending;
+
   return {
     user,
-    isLoading,
+    isLoading: isLoading || isAuthLoading,
     isAuthenticated,
     logout,
+    register: registerMutation.mutateAsync,
+    login: loginMutation.mutateAsync,
   };
 }
 
