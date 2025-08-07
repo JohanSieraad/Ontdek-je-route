@@ -27,19 +27,22 @@ export default function GoogleMap({
   const [error, setError] = useState<string | null>(null);
 
   // Fetch API key from backend
-  const { data: config } = useQuery({
+  const { data: config, isLoading: configLoading } = useQuery({
     queryKey: ['/api/config'],
     queryFn: async () => {
       const response = await fetch('/api/config');
+      if (!response.ok) throw new Error('Failed to fetch config');
       return response.json();
     }
   });
 
   useEffect(() => {
-    if (!config?.googleMapsApiKey) return;
+    if (!config?.googleMapsApiKey || configLoading) return;
 
     const initMap = async () => {
       try {
+        console.log('Initializing Google Maps with API key:', config.googleMapsApiKey ? 'provided' : 'missing');
+        
         const loader = new Loader({
           apiKey: config.googleMapsApiKey,
           version: 'weekly',
@@ -110,20 +113,20 @@ export default function GoogleMap({
     };
 
     initMap();
-  }, [config?.googleMapsApiKey, center, zoom, markers, route]);
+  }, [config?.googleMapsApiKey, configLoading, center, zoom, markers, route]);
 
   if (error) {
     return (
       <div className={`${className} bg-gray-100 rounded-lg flex items-center justify-center`}>
         <div className="text-center p-4">
           <p className="text-gray-600 mb-2">⚠️ Kaart kon niet geladen worden</p>
-          <p className="text-sm text-gray-500">Google Maps API key vereist</p>
+          <p className="text-sm text-gray-500">{error}</p>
         </div>
       </div>
     );
   }
 
-  if (isLoading) {
+  if (isLoading || configLoading) {
     return (
       <div className={`${className} bg-gray-100 rounded-lg flex items-center justify-center`}>
         <div className="text-center p-4">
