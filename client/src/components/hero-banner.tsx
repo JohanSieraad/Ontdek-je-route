@@ -1,14 +1,15 @@
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { MapPin, Car, Navigation } from "lucide-react";
+import kasteelZuylenImage from "@assets/Slot_Zuylen_1754581629531.jpg";
 
 export function HeroBanner() {
   return (
     <section className="relative h-[700px] overflow-hidden">
       {/* Kasteel Zuylen Background Image */}
       <img
-        src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80"
-        alt="Historisch Kasteel - RouteParel"
+        src={kasteelZuylenImage}
+        alt="Kasteel Zuylen - RouteParel"
         className="w-full h-full object-cover"
       />
       {/* Elegant Gradient Overlay - kasteel route style */}
