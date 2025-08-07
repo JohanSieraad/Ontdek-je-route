@@ -333,7 +333,7 @@ export class MemStorage implements IStorage {
         rating: 4.9,
         duration: "6 uur rijden",
         distance: "185 km",
-        imageUrl: "@assets/muiderslot_1754588216020.jpg",
+        imageUrl: "@assets/muiderslot_1754588456484.jpg",
         difficulty: "gemakkelijk",
         isPopular: 1
       },
@@ -1310,7 +1310,7 @@ export class MemStorage implements IStorage {
         name: "Kasteel Muiderslot",
         location: "Muiden, Noord-Holland", 
         description: "Een van de best bewaarde middeleeuwse kastelen van Nederland, gebouwd in 1285 door Graaf Floris V. Het kasteel ligt strategisch aan de monding van de Vecht en biedt een prachtige combinatie van geschiedenis en architectuur.",
-        imageUrl: "@assets/muiderslot_1754588216020.jpg",
+        imageUrl: "@assets/muiderslot_1754588456484.jpg",
         historicalPeriod: "13e eeuw",
         builtYear: 1285,
         architecturalStyle: "Middeleeuwse vesting",
