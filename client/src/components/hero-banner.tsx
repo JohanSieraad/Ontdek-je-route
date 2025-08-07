@@ -50,10 +50,11 @@ export function HeroBanner() {
           </div>
 
           <div className="flex flex-wrap gap-4">
-            <Link href="#routes">
+            <Link href="/kasteel-routes">
               <Button
                 size="lg"
                 className="bg-gradient-to-r from-dutch-orange to-sunset-pink text-white hover:from-dutch-orange/90 hover:to-sunset-pink/90 font-semibold px-8 py-4 text-lg shadow-xl transform hover:scale-105 transition-all duration-300"
+                data-testid="button-start-kasteel-route"
               >
                 🚗 Start je Kasteel Route
               </Button>

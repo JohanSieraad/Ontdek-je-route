@@ -14,6 +14,7 @@ import ManageRoutes from "@/pages/manage-routes";
 import MultiDayRoutes from "@/pages/multi-day-routes";
 import MultiDayRouteDetail from "@/pages/multi-day-route-detail";
 import Profile from "@/pages/profile";
+import { KasteelRoutes } from "@/pages/kasteel-routes";
 
 
 
@@ -23,6 +24,7 @@ function Router() {
       <Navigation />
       <Switch>
         <Route path="/" component={Home} />
+        <Route path="/kasteel-routes" component={KasteelRoutes} />
         <Route path="/regios" component={Regions} />
         <Route path="/regio/:regionId" component={Region} />
         <Route path="/route/:routeId" component={RouteDetail} />
