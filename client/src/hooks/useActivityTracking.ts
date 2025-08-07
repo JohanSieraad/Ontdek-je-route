@@ -36,9 +36,9 @@ export function useActivityTracking() {
   });
 
   const trackActivity = useCallback((activity: ActivityData) => {
-    // Only track if user is authenticated and we have a token
+    // Only track if user is authenticated, we have a token, and mutation is not pending
     const token = localStorage.getItem('authToken');
-    if (isAuthenticated && token) {
+    if (isAuthenticated && token && !trackActivityMutation.isPending) {
       trackActivityMutation.mutate(activity);
     }
   }, [isAuthenticated, trackActivityMutation]);
