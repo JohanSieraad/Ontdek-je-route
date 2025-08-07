@@ -74,30 +74,33 @@ export default function Home() {
           ) : regions && regions.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {regions.slice(0, 4).map((region, index) => (
-                <div 
+                <Link 
                   key={region.id} 
-                  className={`animate-discovery-reveal animate-discovery-delay-${Math.min(index + 1, 4)} bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden hover:shadow-xl transition-all duration-200 cursor-pointer hover:scale-105`}
-                  onClick={() => window.location.href = `/regios#${region.id}`}
-                  data-testid={`region-card-${region.id}`}
+                  href={`/regios#${region.id}`}
                 >
-                  <div className="w-full h-32 bg-cover bg-center" style={{ backgroundImage: `url(${region.imageUrl})` }}></div>
-                  <div className="p-4">
-                    <h4 className="font-semibold text-gray-900 mb-1">{region.name}</h4>
-                    <p className="text-sm text-gray-600">{region.routeCount} routes</p>
+                  <div 
+                    className={`animate-discovery-reveal animate-discovery-delay-${Math.min(index + 1, 4)} bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden hover:shadow-xl transition-all duration-200 cursor-pointer hover:scale-105`}
+                    data-testid={`region-card-${region.id}`}
+                  >
+                    <div className="w-full h-32 bg-cover bg-center" style={{ backgroundImage: `url(${region.imageUrl})` }}></div>
+                    <div className="p-4">
+                      <h4 className="font-semibold text-gray-900 mb-1">{region.name}</h4>
+                      <p className="text-sm text-gray-600">{region.routeCount} routes</p>
+                    </div>
                   </div>
-                </div>
+                </Link>
               ))}
             </div>
           ) : null}
           
           <div className="text-center mt-8">
-            <a 
+            <Link 
               href="/regios" 
               className="inline-flex items-center px-6 py-3 bg-dutch-orange text-white font-medium rounded-lg hover:bg-dutch-orange/90 transition-colors"
             >
               <Globe className="h-5 w-5 mr-2" />
               Alle Regio's Bekijken
-            </a>
+            </Link>
           </div>
         </div>
       </section>
