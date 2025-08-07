@@ -18,7 +18,7 @@ export function HeroBanner() {
       <div className="absolute bottom-8 left-8 right-8 text-white">
         <div className="max-w-4xl">
           <h1 className="text-4xl md:text-6xl font-bold mb-4">
-            Nederlandse Routes
+            RouteParel
           </h1>
           <p className="text-lg md:text-xl mb-6 max-w-2xl leading-relaxed">
             Autoroutes langs kastelen, pittoreske dorpjes en toprestaurants. 

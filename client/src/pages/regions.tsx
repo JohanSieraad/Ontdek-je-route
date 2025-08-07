@@ -35,7 +35,7 @@ export default function Regions() {
             <div className="mt-8 flex justify-center">
               <SocialShare 
                 url="/regios" 
-                title="Alle Regio's - AutoRoutes Nederland" 
+                title="Alle Regio's - RouteParel" 
                 description="Ontdek alle beschikbare regio's voor uw auto avontuur"
                 variant="compact"
               />

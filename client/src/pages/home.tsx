@@ -52,7 +52,7 @@ export default function Home() {
             <div className="mt-8 flex justify-center">
               <SocialShare 
                 url="/" 
-                title="AutoRoutes Nederland - Ontdek de mooiste autoroutes" 
+                title="RouteParel - Ontdek de mooiste autoroutes" 
                 description="Rijd langs kastelen, pittoreske dorpjes en toprestaurants in Nederland en België"
                 variant="compact"
               />
@@ -76,7 +76,7 @@ export default function Home() {
               {regions.slice(0, 4).map((region, index) => (
                 <Link 
                   key={region.id} 
-                  href={`/regios#${region.id}`}
+                  href={`/regio/${region.id}`}
                 >
                   <div 
                     className={`animate-discovery-reveal animate-discovery-delay-${Math.min(index + 1, 4)} bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden hover:shadow-xl transition-all duration-200 cursor-pointer hover:scale-105`}
@@ -84,8 +84,13 @@ export default function Home() {
                   >
                     <div className="w-full h-32 bg-cover bg-center" style={{ backgroundImage: `url(${region.imageUrl})` }}></div>
                     <div className="p-4">
-                      <h4 className="font-semibold text-gray-900 mb-1">{region.name}</h4>
-                      <p className="text-sm text-gray-600">{region.routeCount} routes</p>
+                      <div className="flex items-center justify-between mb-2">
+                        <h4 className="font-semibold text-gray-900">{region.name}</h4>
+                        <span className="bg-dutch-orange text-white px-2 py-1 rounded-full text-xs font-medium flex items-center">
+                          🚗 {region.routeCount} routes
+                        </span>
+                      </div>
+                      <p className="text-sm text-gray-600">{region.estimatedDuration}</p>
                     </div>
                   </div>
                 </Link>

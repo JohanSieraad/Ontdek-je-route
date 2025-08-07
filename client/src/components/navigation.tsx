@@ -75,7 +75,7 @@ export function Navigation() {
           <Link href="/">
             <div className="flex items-center space-x-2 cursor-pointer group" data-testid="link-home">
               <MapPin className="h-8 w-8 text-dutch-orange group-hover:animate-wiggle transition-all duration-200" />
-              <h1 className="text-xl font-bold text-gray-900 group-hover:text-dutch-orange transition-colors duration-200">AutoRoutes Nederland</h1>
+              <h1 className="text-xl font-bold text-gray-900 group-hover:text-dutch-orange transition-colors duration-200">RouteParel</h1>
             </div>
           </Link>
           
