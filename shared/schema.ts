@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { pgTable, text, varchar, integer, real, jsonb, timestamp, boolean, index } from "drizzle-orm/pg-core";
+import { pgTable, text, varchar, integer, real, jsonb, timestamp, boolean, index, primaryKey } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 import { relations } from "drizzle-orm";
@@ -293,6 +293,108 @@ export const insertCastleLandmarkSchema = createInsertSchema(castleLandmarks).om
 export type InsertCastleLandmark = z.infer<typeof insertCastleLandmarkSchema>;
 export type CastleLandmark = typeof castleLandmarks.$inferSelect;
 
+// User favorite locations - saved points of interest
+export const userFavoriteLocations = pgTable("user_favorite_locations", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  name: varchar("name").notNull(),
+  description: text("description"),
+  category: varchar("category").notNull(), // restaurant, castle, photo_spot, gas_station, charging_station, bnb
+  address: text("address").notNull(),
+  coordinates: jsonb("coordinates").notNull(), // {lat: number, lng: number}
+  phoneNumber: varchar("phone_number"),
+  website: varchar("website"),
+  openingHours: jsonb("opening_hours"), // {monday: "9:00-17:00", etc}
+  priceRange: varchar("price_range"), // €, €€, €€€, €€€€
+  rating: real("rating"), // personal rating
+  notes: text("notes"), // personal notes
+  instagramWorthy: boolean("instagram_worthy").default(false),
+  evFriendly: boolean("ev_friendly").default(false), // has EV charging
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// User vehicle preferences
+export const userVehiclePreferences = pgTable("user_vehicle_preferences", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  vehicleType: varchar("vehicle_type").notNull(), // car, motorcycle, ev, camper, bicycle
+  fuelType: varchar("fuel_type"), // petrol, diesel, electric, hybrid, hydrogen
+  needsCharging: boolean("needs_charging").default(false),
+  chargingType: varchar("charging_type"), // type1, type2, ccs, chademo
+  tankCapacity: integer("tank_capacity"), // liters or kWh
+  averageConsumption: real("average_consumption"), // l/100km or kWh/100km
+  maxRange: integer("max_range"), // km on full tank/charge
+  preferredBrands: jsonb("preferred_brands").$type<string[]>().default([]), // shell, bp, fastned, etc
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// User completed routes - travel history
+export const userCompletedRoutes = pgTable("user_completed_routes", {
+  userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  routeId: varchar("route_id").notNull().references(() => routes.id, { onDelete: "cascade" }),
+  completedAt: timestamp("completed_at").defaultNow(),
+  duration: integer("duration"), // actual duration in minutes
+  rating: real("rating"), // user's rating for this completion
+  photos: jsonb("photos").$type<string[]>().default([]), // URLs to uploaded photos
+  notes: text("notes"), // travel diary notes
+  weatherConditions: varchar("weather_conditions"),
+  travelCompanions: jsonb("travel_companions").$type<string[]>().default([]),
+  favoriteStops: jsonb("favorite_stops").$type<string[]>().default([]), // stop IDs they loved most
+  wouldRecommend: boolean("would_recommend").default(true),
+  wouldRepeat: boolean("would_repeat").default(false),
+}, (table) => [
+  primaryKey({ columns: [table.userId, table.routeId] }),
+  index("completed_routes_user_idx").on(table.userId),
+  index("completed_routes_date_idx").on(table.completedAt),
+]);
+
+// Points of interest along routes - restaurants, castles, photo spots, etc
+export const pointsOfInterest = pgTable("points_of_interest", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  name: varchar("name").notNull(),
+  category: varchar("category").notNull(), // restaurant, castle, photo_spot, gas_station, charging_station, bnb, museum, park
+  description: text("description").notNull(),
+  address: text("address").notNull(),
+  coordinates: jsonb("coordinates").notNull(), // {lat: number, lng: number}
+  phoneNumber: varchar("phone_number"),
+  website: varchar("website"),
+  instagramHandle: varchar("instagram_handle"),
+  openingHours: jsonb("opening_hours"), // {monday: "9:00-17:00", etc}
+  priceRange: varchar("price_range"), // €, €€, €€€, €€€€
+  averageRating: real("average_rating").default(0),
+  totalReviews: integer("total_reviews").default(0),
+  imageUrl: text("image_url").notNull(),
+  instagramSpots: jsonb("instagram_spots").$type<string[]>().default([]), // specific photo locations
+  amenities: jsonb("amenities").$type<string[]>().default([]), // wifi, parking, wheelchair_accessible, etc
+  // For gas stations / charging stations
+  fuelTypes: jsonb("fuel_types").$type<string[]>().default([]), // petrol, diesel, electric, etc
+  chargingTypes: jsonb("charging_types").$type<string[]>().default([]), // type2, ccs, etc
+  chargingSpeed: varchar("charging_speed"), // slow, fast, rapid
+  // For restaurants
+  cuisineTypes: jsonb("cuisine_types").$type<string[]>().default([]),
+  dietaryOptions: jsonb("dietary_options").$type<string[]>().default([]), // vegetarian, vegan, gluten_free
+  // For accommodation  
+  accommodationType: varchar("accommodation_type"), // bnb, hotel, camping, etc
+  roomTypes: jsonb("room_types").$type<string[]>().default([]),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// Junction table for routes and points of interest
+export const routePointsOfInterest = pgTable("route_points_of_interest", {
+  routeId: varchar("route_id").notNull().references(() => routes.id, { onDelete: "cascade" }),
+  poiId: varchar("poi_id").notNull().references(() => pointsOfInterest.id, { onDelete: "cascade" }),
+  orderInRoute: integer("order_in_route").notNull(),
+  distanceFromStart: integer("distance_from_start"), // km from route start
+  isOptional: boolean("is_optional").default(false),
+  estimatedStopTime: integer("estimated_stop_time"), // minutes
+  description: text("description"), // context for this POI on this route
+}, (table) => [
+  primaryKey({ columns: [table.routeId, table.poiId] }),
+]);
+
 // User authentication schemas
 export const insertUserSchema = createInsertSchema(users).omit({
   id: true,
@@ -300,19 +402,60 @@ export const insertUserSchema = createInsertSchema(users).omit({
   updatedAt: true,
 });
 
-export const insertSocialAccountSchema = createInsertSchema(userSocialAccounts).omit({
+export const insertUserPreferencesSchema = createInsertSchema(userPreferences).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export const insertUserBookmarkSchema = createInsertSchema(userBookmarks).omit({
   id: true,
   createdAt: true,
 });
 
-export const insertSessionSchema = createInsertSchema(sessions).omit({
+export const insertUserFavoriteLocationSchema = createInsertSchema(userFavoriteLocations).omit({
   id: true,
   createdAt: true,
+  updatedAt: true,
+});
+
+export const insertUserVehiclePreferencesSchema = createInsertSchema(userVehiclePreferences).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export const insertUserCompletedRouteSchema = createInsertSchema(userCompletedRoutes).omit({
+  completedAt: true,
+});
+
+export const insertPointOfInterestSchema = createInsertSchema(pointsOfInterest).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
 });
 
 // User auth types
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
+
+export type InsertUserPreferences = z.infer<typeof insertUserPreferencesSchema>;
+export type UserPreferences = typeof userPreferences.$inferSelect;
+
+export type InsertUserBookmark = z.infer<typeof insertUserBookmarkSchema>;
+export type UserBookmark = typeof userBookmarks.$inferSelect;
+
+export type InsertUserFavoriteLocation = z.infer<typeof insertUserFavoriteLocationSchema>;
+export type UserFavoriteLocation = typeof userFavoriteLocations.$inferSelect;
+
+export type InsertUserVehiclePreferences = z.infer<typeof insertUserVehiclePreferencesSchema>;
+export type UserVehiclePreferences = typeof userVehiclePreferences.$inferSelect;
+
+export type InsertUserCompletedRoute = z.infer<typeof insertUserCompletedRouteSchema>;
+export type UserCompletedRoute = typeof userCompletedRoutes.$inferSelect;
+
+export type InsertPointOfInterest = z.infer<typeof insertPointOfInterestSchema>;
+export type PointOfInterest = typeof pointsOfInterest.$inferSelect;
 
 // Multi-day routes for extended travel experiences
 export const multiDayRoutes = pgTable("multi_day_routes", {
@@ -455,19 +598,8 @@ export type InsertAccommodation = z.infer<typeof insertAccommodationSchema>;
 export type BookingTracking = typeof bookingTracking.$inferSelect;
 export type InsertBookingTracking = z.infer<typeof insertBookingTrackingSchema>;
 
-// Recommendation system types
-export const insertUserPreferencesSchema = createInsertSchema(userPreferences).omit({
-  id: true,
-  createdAt: true,
-  updatedAt: true,
-});
-
+// Additional recommendation system types
 export const insertUserActivitySchema = createInsertSchema(userActivity).omit({
-  id: true,
-  createdAt: true,
-});
-
-export const insertUserBookmarkSchema = createInsertSchema(userBookmarks).omit({
   id: true,
   createdAt: true,
 });
@@ -477,14 +609,8 @@ export const insertRouteRecommendationSchema = createInsertSchema(routeRecommend
   createdAt: true,
 });
 
-export type InsertUserPreferences = z.infer<typeof insertUserPreferencesSchema>;
-export type UserPreferences = typeof userPreferences.$inferSelect;
-
 export type InsertUserActivity = z.infer<typeof insertUserActivitySchema>;
 export type UserActivity = typeof userActivity.$inferSelect;
-
-export type InsertUserBookmark = z.infer<typeof insertUserBookmarkSchema>;
-export type UserBookmark = typeof userBookmarks.$inferSelect;
 
 export type InsertRouteRecommendation = z.infer<typeof insertRouteRecommendationSchema>;
 export type RouteRecommendation = typeof routeRecommendations.$inferSelect;

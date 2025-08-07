@@ -248,10 +248,12 @@ export function Navigation() {
                       </div>
                     </div>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem data-testid="menu-item-profile">
-                      <User className="mr-2 h-4 w-4" />
-                      <span>Profiel</span>
-                    </DropdownMenuItem>
+                    <Link href="/profiel">
+                      <DropdownMenuItem data-testid="menu-item-profile">
+                        <User className="mr-2 h-4 w-4" />
+                        <span>Profiel</span>
+                      </DropdownMenuItem>
+                    </Link>
                     <DropdownMenuItem data-testid="menu-item-settings">
                       <Settings className="mr-2 h-4 w-4" />
                       <span>Instellingen</span>

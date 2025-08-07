@@ -537,6 +537,136 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Register recommendation routes
   registerRecommendationRoutes(app);
 
+  // User Profile Routes
+  app.get("/api/profile", authenticateToken, async (req: any, res: Response) => {
+    try {
+      const userId = req.userId;
+      const profile = await storage.getUserProfile(userId);
+      res.json(profile);
+    } catch (error) {
+      console.error("Error fetching user profile:", error);
+      res.status(500).json({ message: "Failed to fetch profile" });
+    }
+  });
+
+  // Vehicle Preferences Routes
+  app.post("/api/profile/vehicle", authenticateToken, async (req: any, res: Response) => {
+    try {
+      const userId = req.userId;
+      const vehicleData = { ...req.body, userId };
+      
+      const preferences = await storage.upsertUserVehiclePreferences(vehicleData);
+      res.json(preferences);
+    } catch (error) {
+      console.error("Error updating vehicle preferences:", error);
+      res.status(500).json({ message: "Failed to update vehicle preferences" });
+    }
+  });
+
+  app.get("/api/profile/vehicle", authenticateToken, async (req: any, res: Response) => {
+    try {
+      const userId = req.userId;
+      const preferences = await storage.getUserVehiclePreferences(userId);
+      res.json(preferences);
+    } catch (error) {
+      console.error("Error fetching vehicle preferences:", error);
+      res.status(500).json({ message: "Failed to fetch vehicle preferences" });
+    }
+  });
+
+  // Favorite Locations Routes
+  app.get("/api/profile/favorite-locations", authenticateToken, async (req: any, res: Response) => {
+    try {
+      const userId = req.userId;
+      const locations = await storage.getUserFavoriteLocations(userId);
+      res.json(locations);
+    } catch (error) {
+      console.error("Error fetching favorite locations:", error);
+      res.status(500).json({ message: "Failed to fetch favorite locations" });
+    }
+  });
+
+  app.post("/api/profile/favorite-locations", authenticateToken, async (req: any, res: Response) => {
+    try {
+      const userId = req.userId;
+      const locationData = { ...req.body, userId };
+      
+      const location = await storage.createUserFavoriteLocation(locationData);
+      res.json(location);
+    } catch (error) {
+      console.error("Error creating favorite location:", error);
+      res.status(500).json({ message: "Failed to create favorite location" });
+    }
+  });
+
+  app.put("/api/profile/favorite-locations/:id", authenticateToken, async (req: any, res: Response) => {
+    try {
+      const { id } = req.params;
+      const location = await storage.updateUserFavoriteLocation(id, req.body);
+      res.json(location);
+    } catch (error) {
+      console.error("Error updating favorite location:", error);
+      res.status(500).json({ message: "Failed to update favorite location" });
+    }
+  });
+
+  app.delete("/api/profile/favorite-locations/:id", authenticateToken, async (req: any, res: Response) => {
+    try {
+      const { id } = req.params;
+      await storage.deleteUserFavoriteLocation(id);
+      res.json({ message: "Favorite location deleted" });
+    } catch (error) {
+      console.error("Error deleting favorite location:", error);
+      res.status(500).json({ message: "Failed to delete favorite location" });
+    }
+  });
+
+  // Completed Routes
+  app.get("/api/profile/completed-routes", authenticateToken, async (req: any, res: Response) => {
+    try {
+      const userId = req.userId;
+      const completedRoutes = await storage.getUserCompletedRoutes(userId);
+      res.json(completedRoutes);
+    } catch (error) {
+      console.error("Error fetching completed routes:", error);
+      res.status(500).json({ message: "Failed to fetch completed routes" });
+    }
+  });
+
+  app.post("/api/profile/completed-routes", authenticateToken, async (req: any, res: Response) => {
+    try {
+      const userId = req.userId;
+      const completionData = { ...req.body, userId };
+      
+      const completion = await storage.markRouteCompleted(completionData);
+      res.json(completion);
+    } catch (error) {
+      console.error("Error marking route completed:", error);
+      res.status(500).json({ message: "Failed to mark route completed" });
+    }
+  });
+
+  // Points of Interest Routes
+  app.get("/api/points-of-interest", async (req: Request, res: Response) => {
+    try {
+      const { category, routeId } = req.query;
+      
+      let pois;
+      if (category) {
+        pois = await storage.getPointsOfInterestByCategory(category as string);
+      } else if (routeId) {
+        pois = await storage.getPointsOfInterestByRoute(routeId as string);
+      } else {
+        pois = await storage.getAllPointsOfInterest();
+      }
+      
+      res.json(pois);
+    } catch (error) {
+      console.error("Error fetching points of interest:", error);
+      res.status(500).json({ message: "Failed to fetch points of interest" });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }
