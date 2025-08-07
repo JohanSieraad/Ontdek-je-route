@@ -61,6 +61,9 @@ export async function authenticateToken(req: AuthRequest, res: Response, next: N
     displayName: user.displayName || undefined
   };
 
+  // Also add userId for backward compatibility
+  (req as any).userId = user.id;
+
   next();
 }
 

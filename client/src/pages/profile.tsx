@@ -54,6 +54,22 @@ export default function ProfilePage() {
   const { data: profile, isLoading: profileLoading } = useQuery({
     queryKey: ['/api/profile'],
     enabled: !!isAuthenticated,
+    queryFn: async () => {
+      const token = localStorage.getItem('authToken');
+      if (!token) throw new Error('No auth token');
+      
+      const response = await fetch('/api/profile', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to fetch profile');
+      }
+      
+      return response.json();
+    },
   });
 
   // Vehicle preferences mutation

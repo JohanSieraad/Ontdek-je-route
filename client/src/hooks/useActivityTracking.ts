@@ -17,16 +17,28 @@ export function useActivityTracking() {
     mutationFn: async (activity: ActivityData) => {
       if (!isAuthenticated) return;
       
+      const token = localStorage.getItem('authToken');
+      if (!token) return;
+      
       await apiRequest("/api/activity", {
         method: "POST",
         body: JSON.stringify(activity),
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
     },
     retry: false, // Don't retry activity tracking
+    onError: (error) => {
+      // Silently ignore activity tracking errors
+      console.debug("Activity tracking failed:", error);
+    },
   });
 
   const trackActivity = useCallback((activity: ActivityData) => {
-    if (isAuthenticated) {
+    // Only track if user is authenticated and we have a token
+    const token = localStorage.getItem('authToken');
+    if (isAuthenticated && token) {
       trackActivityMutation.mutate(activity);
     }
   }, [isAuthenticated, trackActivityMutation]);

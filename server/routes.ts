@@ -538,9 +538,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
   registerRecommendationRoutes(app);
 
   // User Profile Routes
-  app.get("/api/profile", authenticateToken, async (req: any, res: Response) => {
+  app.get("/api/profile", authenticateToken, async (req: any, res) => {
     try {
-      const userId = req.userId;
+      const userId = req.user?.id || req.userId;
+      if (!userId) {
+        return res.status(401).json({ message: "User ID not found in token" });
+      }
+      
       const profile = await storage.getUserProfile(userId);
       res.json(profile);
     } catch (error) {
@@ -552,7 +556,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Vehicle Preferences Routes
   app.post("/api/profile/vehicle", authenticateToken, async (req: any, res: Response) => {
     try {
-      const userId = req.userId;
+      const userId = req.user?.id || req.userId;
       const vehicleData = { ...req.body, userId };
       
       const preferences = await storage.upsertUserVehiclePreferences(vehicleData);
@@ -565,7 +569,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.get("/api/profile/vehicle", authenticateToken, async (req: any, res: Response) => {
     try {
-      const userId = req.userId;
+      const userId = req.user?.id || req.userId;
       const preferences = await storage.getUserVehiclePreferences(userId);
       res.json(preferences);
     } catch (error) {
@@ -577,7 +581,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Favorite Locations Routes
   app.get("/api/profile/favorite-locations", authenticateToken, async (req: any, res: Response) => {
     try {
-      const userId = req.userId;
+      const userId = req.user?.id || req.userId;
       const locations = await storage.getUserFavoriteLocations(userId);
       res.json(locations);
     } catch (error) {
@@ -588,7 +592,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post("/api/profile/favorite-locations", authenticateToken, async (req: any, res: Response) => {
     try {
-      const userId = req.userId;
+      const userId = req.user?.id || req.userId;
       const locationData = { ...req.body, userId };
       
       const location = await storage.createUserFavoriteLocation(locationData);
@@ -624,7 +628,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Completed Routes
   app.get("/api/profile/completed-routes", authenticateToken, async (req: any, res: Response) => {
     try {
-      const userId = req.userId;
+      const userId = req.user?.id || req.userId;
       const completedRoutes = await storage.getUserCompletedRoutes(userId);
       res.json(completedRoutes);
     } catch (error) {
@@ -635,7 +639,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post("/api/profile/completed-routes", authenticateToken, async (req: any, res: Response) => {
     try {
-      const userId = req.userId;
+      const userId = req.user?.id || req.userId;
       const completionData = { ...req.body, userId };
       
       const completion = await storage.markRouteCompleted(completionData);
