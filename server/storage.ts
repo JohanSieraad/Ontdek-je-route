@@ -457,7 +457,7 @@ export class MemStorage implements IStorage {
         rating: 4.6,
         duration: "5 uur",
         distance: "125 km",
-        imageUrl: "https://images.unsplash.com/photo-1520637836862-4d197d17c93a?ixlib=rb-4.0.3",
+        imageUrl: "@assets/kasteel bouilon_1754588545570.jpg",
         difficulty: "gemiddeld",
         isPopular: 1
       },
