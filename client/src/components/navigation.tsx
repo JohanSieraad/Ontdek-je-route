@@ -5,7 +5,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { MapPin, Menu, Search, Home, Globe, Route, Info, Calendar, ChevronDown, User, LogIn, LogOut, Settings } from "lucide-react";
-import { AuthDialog } from "@/components/ui/auth-dialog";
+import { AuthDialogWrapper as AuthDialog } from "@/components/auth/auth-dialog-wrapper";
 import { useAuth } from "@/hooks/useAuth";
 
 export function Navigation() {
