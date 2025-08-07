@@ -127,11 +127,11 @@ export function registerRecommendationRoutes(app: Express) {
         return res.status(401).json({ message: "User not authenticated" });
       }
 
-      // Validate required fields - be more flexible
+      // Validate required fields - be more strict and silent
       const { actionType, entityType, entityId } = req.body;
-      if (!actionType && !entityType) {
-        // Just ignore invalid tracking requests instead of throwing errors
-        return res.json({ message: "Activity tracking skipped - insufficient data" });
+      if (!actionType || !entityType || !entityId) {
+        // Silent fail for invalid tracking requests to reduce log spam
+        return res.status(200).json({ message: "ok" });
       }
 
       const activity = insertUserActivitySchema.parse({

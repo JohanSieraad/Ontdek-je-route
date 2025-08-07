@@ -15,7 +15,10 @@ export function useActivityTracking() {
 
   const trackActivityMutation = useMutation({
     mutationFn: async (activity: ActivityData) => {
-      if (!isAuthenticated) return;
+      // More strict validation before even making request
+      if (!isAuthenticated || !activity.actionType || !activity.entityType || !activity.entityId) {
+        return;
+      }
       
       const token = localStorage.getItem('authToken');
       if (!token) return;
@@ -28,17 +31,17 @@ export function useActivityTracking() {
         },
       });
     },
-    retry: false, // Don't retry activity tracking
-    onError: (error) => {
-      // Silently ignore activity tracking errors
-      console.debug("Activity tracking failed:", error);
+    retry: false,
+    onError: () => {
+      // Completely silent - no logging
     },
   });
 
   const trackActivity = useCallback((activity: ActivityData) => {
-    // Only track if user is authenticated, we have a token, and mutation is not pending
+    // Only track if user is authenticated, we have a token, mutation is not pending, and data is valid
     const token = localStorage.getItem('authToken');
-    if (isAuthenticated && token && !trackActivityMutation.isPending) {
+    if (isAuthenticated && token && !trackActivityMutation.isPending && 
+        activity.actionType && activity.entityType && activity.entityId) {
       trackActivityMutation.mutate(activity);
     }
   }, [isAuthenticated, trackActivityMutation]);

@@ -14,6 +14,7 @@ export const users = pgTable("users", {
   profileImageUrl: varchar("profile_image_url"),
   passwordHash: varchar("password_hash"), // For email signup
   emailVerified: boolean("email_verified").default(false),
+  isVerified: boolean("is_verified").default(false), // Add missing field
   verificationToken: varchar("verification_token"),
   resetToken: varchar("reset_token"),
   resetTokenExpires: timestamp("reset_token_expires"),

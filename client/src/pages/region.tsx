@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import { useParams, Link } from "wouter";
-import { Navigation } from "@/components/navigation";
 import { RouteCard } from "@/components/route-card";
 import { AddRouteSection } from "@/components/add-route-section";
 import { Footer } from "@/components/footer";
@@ -35,7 +34,6 @@ export default function RegionPage() {
   if (regionLoading) {
     return (
       <div className="min-h-screen bg-gray-50">
-        <Navigation />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="animate-pulse">
             <div className="h-8 bg-gray-300 rounded w-1/4 mb-4"></div>
@@ -54,7 +52,6 @@ export default function RegionPage() {
   if (!region) {
     return (
       <div className="min-h-screen bg-gray-50">
-        <Navigation />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="text-center">
             <h1 className="text-2xl font-bold text-gray-900 mb-4">Regio niet gevonden</h1>
@@ -72,50 +69,68 @@ export default function RegionPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Navigation />
       
-      {/* Region Header */}
-      <section className="relative py-16 bg-gradient-to-r from-royal-blue to-purple-accent">
-        <div className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-30" 
+      {/* Region Header - kasteel route style met elegante overlays */}
+      <section className="relative h-[500px] overflow-hidden">
+        {/* Background Image */}
+        <div className="absolute inset-0 bg-cover bg-center bg-no-repeat" 
              style={{ backgroundImage: `url(${region.imageUrl})` }}></div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        {/* Elegant Gradient Overlay - kasteel route style */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/10"></div>
+        
+        {/* Crown Badge - kasteel route style */}
+        <div className="absolute top-6 left-6">
+          <div className="bg-gradient-to-r from-yellow-400 to-amber-500 text-black font-semibold px-4 py-2 rounded-lg shadow-lg flex items-center gap-2">
+            🚗 <span>{region.routeCount} Routes</span>
+          </div>
+        </div>
+        
+        {/* Back Button */}
+        <div className="absolute top-6 right-6">
           <Link href="/">
-            <Button variant="outline" className="mb-6 bg-white/80 hover:bg-white" data-testid="button-back">
+            <Button variant="outline" className="bg-white/90 hover:bg-white text-black border-white/50" data-testid="button-back">
               <ArrowLeft className="mr-2 h-4 w-4" />
               Terug naar overzicht
             </Button>
           </Link>
-          
-          <div className="text-white max-w-2xl">
-            <h1 className="text-4xl md:text-5xl font-bold mb-4" data-testid="text-region-name">
+        </div>
+        
+        {/* Main Content - kasteel route style overlay */}
+        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/60 to-transparent p-8">
+          <div className="max-w-6xl mx-auto">
+            <h1 className="text-5xl md:text-7xl font-bold text-white mb-6" data-testid="text-region-name">
               {region.name}
             </h1>
-            <p className="text-xl mb-6 opacity-90" data-testid="text-region-description">
+            <p className="text-xl md:text-2xl text-white/90 mb-8 max-w-3xl leading-relaxed" data-testid="text-region-description">
               {region.description}
             </p>
-            <div className="flex items-center space-x-6 text-lg">
-              <div className="flex items-center">
-                <span className="font-semibold mr-2">{region.routeCount}</span>
-                <span>beschikbare routes</span>
+            
+            {/* Stats Row - kasteel route detail style */}
+            <div className="flex flex-wrap items-center text-white text-lg space-x-6">
+              <div className="flex items-center gap-2">
+                <span className="text-yellow-400">🚗</span>
+                <span className="font-semibold">{region.routeCount} routes beschikbaar</span>
               </div>
-              <div className="flex items-center">
-                <span className="font-semibold mr-2">{region.estimatedDuration}</span>
+              <div className="flex items-center gap-2">
+                <span className="text-yellow-400">⏱️</span>
+                <span className="font-semibold">{region.estimatedDuration}</span>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Routes Grid */}
-      <section className="py-16 bg-white">
+      {/* Routes Grid - homepage style met gradient achtergrond */}
+      <section className="py-16 bg-gradient-to-br from-orange-50 via-white to-pink-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between mb-8">
             <div>
               <h2 className="text-3xl font-bold text-gray-900 mb-4">
-                Routes in {region.name}
+                🚗 Routes in {region.name}
               </h2>
               <p className="text-lg text-gray-600">
-                Ontdek alle historische routes in deze regio
+                Ontdek historische kastelen, pittoreske dorpjes en toprestaurants in deze regio
               </p>
             </div>
             <AddRouteButton 
