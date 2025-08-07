@@ -2,13 +2,14 @@ import { useEffect } from "react";
 import { useParams, Link } from "wouter";
 import { Navigation } from "@/components/navigation";
 import { AudioPlayer } from "@/components/audio-player";
-import { RouteNavigation } from "@/components/route-navigation";
 import { NavigationOptions } from "@/components/navigation-options";
 import { ReviewsSection } from "@/components/reviews-section";
 import { PhotosSection } from "@/components/photos-section";
 import { Footer } from "@/components/footer";
 import { HeaderAd, SidebarAd, ContentAd } from "@/components/ui/google-ads";
 import { SocialShare } from "@/components/ui/social-share";
+import GoogleMap from "@/components/GoogleMap";
+import RouteNavigation from "@/components/RouteNavigation";
 import { useQuery } from "@tanstack/react-query";
 import { Route, RouteStop, AudioTrack } from "@shared/schema";
 import { ArrowLeft, Clock, MapPin, Star, Play, Download, Share } from "lucide-react";
@@ -213,10 +214,47 @@ export default function RouteDetailPage() {
 
         </div>
 
-        {/* Navigation Section */}
+        {/* Google Maps and Navigation Section */}
         {stops && stops.length > 0 && (
-          <div className="mb-8">
-            <RouteNavigation route={route} stops={stops} />
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+            {/* Interactive Map */}
+            <div className="bg-white rounded-xl shadow-lg p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Route Kaart</h3>
+              <GoogleMap
+                center={{ lat: 52.3676, lng: 4.9041 }} // Default to Amsterdam
+                zoom={10}
+                markers={stops.map((stop, index) => ({
+                  position: { 
+                    lat: stop.coordinates?.latitude || 52.3676, 
+                    lng: stop.coordinates?.longitude || 4.9041 
+                  },
+                  title: stop.title,
+                  info: stop.description
+                }))}
+                route={stops.map(stop => ({
+                  lat: stop.coordinates?.latitude || 52.3676,
+                  lng: stop.coordinates?.longitude || 4.9041
+                }))}
+                className="w-full h-80"
+              />
+            </div>
+            
+            {/* Navigation Controls */}
+            <div>
+              <RouteNavigation
+                routeStops={stops.map(stop => ({
+                  id: stop.id,
+                  name: stop.title,
+                  description: stop.description,
+                  coordinates: {
+                    lat: stop.coordinates?.latitude || 52.3676,
+                    lng: stop.coordinates?.longitude || 4.9041
+                  },
+                  category: stop.category
+                }))}
+                routeTitle={route.title}
+              />
+            </div>
           </div>
         )}
 

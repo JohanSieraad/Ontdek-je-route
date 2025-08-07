@@ -671,6 +671,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Config endpoint for client-side configuration
+  app.get('/api/config', (req, res) => {
+    res.json({
+      googleMapsApiKey: process.env.GOOGLE_MAPS_API_KEY || '',
+      environment: process.env.NODE_ENV || 'development'
+    });
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }
