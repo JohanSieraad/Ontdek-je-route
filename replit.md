@@ -11,6 +11,13 @@ This is a full-stack web application for exploring historical routes throughout 
 
 ## Recent Changes
 
+### Navigation and Branding Fixes (August 2025)
+- **Regional navigation repaired**: Homepage region buttons now correctly navigate to `/regio/[id]` instead of all regions page
+- **Route count display restored**: Added orange badges with car emoji 🚗 and route count to region buttons
+- **App rebranding completed**: Changed from "AutoRoutes Nederland" to "RouteParel" across all components
+- **Activity tracking performance optimized**: Fixed excessive POST /api/activity requests causing "Failed to fetch" errors
+- **User confirmation**: "ja dat werkt nu goed en ziet er goed uit" - all navigation and display issues resolved
+
 ### Complete Profile System Implementation (August 2025)
 - **Extended database schema**: Added comprehensive user profile tables (userVehiclePreferences, userFavoriteLocations, userCompletedRoutes, pointsOfInterest)
 - **Backend API routes**: Full implementation of profile management endpoints (/api/profile, /api/profile/vehicle, /api/profile/favorite-locations, /api/profile/completed-routes)
