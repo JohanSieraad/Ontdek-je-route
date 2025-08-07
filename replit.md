@@ -4,7 +4,22 @@
 
 This is a full-stack web application for exploring historical routes throughout the Netherlands. The application allows users to discover various regions, browse curated historical routes, and access audio guides for an immersive cultural experience. Built with React on the frontend and Express.js on the backend, it features a modern, responsive design using shadcn/ui components and Tailwind CSS.
 
+## Test Account
+- **Email**: demo@routes.nl
+- **Password**: demo12345
+- **Name**: Demo Gebruiker
+
 ## Recent Changes
+
+### Complete Profile System Implementation (August 2025)
+- **Extended database schema**: Added comprehensive user profile tables (userVehiclePreferences, userFavoriteLocations, userCompletedRoutes, pointsOfInterest)
+- **Backend API routes**: Full implementation of profile management endpoints (/api/profile, /api/profile/vehicle, /api/profile/favorite-locations, /api/profile/completed-routes)
+- **Authentication system**: Working JWT-based authentication with proper token handling and session management
+- **Frontend profile page**: Complete profile interface with tabs for overview, vehicle preferences, favorite locations, and completed routes
+- **Navigation integration**: Profile page accessible via user dropdown menu
+- **Activity tracking fixes**: Resolved 401/500 errors with proper authentication validation
+- **Storage abstraction**: Both MemStorage and DatabaseStorage classes support all profile functionality
+- **User creation tested**: Demo account successfully created and functional
 
 ### Navigation Restructure & Compact Menu (August 2025)
 - **Complete navigation overhaul**: Replaced horizontal navigation with single compact dropdown menu

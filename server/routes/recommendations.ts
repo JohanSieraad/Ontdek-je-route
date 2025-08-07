@@ -122,13 +122,23 @@ export function registerRecommendationRoutes(app: Express) {
   // Track user activity for recommendations
   app.post("/api/activity", authenticateToken, async (req: any, res) => {
     try {
-      const userId = req.user.id;
+      const userId = req.user?.id || req.userId;
+      if (!userId) {
+        return res.status(401).json({ message: "User not authenticated" });
+      }
+
+      // Validate required fields
+      const { actionType, entityType, entityId } = req.body;
+      if (!actionType || !entityType || !entityId) {
+        return res.status(400).json({ message: "Missing required fields: actionType, entityType, entityId" });
+      }
+
       const activity = insertUserActivitySchema.parse({
         ...req.body,
         userId,
-        sessionId: req.sessionID,
-        ipAddress: req.ip,
-        userAgent: req.get('User-Agent')
+        sessionId: req.sessionID || 'anonymous',
+        ipAddress: req.ip || '0.0.0.0',
+        userAgent: req.get('User-Agent') || 'unknown'
       });
       
       const result = await storage.trackUserActivity(activity);
