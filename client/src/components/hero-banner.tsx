@@ -7,8 +7,8 @@ export function HeroBanner() {
     <section className="relative h-[700px] overflow-hidden">
       {/* Kasteel Zuylen Background Image */}
       <img
-        src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/Slot_Zuylen_vanuit_de_lucht.jpg/1200px-Slot_Zuylen_vanuit_de_lucht.jpg"
-        alt="Kasteel Zuylen - RouteParel"
+        src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80"
+        alt="Historisch Kasteel - RouteParel"
         className="w-full h-full object-cover"
       />
       {/* Elegant Gradient Overlay - kasteel route style */}
