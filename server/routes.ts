@@ -690,6 +690,39 @@ export async function registerRoutes(app: Express): Promise<Server> {
     });
   });
 
+  // Health check endpoint for Docker and monitoring
+  app.get('/api/health', async (req, res) => {
+    try {
+      // Basic health check
+      const health = {
+        status: 'ok',
+        timestamp: new Date().toISOString(),
+        environment: process.env.NODE_ENV || 'development',
+        uptime: Math.floor(process.uptime()),
+        memory: process.memoryUsage(),
+        version: process.env.npm_package_version || '1.0.0'
+      };
+
+      // Test database connection (if available)
+      try {
+        await storage.getRoutes(); // Simple query to test DB
+        health.database = 'connected';
+      } catch (error) {
+        health.database = 'disconnected';
+        health.status = 'degraded';
+      }
+
+      const statusCode = health.status === 'ok' ? 200 : 503;
+      res.status(statusCode).json(health);
+    } catch (error) {
+      res.status(500).json({
+        status: 'error',
+        timestamp: new Date().toISOString(),
+        error: error instanceof Error ? error.message : 'Unknown error'
+      });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

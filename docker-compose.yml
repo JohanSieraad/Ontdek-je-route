@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  database:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: routeparel
+      POSTGRES_USER: routeparel
+      POSTGRES_PASSWORD: routeparel_dev_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U routeparel -d routeparel"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # RouteParel Application
+  app:
+    build: .
+    ports:
+      - "5000:5000"
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgresql://routeparel:routeparel_dev_password@database:5432/routeparel
+      GOOGLE_MAPS_API_KEY: ${GOOGLE_MAPS_API_KEY}
+      SESSION_SECRET: ${SESSION_SECRET:-dev_session_secret_change_in_production}
+    depends_on:
+      database:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Redis for sessions (optional upgrade)
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  postgres_data:
+  redis_data:
