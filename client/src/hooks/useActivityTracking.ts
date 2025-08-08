@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useRef } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useAuth } from "@/hooks/useAuth";
 import { apiRequest } from "@/lib/queryClient";
@@ -12,6 +12,9 @@ interface ActivityData {
 
 export function useActivityTracking() {
   const { isAuthenticated } = useAuth();
+  const lastTrackingTime = useRef<number>(0);
+  const trackingCooldown = 2000; // 2 second cooldown between tracking calls
+  const trackingCache = useRef<Set<string>>(new Set());
 
   const trackActivityMutation = useMutation({
     mutationFn: async (activity: ActivityData) => {
@@ -38,10 +41,33 @@ export function useActivityTracking() {
   });
 
   const trackActivity = useCallback((activity: ActivityData) => {
+    // Create a unique key for this activity to prevent duplicates
+    const activityKey = `${activity.actionType}-${activity.entityType}-${activity.entityId}`;
+    
+    // Debounce tracking calls to prevent spam
+    const now = Date.now();
+    if (now - lastTrackingTime.current < trackingCooldown) {
+      return;
+    }
+    
+    // Check if we've already tracked this exact activity recently
+    if (trackingCache.current.has(activityKey)) {
+      return;
+    }
+    
     // Only track if user is authenticated, we have a token, mutation is not pending, and data is valid
     const token = localStorage.getItem('authToken');
     if (isAuthenticated && token && !trackActivityMutation.isPending && 
         activity.actionType && activity.entityType && activity.entityId) {
+      
+      lastTrackingTime.current = now;
+      trackingCache.current.add(activityKey);
+      
+      // Clear the cache entry after 5 seconds to allow re-tracking later
+      setTimeout(() => {
+        trackingCache.current.delete(activityKey);
+      }, 5000);
+      
       trackActivityMutation.mutate(activity);
     }
   }, [isAuthenticated, trackActivityMutation]);
