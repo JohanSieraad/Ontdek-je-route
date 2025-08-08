@@ -1,206 +1,84 @@
 # Nederlandse Routes Application
 
 ## Overview
-
-This is a full-stack web application for exploring historical routes throughout the Netherlands. The application allows users to discover various regions, browse curated historical routes, and access audio guides for an immersive cultural experience. Built with React on the frontend and Express.js on the backend, it features a modern, responsive design using shadcn/ui components and Tailwind CSS.
-
-## Test Account
-- **Email**: demo@routes.nl
-- **Password**: demo12345
-- **Name**: Demo Gebruiker
-
-## Recent Changes
-
-### Navigation and Branding Fixes (August 2025)
-- **Regional navigation repaired**: Homepage region buttons now correctly navigate to `/regio/[id]` instead of all regions page
-- **Route count display restored**: Added orange badges with car emoji 🚗 and route count to region buttons
-- **App rebranding completed**: Changed from "AutoRoutes Nederland" to "RouteParel" across all components
-- **Activity tracking performance optimized**: Fixed excessive POST /api/activity requests causing "Failed to fetch" errors
-- **User confirmation**: "ja dat werkt nu goed en ziet er goed uit" - all navigation and display issues resolved
-
-### Complete Profile System Implementation (August 2025)
-- **Extended database schema**: Added comprehensive user profile tables (userVehiclePreferences, userFavoriteLocations, userCompletedRoutes, pointsOfInterest)
-- **Backend API routes**: Full implementation of profile management endpoints (/api/profile, /api/profile/vehicle, /api/profile/favorite-locations, /api/profile/completed-routes)
-- **Authentication system**: Working JWT-based authentication with proper token handling and session management
-- **Frontend profile page**: Complete profile interface with tabs for overview, vehicle preferences, favorite locations, and completed routes
-- **Navigation integration**: Profile page accessible via user dropdown menu
-- **Activity tracking fixes**: Resolved 401/500 errors with proper authentication validation
-- **Storage abstraction**: Both MemStorage and DatabaseStorage classes support all profile functionality
-- **User creation tested**: Demo account successfully created and functional
-
-### Navigation Restructure & Compact Menu (August 2025)
-- **Complete navigation overhaul**: Replaced horizontal navigation with single compact dropdown menu
-- **Separate regions page**: Created dedicated `/regios` page with all regions organized by country
-- **Home page optimization**: Reduced to compact preview of 4 regions with "Alle Regio's Bekijken" button
-- **Fixed navigation links**: All dropdown links now work correctly using wouter Link components
-- **Smart anchor handling**: Proper scroll behavior for anchor links within same page
-- **Country organization**: Regions properly grouped by Netherlands, Belgium, Germany & Luxembourg flags
-- **Mobile responsive**: Consistent navigation experience across desktop and mobile devices
-- **User feedback confirmed**: "ja nu werkt het hier goed" - navigation fully functional
-
-### Route ID Persistence Fix (August 2025)
-- **Fixed critical issue**: Route links no longer break after server restart
-- **Implemented fixed IDs**: All 7 regions and 14 routes now use persistent IDs instead of random UUIDs
-- **Enhanced stability**: Route detail pages consistently accessible via direct links
-- **Navigation integration**: Google Maps, Waze, and OpenStreetMap options now available on all route detail pages
-- **Technical improvement**: Replaced `Array.find()` lookups with direct Map operations for better performance
-- **Foundation ready**: Stable architecture prepared for multi-day routes and affiliate integration expansion
-
-### Personalized Route Recommendation Engine (August 2025)
-- **Machine learning system**: Collaborative filtering and content-based recommendation scoring
-- **Extended database schema**: 4 new tables for user preferences, activity, interactions, and recommendations
-- **Activity tracking**: Automatic monitoring of user behavior (route views, searches, category interests)
-- **Preference management**: Comprehensive form for users to customize their route recommendations
-- **Smart recommendations**: Personalized route suggestions based on user history and preferences
-- **Real-time adaptation**: System learns and improves recommendations as users interact with routes
-- **Integration**: Recommendation panel and preferences form integrated into homepage sidebar
-
-### Complete Authentication System (August 2025)
-- **User registration & login**: Email-based authentication with password hashing (bcryptjs)
-- **Session management**: JWT tokens with 7-day expiration and secure session storage
-- **Social login ready**: Google, Facebook, Instagram login placeholders (easily extensible)
-- **Protected routes**: Route management now requires authentication with ownership validation
-- **User-specific data**: Routes are linked to users, only creators can edit/delete their routes
-- **Modern auth UI**: Beautiful login/register forms with validation and error handling
-- **Security features**: Password validation, secure token storage, authorization middleware
-- **UI improvement**: Login icon changed to user avatar icon for better user experience
-- **Registration fix**: Fixed registration and login functionality with proper bcrypt password hashing and JWT tokens
-
-### Complete Automotive Transformation (August 2025)
-- **Full automotive focus**: Transformed from cycling/walking to car driving experience
-- **Summer color scheme**: Added fresh, inviting colors (summer orange, sky blue, vibrant purple, sunset pink)
-- **Authentic autoroutes**: 8 real car routes with restaurant stops, castle visits, and Instagram photo spots
-- **Route categories**: Kastelen & Eten, Dorpjes & Fotografie, Bier & Cultuur, Strand & Restaurants
-- **Culinary integration**: Each route includes specific restaurants, cafes, and picnic locations
-- **Photography focus**: Instagram-worthy stops at castles, villages, and scenic viewpoints
-- **Updated UI/UX**: Hero banner, navigation, and route cards now reflect automotive theme
-- **Enhanced descriptions**: All routes now feature parking info, restaurant recommendations, and photo opportunities
-- **Playful micro-interactions**: Added discovery animations, hover effects, floating elements, and route stats in hero banner
-
-### Belgian Ardennes Expansion (January 2025)
-- Added Belgium as new country with focus on Belgian Ardennes region
-- Created 2 new Belgian routes: "Kastelen Route Ardennen" and "Ardennen Natuur Route"
-- Added authentic Belgian castle stops: Bouillon, La Roche-en-Ardenne, Reinhardstein
-- Implemented nature route with Hoge Venen National Park and Ourthe River
-- Extended navigation system to support cross-border routing
-- Corrected route distances (Kastelen Route: 125 km, Natuur Route: 85 km)
-
-### Navigation Integration (January 2025)
-- Added comprehensive navigation system architecture for future Google Maps/Waze integration
-- Created RouteNavigation component with preferences for avoiding highways, tolls, and ferries  
-- Implemented navigation service interfaces supporting multiple providers (Google Maps, Waze, OpenStreetMap)
-- Enhanced route detail pages with navigation controls and transport mode selection
-- Added schema support for navigation routes and preferences storage
+This full-stack web application, rebranded as "RouteParel", is designed for exploring historical routes across the Netherlands, Belgium, and potentially other regions. It enables users to discover historical routes, access audio guides, and receive personalized recommendations. The application focuses on automotive routes, highlighting scenic drives, cultural stops, and culinary experiences. Key ambitions include expanding to multi-day routes, integrating accommodation bookings for monetization, and publishing to app stores.
 
 ## User Preferences
-
 Preferred communication style: Simple, everyday language.
 Navigation preference: Extremely compact navigation with single dropdown menu (successfully implemented).
 User confirmed satisfaction with navigation restructure: "ja nu werkt het hier goed".
 
-## Development Roadmap
-
-### Planned Features (Next Phase)
-- **Multi-day routes**: Extended routes spanning 2-7 days with overnight stays
-- **Accommodation integration**: Airbnb and Booking.com affiliate partnerships for revenue
-- **Extended itineraries**: Day-by-day planning with restaurant, attraction and hotel recommendations
-- **Monetization strategy**: Affiliate commissions from accommodation bookings
-- **Enhanced content**: Detailed multi-day route descriptions with authentic Dutch/Belgian locations
-
-### App Store Publication Pipeline
-1. **Technical preparation**: Database migration, PWA setup, performance optimization
-2. **Content expansion**: Multi-day routes, affiliate integration, enhanced descriptions  
-3. **Legal compliance**: Privacy policy, terms of service, GDPR compliance
-4. **App store setup**: Google Play Store and iOS App Store preparation
-5. **Marketing materials**: Screenshots, descriptions, ASO optimization
-
 ## System Architecture
 
 ### Frontend Architecture
-- **Framework**: React 18 with TypeScript for type safety and modern development practices
-- **Routing**: Wouter for lightweight client-side routing with support for dynamic routes
-- **State Management**: TanStack Query (React Query) for server state management and caching
-- **UI Components**: shadcn/ui component library built on Radix UI primitives for accessibility
-- **Styling**: Tailwind CSS with custom Dutch-themed color palette and responsive design
-- **Build Tool**: Vite for fast development and optimized production builds
+- **Framework**: React 18 with TypeScript.
+- **Routing**: Wouter for lightweight client-side routing.
+- **State Management**: TanStack Query (React Query) for server state management and caching.
+- **UI Components**: shadcn/ui library built on Radix UI primitives.
+- **Styling**: Tailwind CSS with a custom Dutch-themed color palette and responsive design.
+- **Build Tool**: Vite for fast development and optimized production builds.
 
-### Backend Architecture  
-- **Framework**: Express.js with TypeScript running on Node.js
-- **Storage Layer**: In-memory storage implementation with interface pattern for future database integration
-- **API Design**: RESTful API endpoints for regions, routes, route stops, and audio tracks
-- **Middleware**: Request logging, JSON parsing, and error handling middleware
-- **Development Setup**: Vite middleware integration for hot module replacement in development
+### Backend Architecture
+- **Framework**: Express.js with TypeScript running on Node.js.
+- **Storage Layer**: Currently, an in-memory storage implementation with an interface for future database integration.
+- **API Design**: RESTful API endpoints for regions, routes, stops, audio tracks, and comprehensive user profile management.
+- **Authentication**: JWT-based authentication with bcryptjs for password hashing and secure session management.
+- **Middleware**: Request logging, JSON parsing, error handling, and authentication middleware.
 
 ### Database Schema
-- **ORM**: Drizzle ORM configured for PostgreSQL with type-safe schema definitions
-- **Authentication Tables**:
-  - `users` - User profiles with email, password, names, and verification status
-  - `userSocialAccounts` - Social login connections (Google, Facebook, Instagram)
-  - `sessions` - Secure session management with token expiration
-- **Core Tables**: 
-  - `regions` - Geographic areas with route counts and descriptions
-  - `routes` - Individual historical routes with user ownership and metadata
-  - `routeStops` - Waypoints along routes with coordinates and descriptions  
-  - `audioTracks` - Audio guide content linked to routes and stops
-  - `navigationRoutes` - Navigation data cache for external routing providers
-- **Validation**: Zod schemas for runtime type validation and API request/response validation
-- **User Relations**: Routes linked to users with proper foreign key constraints
+- **ORM**: Drizzle ORM configured for PostgreSQL with type-safe schema definitions.
+- **Tables**:
+    - `users`, `userSocialAccounts`, `sessions` for authentication.
+    - `regions`, `routes`, `routeStops`, `audioTracks` for core content.
+    - `userVehiclePreferences`, `userFavoriteLocations`, `userCompletedRoutes`, `pointsOfInterest` for user profiles.
+    - `navigationRoutes` for caching external navigation data.
+    - `userPreferences`, `activity`, `interactions` for the recommendation engine.
+- **Validation**: Zod schemas for runtime type validation.
 
 ### Component Architecture
-- **Layout Components**: Navigation, footer, and responsive mobile-friendly design
-- **Feature Components**: Region cards, route cards, audio player, route navigation, and interactive map placeholder
-- **UI Components**: Comprehensive shadcn/ui component library with consistent theming
-- **Custom Hooks**: Mobile detection, toast notifications, and form handling
-- **Navigation Components**: RouteNavigation with transport mode selection and route preferences
+- **Layout**: Navigation, footer, and responsive mobile-friendly design.
+- **Features**: Region cards, route cards, audio player, route navigation, interactive map placeholder, and full user profile interface.
+- **UI**: Comprehensive shadcn/ui component library with consistent theming.
+- **Custom Hooks**: For mobile detection, toast notifications, and form handling.
+- **Navigation Components**: RouteNavigation with transport mode selection and route preferences.
 
-### Development Workflow
-- **Monorepo Structure**: Shared types and schemas between frontend and backend
-- **Hot Reloading**: Full-stack development with Vite serving frontend and Express backend
-- **Type Safety**: End-to-end TypeScript with shared schema definitions
-- **Code Organization**: Clear separation between client, server, and shared code
-
-## Navigation Features
-
-### Route Navigation System
-- **Multi-Provider Support**: Google Maps, Waze, and OpenStreetMap integration architecture
-- **Route Preferences**: Options to avoid highways, tolls, ferries with scenic route preference
-- **Transport Modes**: Support for driving, cycling, walking, and public transit
-- **Multi-Stop Routes**: Optimized routing through multiple historical stops
-- **Real-Time Integration**: Framework for live traffic and road condition updates
-
-### Future Implementation Plans
-- **Google Maps Integration**: Directions API with Dutch language support and regional optimization
-- **Waze Integration**: Real-time traffic-aware routing for optimal travel times
-- **OpenStreetMap**: Free alternative using OSRM routing engine
-- **Route Caching**: Navigation route storage for improved performance
-- **Offline Support**: Downloaded routes for areas with poor connectivity
+### System Features
+- **Persistent Route IDs**: Routes and regions use fixed IDs for stability.
+- **Personalized Route Recommendations**: Collaborative filtering and content-based recommendation engine based on user activity and preferences.
+- **Comprehensive User Profile System**: Allows users to manage vehicle preferences, favorite locations, and completed routes.
+- **Route Navigation System**: Architecture supporting multi-provider integration (Google Maps, Waze, OpenStreetMap) with preferences (avoid highways, tolls, ferries).
+- **Automotive Focus**: Application transformed to focus on car driving experiences with specific routes, restaurant stops, and photography spots.
 
 ## External Dependencies
 
 ### Core Framework Dependencies
-- **React Ecosystem**: React 18, React DOM, TypeScript support
-- **Backend**: Express.js, Node.js runtime environment
-- **Build Tools**: Vite for frontend bundling, esbuild for backend compilation
+- **Frontend**: React 18, React DOM, TypeScript.
+- **Backend**: Express.js, Node.js.
+- **Build Tools**: Vite, esbuild.
 
 ### Database & ORM
-- **Database**: PostgreSQL (configured via Drizzle, can be added later)
-- **ORM**: Drizzle ORM with Drizzle Kit for migrations
-- **Connection**: Neon Database serverless driver for PostgreSQL
+- **Database**: PostgreSQL.
+- **ORM**: Drizzle ORM with Drizzle Kit.
+- **Database Connection**: Neon Database serverless driver for PostgreSQL.
 
 ### UI & Styling
-- **Component Library**: Radix UI primitives for accessibility
-- **Styling**: Tailwind CSS with PostCSS and Autoprefixer
-- **Icons**: Lucide React icon library
-- **Utility Libraries**: clsx and tailwind-merge for conditional styling
+- **Component Library**: Radix UI primitives.
+- **Styling**: Tailwind CSS, PostCSS, Autoprefixer.
+- **Icons**: Lucide React.
+- **Utility Libraries**: clsx, tailwind-merge.
 
-### Development Tools
-- **Routing**: Wouter for lightweight React routing
-- **Forms**: React Hook Form with Hookform Resolvers for validation
-- **Date Handling**: date-fns for date manipulation and formatting
-- **State Management**: TanStack React Query for server state
-- **Validation**: Zod for runtime type validation
+### Development Tools & Libraries
+- **Routing**: Wouter.
+- **Forms**: React Hook Form with Hookform Resolvers.
+- **Date Handling**: date-fns.
+- **State Management**: TanStack React Query.
+- **Validation**: Zod.
+- **Authentication**: bcryptjs (for password hashing).
+
+### APIs & Services
+- **Maps**: Google Maps JavaScript API (for map integration).
 
 ### Replit Integration
-- **Development**: Replit-specific Vite plugins for runtime error handling
-- **Deployment**: Replit development banner integration
-- **Cartographer**: Replit Cartographer plugin for enhanced development experience
+- Replit-specific Vite plugins for runtime error handling.
+- Replit development banner integration.
+- Replit Cartographer plugin.
