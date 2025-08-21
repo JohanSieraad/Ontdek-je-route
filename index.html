@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="nl">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="RouteParel - Ontdek de mooiste kasteel routes door Nederland, België en Europa. Met interactieve kaarten, audiogidsen en persoonlijke aanbevelingen." />
+    <meta name="keywords" content="Nederland, kastelen, routes, reizen, Muiderslot, Kasteel Bouillon, roadtrip, auto routes" />
+    
+    <!-- Open Graph meta tags voor social media sharing -->
+    <meta property="og:title" content="RouteParel - Nederlandse Kasteel Routes" />
+    <meta property="og:description" content="Ontdek historische kasteel routes door Nederland en België met interactieve kaarten en audiogidsen." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://johansieraad.github.io/Routepare-/" />
+    <meta property="og:image" content="https://johansieraad.github.io/Routepare-/attached_assets/muiderslot_1754588216020.jpg" />
+    
+    <!-- Twitter Card meta tags -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="RouteParel - Nederlandse Kasteel Routes" />
+    <meta name="twitter:description" content="Ontdek historische kasteel routes door Nederland en België" />
+    <meta name="twitter:image" content="https://johansieraad.github.io/Routepare-/attached_assets/muiderslot_1754588216020.jpg" />
+    
+    <title>RouteParel - Nederlandse Kasteel Routes | Historische Auto Routes</title>
+    
+    <!-- Preload kritieke resources -->
+    <link rel="preconnect" href="https://maps.googleapis.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/client/src/main.tsx"></script>
+    
+    <!-- Service Worker registration voor offline support -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js')
+            .then((registration) => {
+              console.log('SW registered: ', registration);
+            })
+            .catch((registrationError) => {
+              console.log('SW registration failed: ', registrationError);
+            });
+        });
+      }
+    </script>
+  </body>
+</html>

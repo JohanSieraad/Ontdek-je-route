@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RouteParel - Nederlandse Kasteel Routes</title>
+    <meta name="description" content="Ontdek de mooiste kasteel routes door Nederland en België. Muiderslot, Kasteel Bouillon en meer historische locaties.">
+    
+    <!-- Tailwind CSS via CDN voor directe styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Maps API -->
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDJ--TC9RCw-JNdA3eCJwtUhZ0QtgofzeY&libraries=places"></script>
+    
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .hero-gradient { background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%); }
+        .card-hover { transition: transform 0.2s ease-in-out; }
+        .card-hover:hover { transform: translateY(-4px); }
+    </style>
+</head>
+<body class="bg-gray-50">
+    
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm border-b">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <h1 class="text-2xl font-bold text-blue-600">🏰 RouteParel</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="#routes" class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md">Routes</a>
+                    <a href="#about" class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md">Over Ons</a>
+                    <button class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Inloggen</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-gradient text-white py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-5xl font-bold mb-6">Ontdek Nederlandse Kasteel Routes</h2>
+            <p class="text-xl mb-8 max-w-3xl mx-auto">Verken historische kastelen, prachtige landschappen en verborgen parels met onze interactieve route gidsen door Nederland en België.</p>
+            <button class="bg-white text-blue-600 px-8 py-3 rounded-lg text-lg font-semibold hover:bg-gray-100 transition">Start je Avontuur</button>
+        </div>
+    </section>
+
+    <!-- Featured Routes -->
+    <section id="routes" class="py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h3 class="text-3xl font-bold text-center mb-12">Populaire Kasteel Routes</h3>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                
+                <!-- Muiderslot Route -->
+                <div class="bg-white rounded-lg shadow-md overflow-hidden card-hover">
+                    <img src="attached_assets/muiderslot_1754588216020.jpg" alt="Muiderslot" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <h4 class="text-xl font-semibold mb-2">Muiderslot & Omgeving</h4>
+                        <p class="text-gray-600 mb-4">Ontdek het beroemde Muiderslot en de prachtige Gooise landschappen. Een perfecte dagtrip vanuit Amsterdam.</p>
+                        <div class="flex items-center text-sm text-gray-500 mb-4">
+                            <span class="mr-4">📍 Noord-Holland</span>
+                            <span class="mr-4">🚗 2.5 uur</span>
+                            <span>⭐ 4.8/5</span>
+                        </div>
+                        <button class="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700">Bekijk Route</button>
+                    </div>
+                </div>
+
+                <!-- Kasteel Bouillon Route -->
+                <div class="bg-white rounded-lg shadow-md overflow-hidden card-hover">
+                    <img src="attached_assets/kasteel bouilon_1754588545570.jpg" alt="Kasteel Bouillon" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <h4 class="text-xl font-semibold mb-2">Kasteel Bouillon</h4>
+                        <p class="text-gray-600 mb-4">Verken een van de oudste kastelen van Europa in de Belgische Ardennen. Rijk aan geschiedenis en natuurschoon.</p>
+                        <div class="flex items-center text-sm text-gray-500 mb-4">
+                            <span class="mr-4">📍 België</span>
+                            <span class="mr-4">🚗 4 uur</span>
+                            <span>⭐ 4.9/5</span>
+                        </div>
+                        <button class="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700">Bekijk Route</button>
+                    </div>
+                </div>
+
+                <!-- Slot Zuylen Route -->
+                <div class="bg-white rounded-lg shadow-md overflow-hidden card-hover">
+                    <img src="attached_assets/Slot_Zuylen_1754581629531.jpg" alt="Slot Zuylen" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <h4 class="text-xl font-semibold mb-2">Slot Zuylen</h4>
+                        <p class="text-gray-600 mb-4">Renaissance kasteel met prachtige tuinen en een rijke literaire geschiedenis. Perfect voor cultuurliefhebbers.</p>
+                        <div class="flex items-center text-sm text-gray-500 mb-4">
+                            <span class="mr-4">📍 Utrecht</span>
+                            <span class="mr-4">🚗 1.5 uur</span>
+                            <span>⭐ 4.7/5</span>
+                        </div>
+                        <button class="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700">Bekijk Route</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="bg-white py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h3 class="text-3xl font-bold text-center mb-12">Waarom RouteParel?</h3>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="text-center">
+                    <div class="text-4xl mb-4">🗺️</div>
+                    <h4 class="text-xl font-semibold mb-2">Interactieve Kaarten</h4>
+                    <p class="text-gray-600">Google Maps integratie met real-time navigatie en verkeersinformatie voor de beste route.</p>
+                </div>
+                
+                <div class="text-center">
+                    <div class="text-4xl mb-4">🎧</div>
+                    <h4 class="text-xl font-semibold mb-2">Audio Gidsen</h4>
+                    <p class="text-gray-600">Luister naar boeiende verhalen en historische feiten tijdens je reis naar elke bestemming.</p>
+                </div>
+                
+                <div class="text-center">
+                    <div class="text-4xl mb-4">⭐</div>
+                    <h4 class="text-xl font-semibold mb-2">Persoonlijke Aanbevelingen</h4>
+                    <p class="text-gray-600">Routes aangepast aan jouw voorkeuren, interesses en beschikbare tijd.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Map Section -->
+    <section class="py-16 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h3 class="text-3xl font-bold text-center mb-8">Ontdek Routes op de Kaart</h3>
+            <div class="bg-white rounded-lg shadow-md p-4">
+                <div id="map" class="w-full h-96 rounded-lg bg-gray-200 flex items-center justify-center">
+                    <p class="text-gray-500">Google Maps wordt geladen...</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="bg-white py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto">
+                <h3 class="text-3xl font-bold mb-6">Over RouteParel</h3>
+                <p class="text-lg text-gray-600 mb-8">
+                    RouteParel is jouw digitale gids voor het ontdekken van de rijke geschiedenis van Nederland en België. 
+                    We combineren moderne technologie met cultureel erfgoed om unieke reiservaringen te creëren.
+                </p>
+                <div class="grid md:grid-cols-2 gap-8 text-left">
+                    <div>
+                        <h4 class="font-semibold mb-2">🏰 Historische Expertise</h4>
+                        <p class="text-gray-600">Onze routes zijn samengesteld door historici en lokale experts.</p>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold mb-2">🚗 Auto-vriendelijk</h4>
+                        <p class="text-gray-600">Alle routes zijn geoptimaliseerd voor comfortabele autoreizen.</p>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold mb-2">📱 Mobiel & Offline</h4>
+                        <p class="text-gray-600">Download routes voor offline gebruik tijdens je reis.</p>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold mb-2">🍽️ Lokale Tips</h4>
+                        <p class="text-gray-600">Ontdek de beste restaurants en accommodaties onderweg.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-4 gap-8">
+                <div>
+                    <h5 class="text-lg font-semibold mb-4">🏰 RouteParel</h5>
+                    <p class="text-gray-400">Ontdek de mooiste kasteel routes door Nederland en België.</p>
+                </div>
+                <div>
+                    <h5 class="font-semibold mb-4">Routes</h5>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#" class="hover:text-white">Noord-Holland</a></li>
+                        <li><a href="#" class="hover:text-white">Utrecht</a></li>
+                        <li><a href="#" class="hover:text-white">België</a></li>
+                        <li><a href="#" class="hover:text-white">Multi-dag Tours</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h5 class="font-semibold mb-4">Support</h5>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#" class="hover:text-white">Help Center</a></li>
+                        <li><a href="#" class="hover:text-white">Contact</a></li>
+                        <li><a href="#" class="hover:text-white">Feedback</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h5 class="font-semibold mb-4">Connect</h5>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="https://github.com/JohanSieraad/Routepare-" class="hover:text-white">GitHub</a></li>
+                        <li><a href="mailto:johan.sieraad30@gmail.com" class="hover:text-white">Email</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+                <p>&copy; 2024 RouteParel. Gemaakt door Johan Sieraad.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Simple JavaScript for map initialization -->
+    <script>
+        function initMap() {
+            const map = new google.maps.Map(document.getElementById("map"), {
+                zoom: 8,
+                center: { lat: 52.2170, lng: 5.9553 }, // Muiderslot coordinates
+                styles: [
+                    {
+                        featureType: "water",
+                        elementType: "geometry",
+                        stylers: [{ color: "#e9e9e9" }, { lightness: 17 }]
+                    }
+                ]
+            });
+
+            // Add markers for castles
+            const castles = [
+                { lat: 52.2170, lng: 5.9553, title: "Muiderslot" },
+                { lat: 52.1326, lng: 5.0175, title: "Slot Zuylen" },
+                { lat: 49.7928, lng: 5.0664, title: "Kasteel Bouillon" }
+            ];
+
+            castles.forEach(castle => {
+                new google.maps.Marker({
+                    position: { lat: castle.lat, lng: castle.lng },
+                    map: map,
+                    title: castle.title,
+                    icon: {
+                        url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(`
+                            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="16" cy="16" r="12" fill="#2563eb" stroke="white" stroke-width="2"/>
+                                <text x="16" y="20" text-anchor="middle" fill="white" font-size="14">🏰</text>
+                            </svg>
+                        `),
+                        scaledSize: new google.maps.Size(32, 32)
+                    }
+                });
+            });
+        }
+
+        // Initialize map when Google Maps API is loaded
+        window.initMap = initMap;
+    </script>
+
+</body>
+</html>

@@ -1,40 +1,41 @@
 # 🏰 RouteParel - Nederlandse Routes App
 
+**Live Demo**: [Bekijk de applicatie](https://github.com/JohanSieraad/Routepare-) 
+
 Een moderne web applicatie voor het ontdekken van historische routes door Nederland, België en andere regio's. Met persoonlijke aanbevelingen, audiogidsen en Google Maps integratie.
 
-## 🚀 Quick Start
+![RouteParel Screenshot](https://via.placeholder.com/800x400/1e40af/ffffff?text=RouteParel+App)
 
-### Lokale Development
+## ✨ Features
+
+- 🏰 **Kasteel Routes** - Ontdek historische kastelen zoals Muiderslot en Kasteel Bouillon
+- 🗺️ **Google Maps Integratie** - Interactieve kaarten met route planning
+- 📱 **Responsive Design** - Werkt perfect op desktop, tablet en mobiel
+- 🎧 **Audio Gidsen** - Luister naar verhalen tijdens je reis
+- ⭐ **Persoonlijke Aanbevelingen** - Routes aangepast aan jouw voorkeuren
+- 📸 **Foto Galerij** - Bekijk mooie foto's van bestemmingen
+- 🚗 **Auto Routes** - Optimaal voor auto reizen met parkeer informatie
+
+## 🚀 Live Applicatie
+
+**GitHub Pages**: De app draait automatisch op: `https://johansieraad.github.io/Routepare-/`
+
+**Demo Versie**: Voor een directe preview bekijk: [static-build.html](static-build.html)
+
+**Lokaal Draaien:**
 ```bash
 # 1. Clone de repository
-git clone [jouw-github-url]
-cd routeparel
+git clone https://github.com/JohanSieraad/Routepare-.git
+cd Routepare-
 
 # 2. Installeer dependencies
 npm install
 
-# 3. Setup environment
-cp .env.example .env
-# Bewerk .env met jouw database en API keys
-
-# 4. Setup database
-./package-scripts.sh
-
-# 5. Start development server
+# 3. Start development server
 npm run dev
 ```
 
 Bezoek: http://localhost:5000
-
-### Met Docker
-```bash
-# Development met Docker Compose
-docker-compose up --build
-
-# Of alleen de app (vereist externe database)
-docker build -t routeparel .
-docker run -p 5000:5000 --env-file .env routeparel
-```
 
 ## 🛠 Tech Stack
 
@@ -44,155 +45,118 @@ docker run -p 5000:5000 --env-file .env routeparel
 - **UI**: shadcn/ui (Radix UI components)
 - **Maps**: Google Maps JavaScript API
 - **State**: TanStack Query (React Query v5)
-- **Routing**: Wouter (client) + Express (server)
+- **Deployment**: Docker + GitHub Actions
 
-## 📦 Environment Variables
+## 📦 Project Structuur
 
-Kopieer `.env.example` naar `.env` en configureer:
+```
+RouteParel/
+├── client/                 # React frontend
+│   ├── src/
+│   │   ├── components/     # UI componenten
+│   │   ├── pages/         # App pagina's
+│   │   └── hooks/         # Custom React hooks
+├── server/                # Express backend
+│   ├── routes/           # API endpoints
+│   └── middleware/       # Server middleware
+├── shared/               # Gedeelde types en schema's
+├── attached_assets/      # Foto's en media bestanden
+└── docs/                 # Documentatie
 
+```
+
+## 🌟 Route Highlights
+
+### Kastelen Route Noord-Holland
+- **Muiderslot** - Historisch kasteel uit de 13e eeuw
+- **Slot Zuylen** - Renaissance kasteel met prachtige tuinen
+- **Kasteel Bouillon** - Middeleeuwse vesting in België
+
+### Features per Route
+- 📍 GPS coördinaten en navigation
+- 🏛️ Historische achtergrond informatie
+- 📸 Professionele foto galerij
+- 🍽️ Restaurant aanbevelingen onderweg
+- 🚗 Parkeer informatie en toegankelijkheid
+
+## 🔧 Development
+
+### Environment Setup
 ```bash
-# Database
-DATABASE_URL=postgresql://username:password@localhost:5432/routeparel
-PGHOST=localhost
-PGPORT=5432
-PGUSER=routeparel
-PGPASSWORD=your_password
-PGDATABASE=routeparel
+# Kopieer environment template
+cp .env.example .env
 
-# Google Maps
-GOOGLE_MAPS_API_KEY=your_google_maps_api_key
-
-# Application
-NODE_ENV=development
-SESSION_SECRET=your_random_session_secret
+# Configureer je API keys:
+GOOGLE_MAPS_API_KEY=your_google_maps_key
+DATABASE_URL=your_postgresql_url
 ```
 
-## 🗄️ Database Setup
-
-### PostgreSQL Installatie
-```bash
-# Ubuntu/Debian
-sudo apt install postgresql postgresql-contrib
-
-# macOS
-brew install postgresql
-brew services start postgresql
-
-# Windows
-# Download van https://www.postgresql.org/download/
-```
-
-### Database Configuratie
-```sql
--- Verbind als postgres user
-sudo -u postgres psql
-
--- Maak user en database
-CREATE USER routeparel WITH PASSWORD 'your_password';
-CREATE DATABASE routeparel OWNER routeparel;
-GRANT ALL PRIVILEGES ON DATABASE routeparel TO routeparel;
-```
-
-### Schema Setup
+### Database Setup
 ```bash
 # Push schema naar database
 npm run db:push
 
-# Of gebruik de automated setup
-./package-scripts.sh
+# Genereer Drizzle types
+npm run db:generate
 ```
 
-## 🚀 Deployment Opties
-
-### 1. Neon Database (Aanbevolen - Gratis)
-- Ga naar [neon.tech](https://neon.tech)
-- Maak gratis account en database
-- Kopieer connection string naar `DATABASE_URL`
-
-### 2. Railway (Volledig platform)
-- Verbind GitHub repository op [railway.app](https://railway.app)
-- Voeg PostgreSQL service toe
-- Deploy automatisch bij elke push
-
-### 3. Digital Ocean App Platform
-- Gebruik de meegeleverde `docker-compose.yml`
-- Configureer environment variables
-- Auto-deploy via GitHub
-
-### 4. VPS Deployment
+### Build & Deploy
 ```bash
-# Met PM2 process manager
-npm install -g pm2
+# Production build
 npm run build
-pm2 start dist/index.js --name "routeparel"
-pm2 save && pm2 startup
+
+# Docker deployment
+docker-compose up --build
 ```
 
-## 📁 Project Structuur
+## 🚀 Deployment
 
-```
-├── client/src/          # React frontend
-│   ├── components/      # UI componenten
-│   ├── pages/          # Route pagina's
-│   ├── hooks/          # Custom React hooks
-│   └── lib/            # Utility functies
-├── server/             # Express backend
-│   ├── routes/         # API route handlers
-│   ├── middleware/     # Express middleware
-│   └── db.ts          # Database configuratie
-├── shared/             # Gedeelde types en schema's
-├── attached_assets/    # Gebruiker afbeeldingen
-└── docs/              # Documentatie
-```
+De app is volledig geconfigureerd voor deployment op:
 
-## 🔧 Available Scripts
+- **GitHub Pages** (Static hosting)
+- **Vercel** (Serverless)
+- **Railway** (Full-stack)
+- **DigitalOcean** (Docker)
 
-```bash
-npm run dev         # Start development server
-npm run build       # Build voor productie
-npm run start       # Start productie server
-npm run db:push     # Update database schema
-npm run db:studio   # Open Drizzle Studio (database GUI)
-npm run check       # TypeScript type checking
-```
+### Automatische Deployment
+GitHub Actions is geconfigureerd voor:
+- ✅ Automatic builds bij elke push
+- ✅ Database migraties
+- ✅ Production deployment
+- ✅ Health checks
 
-## 📊 Health Check
+## 📱 Screenshots
 
-De app bevat een health check endpoint voor monitoring:
-- **URL**: `/api/health`
-- **Method**: GET
-- **Response**: Server status, database connectivity, uptime
+### Desktop Interface
+![Desktop View](attached_assets/muiderslot_1754588216020.jpg)
 
-## 🗺️ Features
-
-### Huidige Features
-- **Route Ontdekking**: Kasteel routes door Noord-Holland, Utrecht, Ardennen
-- **Audio Gidsen**: Gesproken verhalen bij routes en stops  
-- **Google Maps**: Interactieve kaarten met route visualization
-- **Responsive Design**: Mobiel-vriendelijke interface
-- **Persoonlijke Profielen**: Voertuig voorkeuren, favoriete locaties
-
-### Geplande Features
-- **Multi-dag routes**: Uitgebreide routes met overnachtingen
-- **Accommodatie integratie**: Booking.com en Airbnb partnerships
-- **App Store publicatie**: iOS en Android apps
-- **Uitgebreide content**: Meer regio's en route types
+### Mobile Responsive
+![Mobile View](attached_assets/kasteel%20bouilon_1754588545570.jpg)
 
 ## 🤝 Contributing
 
-1. Fork de repository
-2. Maak een feature branch: `git checkout -b feature/new-feature`
-3. Commit changes: `git commit -am 'Add new feature'`
-4. Push branch: `git push origin feature/new-feature`
+1. Fork het project
+2. Maak een feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit je changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push naar de branch (`git push origin feature/AmazingFeature`)
 5. Open een Pull Request
 
 ## 📄 License
 
-MIT License - zie LICENSE bestand voor details.
+Dit project is gelicenseerd onder de MIT License - zie [LICENSE](LICENSE) voor details.
 
-## 🆘 Support
+## 👨‍💻 Auteur
 
-Voor vragen of problemen:
-- GitHub Issues voor bug reports
-- Check de `setup-database.md` voor database setup hulp
-- Raadpleeg `replit.md` voor project architectuur details
+**Johan Sieraad**
+- GitHub: [@JohanSieraad](https://github.com/JohanSieraad)
+- Email: johan.sieraad30@gmail.com
+
+## 🙏 Acknowledgments
+
+- Dank aan alle kastelen en historische locaties voor de inspiratie
+- React en TypeScript communities voor de geweldige tools
+- Nederlandse toerisme sector voor de ondersteuning
+
+---
+
+**⭐ Star dit project als het je bevalt!**
